@@ -18,6 +18,7 @@ from backend.main import (
     get_user_history,
     health_check,
     onboard_user,
+    search_places,
     topup_user_credits,
 )
 
@@ -42,6 +43,21 @@ def test_health_check_endpoint():
     res = health_check()
     assert res["status"] == "ok"
     assert "Melooha" in res["app"]
+
+
+def test_places_search_endpoint():
+    # Test prefix matching
+    res = search_places(q="mum")
+    assert len(res["places"]) > 0
+    assert "Mumbai" in res["places"][0]["name"]
+
+    # Test global city search
+    res = search_places(q="London")
+    assert any("London" in p["name"] for p in res["places"])
+
+    # Test empty query returns top cities
+    res_empty = search_places(q="")
+    assert len(res_empty["places"]) > 0
 
 
 def test_api_onboarding_and_balance_flow(db):

@@ -150,3 +150,12 @@
   - `docs/demo-script.md`: Exact 2-minute walkthrough video script covering onboarding, streaming, evidence chips inspection, zero-balance top-up, Hindi i18n, and live metrics.
   - `docs/eval_report.md`: 30-question evaluation scorecard showing 100.0% grounding pass rate.
 - **Verification Status**: 32/32 pytest tests PASSED; Vite production build verified; Git repository clean.
+
+## Log Entry 11: Global Birth Place Autocomplete & Manual Coordinates
+- **Objective**: Expand birth place selection from initial presets to any worldwide city or custom location with live autocomplete and manual coordinates override.
+- **Files Created / Updated**:
+  - `backend/places.py`: Database of 90+ major Indian and international cities with latitude, longitude, and IANA timezone strings, plus prefix/substring search algorithm.
+  - `backend/main.py`: Added `GET /api/places/search?q={query}` endpoint.
+  - `frontend/src/components/OnboardingModal.jsx`: Replaced fixed 4-button preset with a global debounced autocomplete search bar, popular 1-click shortcut pills, selected place confirmation pill, and collapsible manual latitude/longitude/timezone coordinates editor for custom towns/villages.
+  - `tests/test_api_endpoints.py`: Added integration test for places search API.
+- **Verification Status**: 33/33 pytest tests PASSED; Vite production build compiled; Uvicorn server running live on `http://localhost:8000`.

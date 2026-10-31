@@ -16,6 +16,7 @@ from backend.ledger import (
     topup_credits,
 )
 from backend.models import Answer, BalanceLedger, BirthProfile, Chart, Event, Question, User
+from backend.places import search_cities
 from backend.service import OnboardingService, QuestionService
 from backend.streaming import stream_question_answer
 import os
@@ -69,6 +70,12 @@ class AskQuestionRequest(BaseModel):
 @app.get("/health")
 def health_check():
     return {"status": "ok", "app": "Melooha API"}
+
+
+@app.get("/api/places/search")
+def search_places(q: str = "", limit: int = 15):
+    """Search global and Indian cities for birth chart calculations."""
+    return {"places": search_cities(q, limit=limit)}
 
 
 @app.post("/api/onboarding", status_code=status.HTTP_201_CREATED)
