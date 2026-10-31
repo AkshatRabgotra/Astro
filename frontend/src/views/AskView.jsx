@@ -280,7 +280,7 @@ export default function AskView({
   };
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-64px)] max-w-md mx-auto px-4 pb-[84px]">
+    <div className="flex flex-col h-[calc(100dvh-165px)] max-w-md mx-auto px-4 pb-2">
       {/* Messages Scroll Area */}
       <div className="flex-1 overflow-y-auto space-y-4 pt-3 pb-3">
         {messages.length === 0 && !isStreaming && (
@@ -413,7 +413,7 @@ export default function AskView({
           <button
             onClick={() => handleAsk()}
             disabled={isStreaming || !questionText.trim()}
-            className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#931B58] to-[#B21E68] text-white flex items-center justify-center disabled:opacity-40 transition-all shadow-md active:scale-95 shrink-0"
+            className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#931B58] to-[#B21E68] text-white flex items-center justify-center disabled:opacity-40 transition-all shadow-md active:scale-95 shrink-0"
           >
             {isStreaming ? (
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
