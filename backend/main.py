@@ -18,6 +18,9 @@ from backend.ledger import (
 from backend.models import Answer, BalanceLedger, BirthProfile, Chart, Event, Question, User
 from backend.service import OnboardingService, QuestionService
 from backend.streaming import stream_question_answer
+import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 # Initialize database schema
 Base.metadata.create_all(bind=engine)
@@ -286,3 +289,19 @@ def get_metrics(db: Session = Depends(get_db)):
         "total_topups": total_topups,
         "evidence_opened_count": evidence_clicks,
     }
+
+
+# Mount built frontend static files if present (for single-command unified deployment)
+frontend_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "dist")
+if os.path.exists(frontend_dist):
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+
+    @app.get("/{full_path:path}")
+    def serve_frontend_spa(full_path: str):
+        # Allow API routes to be handled by FastAPI
+        if full_path.startswith("api/") or full_path == "health":
+            raise HTTPException(status_code=404)
+        file_path = os.path.join(frontend_dist, full_path)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(frontend_dist, "index.html"))

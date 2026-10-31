@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-cosmic: #080511;
+  --bg-card: rgba(22, 16, 40, 0.88);
+  --bg-card-hover: rgba(32, 24, 58, 0.95);
+  --border-plum: rgba(178, 30, 104, 0.32);
+  --border-plum-light: rgba(178, 30, 104, 0.55);
+  --accent-plum: #B21E68;
+  --accent-plum-gradient: linear-gradient(135deg, #931B58 0%, #B21E68 50%, #D8227E 100%);
+  --accent-gold: #E5A93C;
+  --text-primary: #F2EEFB;
+  --text-muted: #9E94B8;
+  --text-plum-light: #F4B8DC;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-cosmic);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(147, 27, 88, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(46, 26, 84, 0.25) 0%, transparent 60%),
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 75% 15%, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 120px 120px, 180px 180px, 140px 140px;
+}
+
+h1, h2, h3, .font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(178, 30, 104, 0.3);
+  border-radius: 4px;
+}
+
+/* Accessible touch target standard (44px min) */
+button, input, select, a, .touch-target {
+  min-height: 44px;
+}
+
+/* Pulsing aura effect */
+@keyframes cosmic-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(178, 30, 104, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(216, 34, 126, 0.6);
+  }
+}
+
+.cosmic-glow {
+  animation: cosmic-pulse 3s infinite ease-in-out;
+}
+
+/* Glassmorphism panel */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-plum);
+  border-radius: 1.25rem;
+}
+
+/* Bottom nav shadow */
+.nav-shadow {
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.65), 0 -1px 0 rgba(178, 30, 104, 0.25);
+}

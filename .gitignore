@@ -8,6 +8,11 @@ __pycache__/
 .coverage
 htmlcov/
 
+# Node / Frontend
+node_modules/
+dist/
+.vite/
+
 # Environments
 .env
 .env.local

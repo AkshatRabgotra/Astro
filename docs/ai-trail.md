@@ -107,3 +107,22 @@
   - `tests/test_streaming_sse.py`: 3 tests covering verified SSE streaming, replace event on violation, and automatic refund on failure.
 - **Test Status**: All 31 tests PASSED in 4.15s.
 - **Commit**: Completed Phase 5.
+
+## Log Entry 8: Phase 6 — My One Idea & Melooha-Style Mobile-First UI
+- **Objective**: Build a mobile-first UI authentic to Melooha's look and feel, implement "Evidence Behind Every Answer" with interactive fact inspection modals, instrument conversion events, and write `docs/idea.md`.
+- **Files Created / Updated**:
+  - `docs/idea.md`: Half-page rationale defining the audience (discerning seekers/skeptics), target metric (% of free-question users asking a 2nd question), trust hypothesis, and tracking implementation.
+  - `frontend/package.json` & `vite.config.js`: React 18, Vite 6, Lucide icons, canvas-confetti, Tailwind CSS.
+  - `frontend/src/index.css`: Melooha cosmic theme (`#080511`, `#161028`, `#B21E68`), Google Playfair Display & Inter typography, 44px touch targets.
+  - `frontend/src/components/Header.jsx`: User profile pill, question balance counter (`1 Question left` / `0 Question left` with top-up badge).
+  - `frontend/src/components/BottomNav.jsx`: Floating bottom bar with Home, center glowing Ask button, History, and Metrics tabs.
+  - `frontend/src/components/EvidenceModal.jsx`: Interactive fact inspector showing exact coordinate, sign, whole-sign house, nakshatra, and dasha window on chip tap.
+  - `frontend/src/components/PaywallModal.jsx`: Zero-balance paywall with "+5 Questions (Free Challenge)" instant credit top-up and confetti.
+  - `frontend/src/components/OnboardingModal.jsx`: Birth date, place picker, and "I don't know my time" toggle with explicit house reservation warning.
+  - `frontend/src/views/HomeView.jsx`: Daily horoscope (99% ring, lucky color/number), active Choghadiya (Labh), placements summary, and suggested questions.
+  - `frontend/src/views/AskView.jsx`: SSE streaming chat interface with verified Evidence Chips, replace fallback badge, and error retry state.
+  - `frontend/src/views/HistoryView.jsx`: Chronological question and reading archive with cited fact IDs.
+  - `frontend/src/views/MetricsView.jsx`: Live analytics dashboard rendering the second-question retention rate KPI and conversion funnel.
+  - `backend/main.py`: Static mount serving `frontend/dist` for single-command full-stack execution.
+- **Build Status**: `vite build` completed cleanly; 31 pytest tests passing in 3.71s.
+- **Commit**: Completed Phase 6.
