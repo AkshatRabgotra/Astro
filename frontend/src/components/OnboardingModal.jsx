@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Sparkles, Compass, MapPin, Clock, Calendar, Check, AlertCircle, Search, ChevronDown, ChevronUp, Globe } from "lucide-react";
+import { Sparkles, Compass, MapPin, Clock, Calendar, Check, AlertCircle, Search, ChevronDown, ChevronUp, Globe, X } from "lucide-react";
 
 const POPULAR_PRESETS = [
+  { name: "Jammu, Jammu and Kashmir, India", lat: 32.7353, lon: 74.8617, tz: "Asia/Kolkata", short: "Jammu" },
+  { name: "Srinagar, Jammu and Kashmir, India", lat: 34.0837, lon: 74.7973, tz: "Asia/Kolkata", short: "Srinagar" },
   { name: "Mumbai, Maharashtra, India", lat: 19.0760, lon: 72.8777, tz: "Asia/Kolkata", short: "Mumbai" },
   { name: "New Delhi, Delhi, India", lat: 28.6139, lon: 77.2090, tz: "Asia/Kolkata", short: "Delhi" },
   { name: "Bengaluru, Karnataka, India", lat: 12.9716, lon: 77.5946, tz: "Asia/Kolkata", short: "Bengaluru" },
-  { name: "Pune, Maharashtra, India", lat: 18.5204, lon: 73.8567, tz: "Asia/Kolkata", short: "Pune" },
   { name: "London, UK", lat: 51.5074, lon: -0.1278, tz: "Europe/London", short: "London" },
   { name: "New York, USA", lat: 40.7128, lon: -74.0060, tz: "America/New_York", short: "New York" },
   { name: "Dubai, UAE", lat: 25.2048, lon: 55.2708, tz: "Asia/Dubai", short: "Dubai" },
@@ -19,7 +20,7 @@ export default function OnboardingModal({ onOnboardSuccess }) {
 
   // Selected place object
   const [selectedPlace, setSelectedPlace] = useState(POPULAR_PRESETS[0]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(POPULAR_PRESETS[0].name);
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -75,7 +76,7 @@ export default function OnboardingModal({ onOnboardSuccess }) {
     setCustomLat(city.lat);
     setCustomLon(city.lon);
     setCustomTz(city.tz);
-    setSearchQuery("");
+    setSearchQuery(city.name);
     setShowDropdown(false);
   };
 
@@ -246,12 +247,23 @@ export default function OnboardingModal({ onOnboardSuccess }) {
                   setShowDropdown(true);
                 }}
                 onFocus={() => setShowDropdown(true)}
-                placeholder="Search any city or country (e.g. Pune, Patna, London, Dubai...)"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#1D1438] border border-[#3A275E] text-white placeholder-[#786994] focus:outline-none focus:border-[#B21E68] text-sm"
+                placeholder="Search any place (e.g. Jammu, Srinagar, Pune, London...)"
+                className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#1D1438] border border-[#3A275E] text-white placeholder-[#786994] focus:outline-none focus:border-[#B21E68] text-sm"
               />
-              {isSearching && (
+              {isSearching ? (
                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-2 border-[#B21E68] border-t-transparent rounded-full animate-spin" />
-              )}
+              ) : searchQuery ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSearchResults([]);
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 text-[#786994] hover:text-white rounded"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              ) : null}
             </div>
 
             {/* Autocomplete Dropdown */}

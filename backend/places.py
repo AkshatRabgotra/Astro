@@ -1,8 +1,29 @@
-"""Comprehensive database of major Indian and global cities with exact coordinates and timezones."""
+"""Comprehensive global place search and geocoding engine.
 
-from typing import Dict, List
+Combines high-speed curated in-memory database with Open-Meteo & OpenStreetMap
+Nominatim live global geocoding to cover every city, district, town, and village on Earth.
+"""
 
-CITIES_DB: List[Dict[str, any]] = [
+import logging
+from typing import Any, Dict, List
+import httpx
+
+logger = logging.getLogger("melooha.places")
+
+# High-priority curated cities for instant zero-latency responses
+CITIES_DB: List[Dict[str, Any]] = [
+    # Jammu & Kashmir / Ladakh
+    {"name": "Jammu, Jammu and Kashmir, India", "lat": 32.7353, "lon": 74.8617, "tz": "Asia/Kolkata"},
+    {"name": "Srinagar, Jammu and Kashmir, India", "lat": 34.0837, "lon": 74.7973, "tz": "Asia/Kolkata"},
+    {"name": "Udhampur, Jammu and Kashmir, India", "lat": 32.9250, "lon": 75.1417, "tz": "Asia/Kolkata"},
+    {"name": "Kathua, Jammu and Kashmir, India", "lat": 32.3694, "lon": 75.5254, "tz": "Asia/Kolkata"},
+    {"name": "Anantnag, Jammu and Kashmir, India", "lat": 33.7307, "lon": 75.1542, "tz": "Asia/Kolkata"},
+    {"name": "Baramulla, Jammu and Kashmir, India", "lat": 34.2000, "lon": 74.3500, "tz": "Asia/Kolkata"},
+    {"name": "Katra, Jammu and Kashmir, India", "lat": 32.9922, "lon": 74.9317, "tz": "Asia/Kolkata"},
+    {"name": "Leh, Ladakh, India", "lat": 34.1526, "lon": 77.5771, "tz": "Asia/Kolkata"},
+    {"name": "Rajouri, Jammu and Kashmir, India", "lat": 33.3812, "lon": 74.3142, "tz": "Asia/Kolkata"},
+    {"name": "Poonch, Jammu and Kashmir, India", "lat": 33.7667, "lon": 74.1000, "tz": "Asia/Kolkata"},
+
     # Top Indian Metros & State Capitals
     {"name": "Mumbai, Maharashtra, India", "lat": 19.0760, "lon": 72.8777, "tz": "Asia/Kolkata"},
     {"name": "New Delhi, Delhi, India", "lat": 28.6139, "lon": 77.2090, "tz": "Asia/Kolkata"},
@@ -31,7 +52,6 @@ CITIES_DB: List[Dict[str, any]] = [
     {"name": "Meerut, Uttar Pradesh, India", "lat": 28.9845, "lon": 77.7064, "tz": "Asia/Kolkata"},
     {"name": "Rajkot, Gujarat, India", "lat": 22.3039, "lon": 70.8022, "tz": "Asia/Kolkata"},
     {"name": "Varanasi, Uttar Pradesh, India", "lat": 25.3176, "lon": 82.9739, "tz": "Asia/Kolkata"},
-    {"name": "Srinagar, Jammu and Kashmir, India", "lat": 34.0837, "lon": 74.7973, "tz": "Asia/Kolkata"},
     {"name": "Aurangabad, Maharashtra, India", "lat": 19.8762, "lon": 75.3433, "tz": "Asia/Kolkata"},
     {"name": "Dhanbad, Jharkhand, India", "lat": 23.7957, "lon": 86.4304, "tz": "Asia/Kolkata"},
     {"name": "Amritsar, Punjab, India", "lat": 31.6340, "lon": 74.8723, "tz": "Asia/Kolkata"},
@@ -49,74 +69,173 @@ CITIES_DB: List[Dict[str, any]] = [
     {"name": "Kota, Rajasthan, India", "lat": 25.2138, "lon": 75.8648, "tz": "Asia/Kolkata"},
     {"name": "Chandigarh, India", "lat": 30.7333, "lon": 76.7794, "tz": "Asia/Kolkata"},
     {"name": "Guwahati, Assam, India", "lat": 26.1445, "lon": 91.7362, "tz": "Asia/Kolkata"},
-    {"name": "Solapur, Maharashtra, India", "lat": 17.6599, "lon": 75.9064, "tz": "Asia/Kolkata"},
-    {"name": "Hubli-Dharwad, Karnataka, India", "lat": 15.3647, "lon": 75.1240, "tz": "Asia/Kolkata"},
-    {"name": "Bareilly, Uttar Pradesh, India", "lat": 28.3670, "lon": 79.4304, "tz": "Asia/Kolkata"},
-    {"name": "Moradabad, Uttar Pradesh, India", "lat": 28.8351, "lon": 78.7747, "tz": "Asia/Kolkata"},
-    {"name": "Mysuru (Mysore), Karnataka, India", "lat": 12.2958, "lon": 76.6394, "tz": "Asia/Kolkata"},
-    {"name": "Tiruchirappalli, Tamil Nadu, India", "lat": 10.7905, "lon": 78.7047, "tz": "Asia/Kolkata"},
-    {"name": "Aligarh, Uttar Pradesh, India", "lat": 27.8974, "lon": 78.0880, "tz": "Asia/Kolkata"},
-    {"name": "Jalandhar, Punjab, India", "lat": 31.3260, "lon": 75.5762, "tz": "Asia/Kolkata"},
-    {"name": "Bhubaneswar, Odisha, India", "lat": 20.2961, "lon": 85.8245, "tz": "Asia/Kolkata"},
-    {"name": "Salem, Tamil Nadu, India", "lat": 11.6643, "lon": 78.1460, "tz": "Asia/Kolkata"},
-    {"name": "Mira-Bhayandar, Maharashtra, India", "lat": 19.2812, "lon": 72.8561, "tz": "Asia/Kolkata"},
-    {"name": "Warangal, Telangana, India", "lat": 17.9689, "lon": 79.5941, "tz": "Asia/Kolkata"},
-    {"name": "Thiruvananthapuram, Kerala, India", "lat": 8.5241, "lon": 76.9366, "tz": "Asia/Kolkata"},
-    {"name": "Kochi, Kerala, India", "lat": 9.9312, "lon": 76.2673, "tz": "Asia/Kolkata"},
-    {"name": "Kozhikode (Calicut), Kerala, India", "lat": 11.2588, "lon": 75.7804, "tz": "Asia/Kolkata"},
-    {"name": "Dehradun, Uttarakhand, India", "lat": 30.3165, "lon": 78.0322, "tz": "Asia/Kolkata"},
-    {"name": "Shimla, Himachal Pradesh, India", "lat": 31.1048, "lon": 77.1734, "tz": "Asia/Kolkata"},
-    {"name": "Haridwar, Uttarakhand, India", "lat": 29.9457, "lon": 78.1642, "tz": "Asia/Kolkata"},
-    {"name": "Ujjain, Madhya Pradesh, India", "lat": 23.1765, "lon": 75.7885, "tz": "Asia/Kolkata"},
-    {"name": "Ayodhya, Uttar Pradesh, India", "lat": 26.7922, "lon": 82.1998, "tz": "Asia/Kolkata"},
 
-    # Major International Cities
-    {"name": "Dubai, United Arab Emirates", "lat": 25.2048, "lon": 55.2708, "tz": "Asia/Dubai"},
-    {"name": "Abu Dhabi, United Arab Emirates", "lat": 24.4539, "lon": 54.3773, "tz": "Asia/Dubai"},
-    {"name": "Singapore", "lat": 1.3521, "lon": 103.8198, "tz": "Asia/Singapore"},
-    {"name": "London, United Kingdom", "lat": 51.5074, "lon": -0.1278, "tz": "Europe/London"},
+    # Global Centers
     {"name": "New York, USA", "lat": 40.7128, "lon": -74.0060, "tz": "America/New_York"},
-    {"name": "San Francisco, USA", "lat": 37.7749, "lon": -122.4194, "tz": "America/Los_Angeles"},
-    {"name": "Los Angeles, USA", "lat": 34.0522, "lon": -118.2437, "tz": "America/Los_Angeles"},
-    {"name": "Chicago, USA", "lat": 41.8781, "lon": -87.6298, "tz": "America/Chicago"},
-    {"name": "Dallas / Houston, Texas, USA", "lat": 29.7604, "lon": -95.3698, "tz": "America/Chicago"},
-    {"name": "Seattle, USA", "lat": 47.6062, "lon": -122.3321, "tz": "America/Los_Angeles"},
+    {"name": "London, UK", "lat": 51.5074, "lon": -0.1278, "tz": "Europe/London"},
+    {"name": "Dubai, UAE", "lat": 25.2048, "lon": 55.2708, "tz": "Asia/Dubai"},
+    {"name": "Singapore", "lat": 1.3521, "lon": 103.8198, "tz": "Asia/Singapore"},
     {"name": "Toronto, Canada", "lat": 43.6532, "lon": -79.3832, "tz": "America/Toronto"},
-    {"name": "Vancouver, Canada", "lat": 49.2827, "lon": -123.1207, "tz": "America/Vancouver"},
     {"name": "Sydney, Australia", "lat": -33.8688, "lon": 151.2093, "tz": "Australia/Sydney"},
-    {"name": "Melbourne, Australia", "lat": -37.8136, "lon": 144.9631, "tz": "Australia/Melbourne"},
     {"name": "Tokyo, Japan", "lat": 35.6762, "lon": 139.6503, "tz": "Asia/Tokyo"},
-    {"name": "Kuala Lumpur, Malaysia", "lat": 3.1390, "lon": 101.6869, "tz": "Asia/Kuala_Lumpur"},
-    {"name": "Bangkok, Thailand", "lat": 13.7563, "lon": 100.5018, "tz": "Asia/Bangkok"},
-    {"name": "Kathmandu, Nepal", "lat": 27.7172, "lon": 85.3240, "tz": "Asia/Kathmandu"},
-    {"name": "Colombo, Sri Lanka", "lat": 6.9271, "lon": 79.8612, "tz": "Asia/Colombo"},
-    {"name": "Dhaka, Bangladesh", "lat": 23.8103, "lon": 90.4125, "tz": "Asia/Dhaka"},
+    {"name": "San Francisco, USA", "lat": 37.7749, "lon": -122.4194, "tz": "America/Los_Angeles"},
     {"name": "Paris, France", "lat": 48.8566, "lon": 2.3522, "tz": "Europe/Paris"},
     {"name": "Berlin, Germany", "lat": 52.5200, "lon": 13.4050, "tz": "Europe/Berlin"},
-    {"name": "Amsterdam, Netherlands", "lat": 52.3676, "lon": 4.9041, "tz": "Europe/Amsterdam"},
 ]
 
 
-def search_cities(query: str, limit: int = 10) -> List[Dict[str, any]]:
-    """Search cities matching query prefix or substring."""
-    q = query.strip().lower()
+STATE_ABBREVIATIONS = {
+    "jk": "jammu and kashmir",
+    "j&k": "jammu and kashmir",
+    "up": "uttar pradesh",
+    "u.p.": "uttar pradesh",
+    "mp": "madhya pradesh",
+    "m.p.": "madhya pradesh",
+    "mh": "maharashtra",
+    "tn": "tamil nadu",
+    "wb": "west bengal",
+    "ka": "karnataka",
+    "gj": "gujarat",
+    "rj": "rajasthan",
+    "pb": "punjab",
+    "hr": "haryana",
+    "dl": "delhi",
+    "ncr": "delhi",
+    "uk": "uttarakhand",
+    "hp": "himachal pradesh",
+    "ny": "new york",
+    "ca": "california",
+}
+
+
+def _normalize_query(query: str) -> str:
+    """Expand common state/regional abbreviations like 'jk', 'up', 'mh'."""
+    q_clean = query.strip().lower().replace(",", " ")
+    words = q_clean.split()
+    expanded = []
+    for w in words:
+        if w in STATE_ABBREVIATIONS:
+            expanded.append(STATE_ABBREVIATIONS[w])
+        else:
+            expanded.append(w)
+    return " ".join(expanded)
+
+
+def _search_open_meteo(query: str, limit: int = 8) -> List[Dict[str, Any]]:
+    """Query Open-Meteo Global Geocoding API (free, fast, includes IANA timezone)."""
+    clean_q = query.strip().split(",")[0].strip()
+    if not clean_q:
+        return []
+
+    url = f"https://geocoding-api.open-meteo.com/v1/search?name={clean_q}&count={limit}&language=en&format=json"
+    results: List[Dict[str, Any]] = []
+    try:
+        with httpx.Client(timeout=2.5) as client:
+            resp = client.get(url)
+            if resp.status_code == 200:
+                data = resp.json()
+                for item in data.get("results", []):
+                    name = item.get("name", "")
+                    admin = item.get("admin1") or ""
+                    country = item.get("country") or ""
+                    parts = [name]
+                    if admin and admin.lower() != name.lower():
+                        parts.append(admin)
+                    if country:
+                        parts.append(country)
+
+                    display_name = ", ".join(parts)
+                    tz = item.get("timezone") or ("Asia/Kolkata" if country == "India" else "UTC")
+                    results.append({
+                        "name": display_name,
+                        "lat": round(float(item["latitude"]), 4),
+                        "lon": round(float(item["longitude"]), 4),
+                        "tz": tz,
+                    })
+    except Exception as e:
+        logger.debug(f"Open-Meteo geocoding non-blocking error: {e}")
+
+    return results
+
+
+def _search_nominatim(query: str, limit: int = 5) -> List[Dict[str, Any]]:
+    """Query OpenStreetMap Nominatim for complex or compound queries like 'jammu jk'."""
+    q = query.strip()
     if not q:
+        return []
+
+    url = f"https://nominatim.openstreetmap.org/search?q={q}&format=json&addressdetails=1&limit={limit}"
+    results: List[Dict[str, Any]] = []
+    headers = {"User-Agent": "MeloohaAstrologyApp/1.0 (geocoding@melooha.ai)"}
+    try:
+        with httpx.Client(timeout=2.5, headers=headers) as client:
+            resp = client.get(url)
+            if resp.status_code == 200:
+                data = resp.json()
+                for item in data:
+                    raw_name = item.get("display_name", "")
+                    parts = [p.strip() for p in raw_name.split(",") if not p.strip().isdigit()]
+                    short_name = ", ".join(parts[:3]) if len(parts) >= 3 else raw_name
+                    is_india = "India" in raw_name
+                    results.append({
+                        "name": short_name,
+                        "lat": round(float(item["lat"]), 4),
+                        "lon": round(float(item["lon"]), 4),
+                        "tz": "Asia/Kolkata" if is_india else "UTC",
+                    })
+    except Exception as e:
+        logger.debug(f"Nominatim geocoding non-blocking error: {e}")
+
+    return results
+
+
+def search_cities(query: str, limit: int = 15) -> List[Dict[str, Any]]:
+    """
+    Search cities across:
+    1. Fast in-memory curated cache with regional abbreviation expansion ('jk', 'up', 'mh').
+    2. Open-Meteo global geocoding API for worldwide towns/cities.
+    3. OpenStreetMap Nominatim for compound queries.
+    """
+    q_raw = query.strip()
+    if not q_raw:
         return CITIES_DB[:limit]
 
-    matches = []
-    # 1. Exact / prefix matches
+    normalized_q = _normalize_query(q_raw)
+    q_tokens = [tok.strip() for tok in normalized_q.split() if len(tok.strip()) > 1]
+    matches: List[Dict[str, Any]] = []
+
+    # 1. Multi-token match in curated database (e.g. 'jammu jk' -> 'Jammu, Jammu and Kashmir, India')
     for city in CITIES_DB:
-        name_lower = city["name"].lower()
-        if name_lower.startswith(q) or any(part.strip().startswith(q) for part in name_lower.split(",")):
+        c_lower = city["name"].lower()
+        if all(tok in c_lower for tok in q_tokens):
             matches.append(city)
             if len(matches) >= limit:
                 return matches
 
-    # 2. Substring matches
+    # Prefix match on city name parts
+    q_first = q_raw.lower()
     for city in CITIES_DB:
-        if city not in matches and q in city["name"].lower():
+        if city not in matches and any(part.strip().startswith(q_first) for part in city["name"].lower().split(",")):
             matches.append(city)
             if len(matches) >= limit:
                 return matches
+
+    # 2. Query Live Open-Meteo Global Geocoder (covers every town/village worldwide)
+    if len(matches) < limit and len(q_raw) >= 2:
+        om_results = _search_open_meteo(q_raw, limit=limit - len(matches))
+        for res in om_results:
+            if not any(abs(res["lat"] - m["lat"]) < 0.05 and abs(res["lon"] - m["lon"]) < 0.05 for m in matches):
+                matches.append(res)
+                if len(matches) >= limit:
+                    return matches
+
+    # 3. Query OpenStreetMap Nominatim for complex search phrases
+    if len(matches) < limit and len(q_raw) >= 3:
+        nom_results = _search_nominatim(q_raw, limit=limit - len(matches))
+        for res in nom_results:
+            if not any(abs(res["lat"] - m["lat"]) < 0.05 and abs(res["lon"] - m["lon"]) < 0.05 for m in matches):
+                matches.append(res)
+                if len(matches) >= limit:
+                    return matches
 
     return matches
