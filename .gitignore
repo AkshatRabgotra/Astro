@@ -15,6 +15,11 @@ venv/
 env/
 ENV/
 
+# Databases
+*.db
+*.sqlite3
+*.sqlite
+
 # OS files
 .DS_Store
 Thumbs.db
