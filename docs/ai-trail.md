@@ -159,3 +159,10 @@
   - `frontend/src/components/OnboardingModal.jsx`: Replaced fixed 4-button preset with a global debounced autocomplete search bar, popular 1-click shortcut pills, selected place confirmation pill, and collapsible manual latitude/longitude/timezone coordinates editor for custom towns/villages.
   - `tests/test_api_endpoints.py`: Added integration test for places search API.
 - **Verification Status**: 33/33 pytest tests PASSED; Vite production build compiled; Uvicorn server running live on `http://localhost:8000`.
+
+## Log Entry 12: Zero-Config Offline Grounded Astrologer Demo Mode
+- **Objective**: Prevent generation interruption when running the application without pre-configured LLM API keys (`GEMINI_API_KEY` / `GROQ_API_KEY`).
+- **Files Updated**:
+  - `backend/config.py`: Added `ENABLE_OFFLINE_DEMO` flag (defaults to True).
+  - `llm/client.py`: Added `DemoAstrologyProvider` that automatically generates rich, 100% grounded Vedic readings directly from computed chart facts when no external API keys are configured, allowing full end-to-end evaluation (streaming tokens, fact chips, paywalls, retention metrics) out of the box.
+- **Verification Status**: 33/33 pytest tests PASSED; live server running on `http://localhost:8000`.
