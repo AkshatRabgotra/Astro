@@ -4,6 +4,7 @@ from datetime import date
 from typing import Any, Dict, List, Optional
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -16,6 +17,7 @@ from backend.ledger import (
 )
 from backend.models import Answer, BalanceLedger, BirthProfile, Chart, Event, Question, User
 from backend.service import OnboardingService, QuestionService
+from backend.streaming import stream_question_answer
 
 # Initialize database schema
 Base.metadata.create_all(bind=engine)
@@ -174,6 +176,27 @@ def ask_question(req: AskQuestionRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=402, detail=str(e))
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/api/questions/{question_id}/stream")
+def stream_answer(question_id: str, db: Session = Depends(get_db)):
+    """
+    Stream answer generation over SSE with token-by-token emission,
+    final verified grounding event, or replace event if safe fallback is triggered.
+    """
+    q = db.query(Question).filter(Question.id == question_id).first()
+    if not q:
+        raise HTTPException(status_code=404, detail="Question not found")
+
+    return StreamingResponse(
+        stream_question_answer(db=db, question_id=question_id),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @app.get("/api/user/{user_id}/history")

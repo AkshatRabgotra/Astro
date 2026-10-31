@@ -93,3 +93,17 @@
   - `tests/test_model_providers.py`: 5 unit tests covering primary success, mock Gemini failure fallback to Groq, circuit breaker state machine, tripped-circuit call skipping, and dual-provider failure handling.
 - **Test Status**: All 28 tests PASSED in 3.11s.
 - **Commit**: Completed Phase 4.
+
+## Log Entry 7: Phase 5 — Streaming SSE, Automated CI & One-Command Setup
+- **Objective**: Implement end-to-end Server-Sent Events (SSE) streaming endpoint, CI workflow, container configuration, and local startup automation.
+- **Files Created / Updated**:
+  - `backend/streaming.py`: SSE event generator emitting `start`, `token`, `verified` (with structured fact chips), `replace` (with grounded safe template), and `error` (with automatic credit refund).
+  - `backend/main.py`: Connected `GET /api/questions/{question_id}/stream` with streaming HTTP headers (`Cache-Control: no-cache`, `X-Accel-Buffering: no`).
+  - `.github/workflows/ci.yml`: GitHub Actions workflow testing on Python 3.12 across all pushes and pull requests.
+  - `Dockerfile`: Multi-stage slim container packaging Swiss Ephemeris and FastAPI.
+  - `docker-compose.yml`: Local multi-container orchestration.
+  - `Makefile`: Commands for `make dev`, `make test`, `docker-up`, `docker-down`.
+  - `requirements.txt` & `.env.example`: Explicit pinned dependencies and environment documentation.
+  - `tests/test_streaming_sse.py`: 3 tests covering verified SSE streaming, replace event on violation, and automatic refund on failure.
+- **Test Status**: All 31 tests PASSED in 4.15s.
+- **Commit**: Completed Phase 5.
