@@ -80,3 +80,16 @@
   - If invalid: emits `event: replace` with corrected safe fallback text.
 - **Test Status**: All 23 tests PASSED in 2.83s.
 - **Commit**: Completed Phase 3.
+
+## Log Entry 6: Phase 4 — Reliable Model Calls (Gemini -> Groq Fallback)
+- **Objective**: Implement multi-provider failover chain with Gemini (primary) and Groq (fallback), circuit breakers, timeouts, per-provider error telemetry, and user-friendly error wrapping.
+- **Files Created / Updated**:
+  - `llm/circuit_breaker.py`: `CircuitBreaker` with states `CLOSED`, `OPEN`, `HALF_OPEN`, configurable failure threshold and recovery cooldown. Fast-fails requests to prevent cascading timeouts.
+  - `llm/client.py`:
+    - `GeminiProvider`: Direct REST interface to Google Gemini API with timeout control.
+    - `GroqProvider`: Direct REST interface to Groq OpenAI-compatible API.
+    - `ModelOrchestrator`: Coordinates primary -> fallback failover, circuit tripping, and structured logging.
+    - `AllProvidersFailedError`: Friendly error masking internal traces with encouraging retry copy.
+  - `tests/test_model_providers.py`: 5 unit tests covering primary success, mock Gemini failure fallback to Groq, circuit breaker state machine, tripped-circuit call skipping, and dual-provider failure handling.
+- **Test Status**: All 28 tests PASSED in 3.11s.
+- **Commit**: Completed Phase 4.
