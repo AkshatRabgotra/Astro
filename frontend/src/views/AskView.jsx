@@ -12,6 +12,7 @@ export default function AskView({
   onQuestionCompleted,
 }) {
   const [questionText, setQuestionText] = useState(initialQuestion || "");
+  const [lastQuestion, setLastQuestion] = useState(initialQuestion || "");
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamStatus, setStreamStatus] = useState("");
   const [messages, setMessages] = useState([]);
@@ -31,12 +32,15 @@ export default function AskView({
   useEffect(() => {
     if (initialQuestion && initialQuestion.trim()) {
       setQuestionText(initialQuestion);
+      setLastQuestion(initialQuestion);
     }
   }, [initialQuestion]);
 
   const handleAsk = async (textToSubmit) => {
-    const qText = (textToSubmit || questionText).trim();
+    const qText = (textToSubmit || questionText || lastQuestion).trim();
     if (!qText || isStreaming) return;
+
+    setLastQuestion(qText);
 
     if (balance <= 0) {
       onOpenPaywall();
@@ -45,15 +49,17 @@ export default function AskView({
 
     setErrorMessage(null);
     setIsStreaming(true);
-    setStreamStatus("Deducting question balance...");
+    setStreamStatus("Consulting planetary positions...");
     setCurrentStreamAnswer("");
 
-    // Add user question message to thread
+    // Add user question message to thread (avoid duplicate on retry)
     const userMsgId = `user_${Date.now()}`;
-    setMessages((prev) => [
-      ...prev,
-      { id: userMsgId, role: "user", text: qText },
-    ]);
+    setMessages((prev) => {
+      if (prev.length > 0 && prev[prev.length - 1].role === "user" && prev[prev.length - 1].text === qText) {
+        return prev;
+      }
+      return [...prev, { id: userMsgId, role: "user", text: qText }];
+    });
     setQuestionText("");
 
     const idempotencyKey = `q_${user.id}_${Date.now()}`;
@@ -266,11 +272,12 @@ export default function AskView({
             </div>
             <p className="leading-relaxed">{errorMessage}</p>
             <button
-              onClick={() => handleAsk()}
-              className="px-3.5 py-1.5 rounded-xl bg-rose-600/30 border border-rose-400 text-white font-medium flex items-center gap-1.5 hover:bg-rose-600/50 text-xs"
+              onClick={() => handleAsk(lastQuestion)}
+              disabled={isStreaming}
+              className="px-3.5 py-1.5 rounded-xl bg-rose-600/30 border border-rose-400 text-white font-medium flex items-center gap-1.5 hover:bg-rose-600/50 text-xs active:scale-95 disabled:opacity-50"
             >
-              <RefreshCw className="w-3 h-3" />
-              <span>Retry Question</span>
+              <RefreshCw className={`w-3.5 h-3.5 ${isStreaming ? "animate-spin" : ""}`} />
+              <span>{isStreaming ? "Connecting..." : "Retry Question"}</span>
             </button>
           </div>
         )}

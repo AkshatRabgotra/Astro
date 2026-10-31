@@ -33,7 +33,7 @@ class LLMResponse(BaseModel):
 
 
 class GeminiProvider:
-    def __init__(self, api_key: Optional[str] = None, model: str = "gemini-3.5-flash-lite", timeout_sec: float = 16.0):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gemini-3.5-flash-lite", timeout_sec: float = 25.0):
         self.api_key = api_key or settings.GEMINI_API_KEY
         self.model = model
         self.timeout = timeout_sec
@@ -53,7 +53,12 @@ class GeminiProvider:
         }
 
         with httpx.Client(timeout=self.timeout) as client:
-            resp = client.post(url, json=payload)
+            try:
+                resp = client.post(url, json=payload)
+            except (httpx.TimeoutException, httpx.ConnectError):
+                # Transient network timeout retry
+                resp = client.post(url, json=payload)
+
             if resp.status_code != 200:
                 # If flash-lite fails, fallback to flash
                 if self.model == "gemini-3.5-flash-lite":
@@ -312,6 +317,17 @@ class ModelOrchestrator:
             logger.error("Groq circuit breaker is OPEN.")
 
         # Both failed
+        if not is_mock and getattr(settings, "ENABLE_OFFLINE_DEMO", True):
+            logger.info("External providers failed at runtime. Serving reading via Grounded Vedic Engine fallback.")
+            demo = DemoAstrologyProvider()
+            raw_json = demo.generate(prompt=prompt, system_prompt=system_prompt)
+            return LLMResponse(
+                content=raw_json,
+                provider="vedic_engine (safe fallback)",
+                duration_ms=10.0,
+                is_fallback=True,
+            )
+
         raise AllProvidersFailedError(
             message="Both Gemini and Groq model providers failed.",
             provider_errors=provider_errors,
