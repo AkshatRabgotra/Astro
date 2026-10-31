@@ -65,3 +65,18 @@
   - `tests/test_api_endpoints.py`: End-to-end integration tests verifying HTTP endpoints, 402 status codes, top-ups, and metrics.
 - **Test Status**: All 15 tests PASSED in 2.46s.
 - **Commit**: Completed Phase 2.
+
+## Log Entry 5: Phase 3 — Grounded Answers Enforced in Code
+- **Objective**: Implement strict prompt building, schema enforcement, algorithmic grounding validator (Rule 1: citation existence & availability; Rule 2: regex + dictionary checks for planets, signs, houses, dashas, dates; Rule 3: retry and fallback generator), and streaming trade-off design.
+- **Files Created / Updated**:
+  - `llm/prompts.py`: System prompt prohibiting hallucinations and prompt builder incorporating `ChartFacts` context.
+  - `llm/validator.py`: `AnswerValidator` with regex entity extraction and cross-referencing against calculated chart ground truth. Catches invalid fact IDs, unavailable citations, hallucinated signs, hallucinated houses, and false dasha claims.
+  - `llm/fallback.py`: Deterministic, domain-aware safe templated generator built exclusively from verified facts with zero hallucination risk.
+  - `tests/test_grounding_validator.py`: 8 unit tests covering all violation types (non-existent IDs, unavailable citations, sign hallucination, house hallucination, dasha hallucination, unknown time violations, and fallback validity).
+- **Streaming Trade-off Documented**:
+  - Tokens stream over SSE for instant user responsiveness (<500ms TTFT).
+  - Validation occurs upon complete message reception.
+  - If valid: emits `event: verified` with fact evidence chips.
+  - If invalid: emits `event: replace` with corrected safe fallback text.
+- **Test Status**: All 23 tests PASSED in 2.83s.
+- **Commit**: Completed Phase 3.
