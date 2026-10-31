@@ -126,3 +126,17 @@
   - `backend/main.py`: Static mount serving `frontend/dist` for single-command full-stack execution.
 - **Build Status**: `vite build` completed cleanly; 31 pytest tests passing in 3.71s.
 - **Commit**: Completed Phase 6.
+
+## Log Entry 9: Phase 7 — Stand-Out Extras (Evaluation Harness & Multilingual Hindi)
+- **Objective**: Implement the two challenge extras: (1) 30-question automated evaluation harness with score report and CI subset test; (2) End-to-end Hindi multilingual support across entities, grounding validation, and frontend UI.
+- **Files Created / Updated**:
+  - `evals/dataset.json`: 30 curated questions across career, relationships, timing, and edge cases (including unknown birth time probes, non-fatalistic ethics tests, and Hindi questions).
+  - `evals/runner.py`: Evaluation runner executing code-level grounding verification, citation integrity checks, and scoring rubric generating `docs/eval_report.md`.
+  - `docs/eval_report.md`: Markdown evaluation report recording **100.0% grounding pass rate** across all 30 questions.
+  - `tests/test_eval_subset.py`: CI integration test executing the evaluation harness.
+  - `chart/multilingual.py`: English <-> Hindi (Devanagari & transliterated) mapping for Grahas (Surya, Chandra, Mangal, etc.), Rashis (Mesha, Vrishabha, etc.), and Bhavas.
+  - `llm/validator.py`: Updated to natively recognize Devanagari entities while enforcing universal fact ID grounding.
+  - `frontend/src/i18n.js`: Bilingual localization dictionary (English ⇄ हिन्दी).
+  - `frontend/src/components/Header.jsx`: One-tap language toggle button.
+- **Test Status**: All 32 tests PASSED in 3.95s; frontend build compiled cleanly.
+- **Commit**: Completed Phase 7.

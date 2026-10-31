@@ -1,8 +1,13 @@
 import React from "react";
-import { Sparkles, Plus, CircleDot, ChevronRight, User } from "lucide-react";
+import { Sparkles, Plus, CircleDot, ChevronRight, User, Languages } from "lucide-react";
+import { t } from "../i18n";
 
-export default function Header({ user, balance, onOpenPaywall, onOpenOnboarding }) {
+export default function Header({ user, balance, lang, setLang, onOpenPaywall, onOpenOnboarding }) {
   const isZero = balance <= 0;
+
+  const toggleLang = () => {
+    setLang(lang === "en" ? "hi" : "en");
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-[#080511]/90 backdrop-blur-md border-b border-[#23173D] px-4 py-3">
@@ -20,8 +25,19 @@ export default function Header({ user, balance, onOpenPaywall, onOpenOnboarding 
           </span>
         </button>
 
-        {/* Balance Badge */}
+        {/* Right side: Language Toggle + Balance Badge */}
         <div className="flex items-center gap-2">
+          {/* Language Toggle */}
+          <button
+            onClick={toggleLang}
+            className="px-2.5 py-1.5 rounded-full bg-[#18112C] border border-[#352554] hover:border-[#B21E68] text-xs font-semibold text-[#F4B8DC] transition-all flex items-center gap-1"
+            title="Switch Language"
+          >
+            <Languages className="w-3.5 h-3.5 text-[#E5A93C]" />
+            <span>{lang === "en" ? "हिन्दी" : "EN"}</span>
+          </button>
+
+          {/* Balance Badge */}
           <button
             onClick={onOpenPaywall}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all ${
@@ -32,10 +48,10 @@ export default function Header({ user, balance, onOpenPaywall, onOpenOnboarding 
           >
             <CircleDot className={`w-3.5 h-3.5 ${isZero ? "text-[#E5A93C] animate-pulse" : "text-[#B21E68]"}`} />
             <span>
-              {balance} {balance === 1 ? "Question" : "Questions"} left
+              {balance} {balance === 1 ? t("questionLeft", lang) : t("questionsLeft", lang)}
             </span>
             <span className="text-[#F4B8DC] text-[11px] font-semibold ml-1 flex items-center">
-              {isZero ? "Add +" : "Buy >"}
+              {isZero ? t("addFree", lang) : t("buyMore", lang) + " >"}
             </span>
           </button>
         </div>

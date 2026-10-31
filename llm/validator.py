@@ -4,6 +4,13 @@ import json
 import re
 from typing import Any, Dict, List, Optional, Set, Tuple
 from chart.models import ChartFact, ChartFacts
+from chart.multilingual import (
+    HINDI_HOUSE_WORDS,
+    HINDI_TO_PLANET,
+    HINDI_TO_SIGN,
+    PLANET_I18N,
+    SIGN_I18N,
+)
 
 # Canonical dictionary of astrological entities
 PLANET_NAMES = {
@@ -156,6 +163,8 @@ class AnswerValidator:
                 r"\b(\d{1,2})(?:st|nd|rd|th)?\s+house\b",
                 r"\bhouse\s+(\d{1,2})\b",
                 r"\bbhava?\s+(\d{1,2})\b",
+                r"(\d{1,2})\s*वें?\s*भाव",
+                r"(?:प्रथम|द्वितीय|तृतीय|चतुर्थ|पंचम|षष्ठ|सप्तम|अष्टम|नवम|दशम|एकादश|द्वादश)\s*भाव",
             ]
             for pat in house_patterns:
                 match = re.search(pat, answer_text, re.IGNORECASE)
@@ -165,11 +174,13 @@ class AnswerValidator:
                     )
                     break
 
-            # Ascendant / Lagna claim check
-            if re.search(r"\b(?:lagna|ascendant)\s+(?:in|is)\s+([A-Za-z]+)\b", answer_text, re.IGNORECASE):
+            # Ascendant / Lagna claim check (only violates if an actual zodiac sign is claimed)
+            sign_names_pattern = "|".join(list(SIGN_NAMES.keys()) + list(HINDI_TO_SIGN.keys()))
+            if re.search(rf"\b(?:lagna|ascendant|लग्न)\s+(?:in|is|में|का)?\s*({sign_names_pattern})\b", answer_text, re.IGNORECASE):
                 violations.append("Unknown birth time violation: Answer mentions an Ascendant/Lagna, which is unavailable.")
 
-        # Check Planet-Sign associations in text: e.g. "Saturn in Aries", "Sun in Leo", "Mangal in Vrishabha"
+        # Check Planet-Sign associations in text (English and Hindi Devanagari)
+        # 1. English / Transliterated
         for p_syn, canonical_p in PLANET_NAMES.items():
             pattern = rf"\b{p_syn}\b(?:\s+(?:is\s+)?in\s+|\s+is\s+placed\s+in\s+)([A-Za-z]+)"
             matches = re.finditer(pattern, answer_text, re.IGNORECASE)
@@ -182,6 +193,22 @@ class AnswerValidator:
                         violations.append(
                             f"Hallucinated placement: Claims '{canonical_p} in {canonical_sign}', but chart has '{canonical_p} in {expected_sign}'."
                         )
+
+        # 2. Hindi Devanagari: e.g. "मंगल मेष राशि में" or "शनि कन्या में"
+        for hi_p, canonical_p in HINDI_TO_PLANET.items():
+            if any('\u0900' <= c <= '\u097F' for c in hi_p):
+                # Devanagari planet regex
+                pattern = rf"{hi_p}\s+([^\s]+)\s*(?:राशि)?\s*में"
+                matches = re.finditer(pattern, answer_text)
+                for m in matches:
+                    hi_sign_word = m.group(1).strip()
+                    if hi_sign_word in HINDI_TO_SIGN:
+                        canonical_sign = HINDI_TO_SIGN[hi_sign_word]
+                        expected_sign = actual_planet_signs.get(canonical_p)
+                        if expected_sign and canonical_sign != expected_sign:
+                            violations.append(
+                                f"Hindi Hallucinated placement: Claims '{hi_p} in {canonical_sign}', but chart has '{canonical_p} in {expected_sign}'."
+                            )
 
         # Check Planet-House associations in text: e.g. "Saturn in House 7", "Mars in the 4th house"
         if chart_facts.time_known:

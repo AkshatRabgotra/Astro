@@ -21,6 +21,7 @@ export default function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [selectedQuestionPrompt, setSelectedQuestionPrompt] = useState("");
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [lang, setLang] = useState("en");
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -94,6 +95,8 @@ export default function App() {
       <Header
         user={user}
         balance={balance}
+        lang={lang}
+        setLang={setLang}
         onOpenPaywall={() => setShowPaywall(true)}
         onOpenOnboarding={() => setShowOnboarding(true)}
       />
