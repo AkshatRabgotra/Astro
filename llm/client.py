@@ -33,7 +33,7 @@ class LLMResponse(BaseModel):
 
 
 class GeminiProvider:
-    def __init__(self, api_key: Optional[str] = None, model: str = "gemini-2.0-flash", timeout_sec: float = 12.0):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gemini-3.5-flash-lite", timeout_sec: float = 16.0):
         self.api_key = api_key or settings.GEMINI_API_KEY
         self.model = model
         self.timeout = timeout_sec
@@ -55,7 +55,12 @@ class GeminiProvider:
         with httpx.Client(timeout=self.timeout) as client:
             resp = client.post(url, json=payload)
             if resp.status_code != 200:
-                raise RuntimeError(f"Gemini API returned status {resp.status_code}: {resp.text}")
+                # If flash-lite fails, fallback to flash
+                if self.model == "gemini-3.5-flash-lite":
+                    url_fb = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key={self.api_key}"
+                    resp = client.post(url_fb, json=payload)
+                if resp.status_code != 200:
+                    raise RuntimeError(f"Gemini API returned status {resp.status_code}: {resp.text}")
 
             data = resp.json()
             candidates = data.get("candidates", [])
@@ -77,13 +82,20 @@ class GroqProvider:
         if not self.api_key:
             raise ValueError("GROQ_API_KEY is not configured")
 
-        url = "https://api.groq.com/openai/v1/chat/completions"
+        # Automatically detect xAI Grok vs Groq Cloud
+        if self.api_key.startswith("xai-"):
+            url = "https://api.x.ai/v1/chat/completions"
+            model = "grok-2-latest" if self.model == "llama-3.3-70b-versatile" else self.model
+        else:
+            url = "https://api.groq.com/openai/v1/chat/completions"
+            model = self.model
+
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
         payload = {
-            "model": self.model,
+            "model": model,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt},
