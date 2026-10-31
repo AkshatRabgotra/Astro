@@ -1,5 +1,104 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, Mic, RefreshCw, AlertCircle, ShieldCheck, Compass, CheckCircle2 } from "lucide-react";
+import { Send, Sparkles, RefreshCw, AlertCircle, ShieldCheck, Compass } from "lucide-react";
+
+/**
+ * Parses bold text (**text**) and in-text fact chips ([F01]..[F25])
+ */
+function parseInline(text) {
+  if (!text) return "";
+  const regex = /(\*\*[^*]+\*\*|\[F\d+\])/g;
+  const parts = text.split(regex);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={i} className="text-white font-semibold">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (/^\[F\d+\]$/.test(part)) {
+      return (
+        <span
+          key={i}
+          className="inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded text-[10.5px] font-mono font-bold bg-[#B21E68]/30 text-[#F4B8DC] border border-[#B21E68]/60 shadow-sm align-baseline"
+        >
+          {part}
+        </span>
+      );
+    }
+    return part;
+  });
+}
+
+/**
+ * Rich, indented markdown formatter for astrological readings
+ */
+function MarkdownContent({ text }) {
+  if (!text) return null;
+
+  const lines = text.split("\n");
+  const elements = [];
+  let currentList = [];
+
+  const flushList = () => {
+    if (currentList.length > 0) {
+      elements.push(
+        <ul key={`ul-${elements.length}`} className="space-y-2.5 my-2.5 pl-1">
+          {currentList.map((item, idx) => (
+            <li
+              key={idx}
+              className="relative pl-5 text-xs sm:text-[13px] text-[#DDD5EE] leading-relaxed before:content-['✦'] before:text-[#E5A93C] before:absolute before:left-0 before:top-0.5 before:text-[10px]"
+            >
+              {parseInline(item)}
+            </li>
+          ))}
+        </ul>
+      );
+      currentList = [];
+    }
+  };
+
+  lines.forEach((rawLine, idx) => {
+    const line = rawLine.trim();
+    if (!line) {
+      flushList();
+      return;
+    }
+
+    // Section headings (### or ##)
+    if (line.startsWith("### ") || line.startsWith("## ")) {
+      flushList();
+      const heading = line.replace(/^#{2,3}\s+/, "");
+      elements.push(
+        <h4
+          key={`h-${idx}`}
+          className="font-serif text-[13px] sm:text-sm font-bold text-[#F4B8DC] pt-3 pb-1 border-b border-[#2C1D47] flex items-center gap-2 mb-2"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#E5A93C] inline-block shrink-0" />
+          <span>{parseInline(heading)}</span>
+        </h4>
+      );
+      return;
+    }
+
+    // Bullet points (- or * or •)
+    if (/^[-*•]\s+/.test(line)) {
+      currentList.push(line.replace(/^[-*•]\s+/, ""));
+      return;
+    }
+
+    // Standard paragraph
+    flushList();
+    elements.push(
+      <p key={`p-${idx}`} className="text-xs sm:text-[13px] text-[#DDD5EE] leading-relaxed mb-2.5">
+        {parseInline(line)}
+      </p>
+    );
+  });
+
+  flushList();
+  return <div className="space-y-0.5">{elements}</div>;
+}
 
 export default function AskView({
   user,
@@ -167,7 +266,6 @@ export default function AskView({
   };
 
   const handleEvidenceClick = (fact) => {
-    // Track evidence opened event
     fetch("/api/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -182,9 +280,9 @@ export default function AskView({
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-130px)] max-w-md mx-auto px-4 pb-2">
+    <div className="flex flex-col h-[calc(100dvh-64px)] max-w-md mx-auto px-4 pb-[84px]">
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto space-y-4 pt-3 pb-4">
+      <div className="flex-1 overflow-y-auto space-y-4 pt-3 pb-3">
         {messages.length === 0 && !isStreaming && (
           <div className="text-center py-10 px-4">
             <div className="w-14 h-14 rounded-full bg-[#1A1230] border border-[#B21E68]/40 flex items-center justify-center text-[#E5A93C] mx-auto mb-3">
@@ -210,11 +308,9 @@ export default function AskView({
                 {m.text}
               </div>
             ) : (
-              <div className="max-w-[95%] p-4 rounded-2xl rounded-tl-sm bg-[#161028] border border-[#2D1F4D] text-[#E8E2F5] text-xs sm:text-sm shadow-md space-y-3">
-                {/* Answer Text */}
-                <div className="whitespace-pre-line leading-relaxed">
-                  {m.text}
-                </div>
+              <div className="max-w-[96%] p-4 sm:p-5 rounded-2xl rounded-tl-sm bg-[#161028] border border-[#2D1F4D] text-[#E8E2F5] text-xs sm:text-sm shadow-md space-y-3">
+                {/* Formatted & Indented Answer Text */}
+                <MarkdownContent text={m.text} />
 
                 {m.replacedReason && (
                   <div className="p-2 rounded-lg bg-[#E5A93C]/10 border border-[#E5A93C]/30 text-[#E5A93C] text-[11px] flex items-center gap-1.5">
@@ -225,7 +321,7 @@ export default function AskView({
 
                 {/* Evidence Chips */}
                 {m.cited_facts && m.cited_facts.length > 0 && (
-                  <div className="pt-2 border-t border-[#2A1D45]">
+                  <div className="pt-2.5 border-t border-[#2A1D45]">
                     <span className="text-[10px] uppercase tracking-wider text-[#9E92BA] font-semibold block mb-1.5">
                       Chart Evidence Used (Tap to verify)
                     </span>
@@ -250,14 +346,14 @@ export default function AskView({
 
         {/* Live Streaming Bubble */}
         {isStreaming && (
-          <div className="flex flex-col items-start max-w-[95%]">
-            <div className="p-4 rounded-2xl rounded-tl-sm bg-[#161028] border border-[#B21E68]/60 text-[#E8E2F5] text-xs sm:text-sm shadow-xl space-y-2">
+          <div className="flex flex-col items-start max-w-[96%]">
+            <div className="p-4 sm:p-5 rounded-2xl rounded-tl-sm bg-[#161028] border border-[#B21E68]/60 text-[#E8E2F5] text-xs sm:text-sm shadow-xl space-y-2">
               <div className="flex items-center gap-2 text-xs text-[#F4B8DC] font-medium">
                 <div className="w-3.5 h-3.5 border-2 border-[#F4B8DC] border-t-transparent rounded-full animate-spin" />
                 <span>{streamStatus}</span>
               </div>
-              <div className="whitespace-pre-line leading-relaxed">
-                {currentStreamAnswer || "Aligning chart facts..."}
+              <div>
+                <MarkdownContent text={currentStreamAnswer || "Aligning chart facts..."} />
               </div>
             </div>
           </div>
@@ -285,8 +381,8 @@ export default function AskView({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Bottom Input Area */}
-      <div className="border-t border-[#23173D] pt-2">
+      {/* Bottom Input Area - Lifted cleanly above BottomNav */}
+      <div className="shrink-0 border-t border-[#23173D] pt-2 pb-1 bg-[#080511]">
         {/* Balance status pill */}
         <div className="flex items-center justify-between text-[11px] mb-1.5 px-1">
           <span className="text-[#8E82AA]">
