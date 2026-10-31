@@ -46,3 +46,22 @@
   - `tests/test_chart_engine.py`: 7 automated tests including 3 golden charts (New Delhi 1980, Mumbai 1995, Bengaluru 2000), degree formatters, timezone parsing, unknown birth time constraints, and LLM context formatting.
 - **Test Status**: All 7 tests PASSED in 0.26s.
 - **Commit**: Completed Phase 1.
+
+## Log Entry 4: Phase 2 — Q&A with a Question Balance & Ledger
+- **Objective**: Implement database persistence layer, 7 relational tables, append-only credit ledger (+1 signup grant, +N top-up, -1 spend, +1 refund), atomic idempotent spending with multi-threaded concurrency safety, and FastAPI REST endpoints.
+- **Files Created / Updated**:
+  - `backend/config.py`: Application settings using Pydantic Settings and environment configuration.
+  - `backend/database.py`: SQLAlchemy database connection with SQLite WAL mode and PostgreSQL compatibility.
+  - `backend/models.py`: 7 relational tables (`users`, `birth_profiles`, `charts`, `balance_ledger`, `questions`, `answers`, `events`).
+  - `backend/ledger.py`: Atomic ledger operations:
+    - `get_balance`: `SUM(amount)` over append-only ledger entries.
+    - `grant_signup_credit`: Idempotent +1 credit on user registration.
+    - `spend_question_credit`: Atomic check-and-decrement with per-user mutex and row locking.
+    - `topup_credits`: Idempotent +N credit top-up without real payment.
+    - `refund_question_credit`: Idempotent automatic +1 refund on generation failure.
+  - `backend/service.py`: High-level business logic orchestrating onboarding, birth chart calculation caching, atomic question spending, answer logging, and conversion events.
+  - `backend/main.py`: REST API endpoints for onboarding, balance checking, top-up, asking questions, history, chart retrieval, and `/api/metrics` computing second-question retention rate.
+  - `tests/test_ledger_and_qa.py`: 6 automated tests including idempotency, zero-balance blocking, automatic refund, and high-concurrency 10-thread parallel spend stress test.
+  - `tests/test_api_endpoints.py`: End-to-end integration tests verifying HTTP endpoints, 402 status codes, top-ups, and metrics.
+- **Test Status**: All 15 tests PASSED in 2.46s.
+- **Commit**: Completed Phase 2.
