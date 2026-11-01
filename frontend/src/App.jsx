@@ -110,6 +110,7 @@ export default function App() {
             profile={profile}
             onSelectQuestion={handleSelectQuestionFromHome}
             onGoToAsk={() => setActiveTab("ask")}
+            onGoToRewards={() => setActiveTab("rewards")}
           />
         )}
 

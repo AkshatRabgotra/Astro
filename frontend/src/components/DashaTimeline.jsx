@@ -51,12 +51,17 @@ export default function DashaTimeline({ chartFacts, onSelectDashaQuestion }) {
   const currentColors = PLANET_COLORS[displayedPeriod.lord] || PLANET_COLORS.Jupiter;
 
   return (
-    <div className="glass-panel p-4 sm:p-5 relative overflow-hidden space-y-4">
+    <div className="crystal-card p-4 sm:p-5 relative overflow-hidden space-y-4">
+      {/* Astrological Planetary Glyphs Watermark */}
+      <div className="absolute -top-3 -right-3 text-4xl text-white/[0.04] select-none pointer-events-none font-serif">
+        ☉ ☽ ♂ ♃
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-[#B21E68]/20 border border-[#B21E68]/50 flex items-center justify-center text-[#E5A93C]">
-            <Clock className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#931B58] to-[#B21E68] text-white flex items-center justify-center shadow-md">
+            <Clock className="w-4 h-4 text-[#FDE68A]" />
           </div>
           <div>
             <h3 className="font-serif text-sm sm:text-base font-bold text-white flex items-center gap-1.5">

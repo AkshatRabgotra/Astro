@@ -8,15 +8,15 @@ export default function EvidenceModal({ fact, onClose }) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-sm p-0 sm:p-4 transition-all"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-md p-0 sm:p-4 transition-all"
       onClick={onClose}
     >
       <div 
-        className="w-full max-w-lg bg-[#140E26] border border-[#B21E68]/50 rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl relative animate-in slide-in-from-bottom duration-200"
+        className="w-full max-w-lg crystal-card border-[#B21E68]/60 rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl relative animate-in slide-in-from-bottom duration-200 space-y-4"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Handle for mobile drawer */}
-        <div className="w-12 h-1.5 bg-[#453664] rounded-full mx-auto mb-4 sm:hidden" />
+        <div className="w-12 h-1 bg-[#453664] rounded-full mx-auto mb-2 sm:hidden" />
 
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-[#2D1F4D]">

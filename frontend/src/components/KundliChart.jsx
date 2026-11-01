@@ -75,12 +75,17 @@ export default function KundliChart({ chartFacts, onSelectHouseQuestion }) {
   const selectedTheme = HOUSE_THEMES[selectedHouse] || {};
 
   return (
-    <div className="glass-panel p-4 sm:p-5 relative overflow-hidden space-y-4">
+    <div className="crystal-card p-4 sm:p-5 relative overflow-hidden space-y-4">
+      {/* Subtle Astrological Watermark */}
+      <div className="absolute -top-4 -right-4 text-4xl text-white/[0.04] select-none pointer-events-none font-serif">
+        ♈ ♉ ♊ ♋
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#E5A93C] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#E5A93C] animate-pulse shadow-sm shadow-[#E5A93C]" />
             <h3 className="font-serif text-sm sm:text-base font-bold text-white flex items-center gap-1.5">
               Visual Kundli Chart (D1 Rashi)
             </h3>
@@ -93,12 +98,12 @@ export default function KundliChart({ chartFacts, onSelectHouseQuestion }) {
         </div>
 
         {/* View Toggle */}
-        <div className="flex items-center gap-1 bg-[#17102D] p-1 rounded-xl border border-[#2D1F4D]">
+        <div className="flex items-center gap-1 bg-[#150E28] p-1 rounded-xl border border-[#302150] shadow-sm">
           <button
             onClick={() => setChartStyle("north")}
             className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
               chartStyle === "north"
-                ? "bg-[#B21E68] text-white shadow-sm"
+                ? "bg-gradient-to-r from-[#931B58] to-[#B21E68] text-white shadow-sm"
                 : "text-[#8E82AA] hover:text-white"
             }`}
           >
@@ -108,7 +113,7 @@ export default function KundliChart({ chartFacts, onSelectHouseQuestion }) {
             onClick={() => setChartStyle("table")}
             className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
               chartStyle === "table"
-                ? "bg-[#B21E68] text-white shadow-sm"
+                ? "bg-gradient-to-r from-[#931B58] to-[#B21E68] text-white shadow-sm"
                 : "text-[#8E82AA] hover:text-white"
             }`}
           >
