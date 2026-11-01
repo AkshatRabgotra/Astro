@@ -27,6 +27,7 @@ from backend.rewards import (
 from chart.models import ChartFacts
 from chart.transits import calculate_today_transits
 from backend.streaming import stream_question_answer
+from backend.twin_router import router as twin_router
 import os
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -47,6 +48,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(twin_router)
 
 
 # --- Request & Response Schemas ---

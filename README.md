@@ -99,10 +99,16 @@ flowchart LR
 7. **Phase 7: Two Stand-Out Extras**
    - **Extra 1: Automated Evaluation Harness (`evals/`)**: Fixed suite of 30 curated questions across career, relationships, timing, and edge cases. Achieved **100.0% code grounding pass rate**.
    - **Extra 2: Multilingual Support (Hindi - हिन्दी)**: Universal fact ID mapping across Devanagari and English with one-tap language toggle.
+8. **Phase 8: Dasha Twin Viral Retention Feature (`docs/dasha-twin.md`)**
+   - **Feature**: Real-time parallel between user's active dasha phase and notable public figures' career milestones during the same dasha lord.
+   - **Primary Metric**: Shares per Weekly Active User (WAU).
+   - **Hand-Curated Dataset**: Stored in `data/figures.json`. Curated by hand from verified Astro-Databank records (Rodden Rating AA or A) with full source links, excluding any deaths, illnesses, legal scandals, or minors.
+   - **Server-Side Dual Card Generator**: Automatically renders and caches 1080x1350 feed cards and 1080x1920 stories under random 128-bit privacy-safe tokens with zero birth details and 90-day expiry.
 
 ---
 
 ## 4. Documentation Suite
+- **[docs/dasha-twin.md](docs/dasha-twin.md)**: Dasha Twin feature architecture, viral loops, metrics tracking, and trade-off analysis.
 - **[docs/architecture.md](docs/architecture.md)**: Full Mermaid architecture flowchart, relational data models, and streaming trade-off analysis.
 - **[docs/idea.md](docs/idea.md)**: Rationale for "Evidence Behind Every Answer", target retention metric, and behavioral tracking.
 - **[docs/exploration.md](docs/exploration.md)**: Breakdown of the Melooha app exploration, friction points, competitor comparison, and opportunity selection.

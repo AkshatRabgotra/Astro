@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { BarChart3, RefreshCw, Users, HelpCircle, CheckCircle2, TrendingUp, Sparkles, Compass } from "lucide-react";
+import { BarChart3, RefreshCw, Users, HelpCircle, CheckCircle2, TrendingUp, Sparkles, Compass, Share2, UserPlus, Eye } from "lucide-react";
 
 export default function MetricsView() {
   const [metrics, setMetrics] = useState(null);
+  const [twinMetrics, setTwinMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchMetrics = () => {
     setLoading(true);
-    fetch("/api/metrics")
-      .then((res) => res.json())
-      .then((data) => {
-        setMetrics(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    Promise.all([
+      fetch("/api/metrics").then((r) => r.json()).catch(() => null),
+      fetch("/api/metrics/dasha-twin").then((r) => r.json()).catch(() => null),
+    ]).then(([m, tm]) => {
+      if (m) setMetrics(m);
+      if (tm) setTwinMetrics(tm);
+      setLoading(false);
+    });
   };
 
   useEffect(() => {
@@ -115,6 +117,63 @@ export default function MetricsView() {
           <span className="text-xl font-bold text-white block">
             {metrics?.evidence_opened_count ?? 0}
           </span>
+        </div>
+      </div>
+
+      {/* Dasha Twin Virality & Share Metrics (Section 6) */}
+      <div className="crystal-card p-5 space-y-3.5 border border-[#E5A93C]/40">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold text-[#E5A93C] uppercase tracking-wider block">
+              Viral Growth Engine
+            </span>
+            <h3 className="font-serif text-base font-bold text-white flex items-center gap-2">
+              <Share2 className="w-4 h-4 text-[#E5A93C]" />
+              <span>Dasha Twin Share Metrics</span>
+            </h3>
+          </div>
+          <span className="px-2.5 py-0.5 rounded-full text-xs bg-amber-500/20 text-[#FDE68A] font-bold border border-amber-400/40">
+            K-Factor / WAU
+          </span>
+        </div>
+
+        {/* Primary Metric: Shares per WAU */}
+        <div className="grid grid-cols-2 gap-2.5">
+          <div className="p-3.5 rounded-2xl bg-[#140B26] border border-[#2B184B] space-y-1">
+            <span className="text-[11px] text-[#A299BC] block font-medium">
+              Primary: Shares / WAU
+            </span>
+            <span className="text-2xl font-bold font-serif text-[#FDE68A]">
+              {twinMetrics ? twinMetrics.primary_metric_shares_per_wau : "0.00"}
+            </span>
+            <span className="text-[10px] text-emerald-400 block">Weekly virality velocity</span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-[#140B26] border border-[#2B184B] space-y-1">
+            <span className="text-[11px] text-[#A299BC] block font-medium">
+              Secondary: Share to Signup
+            </span>
+            <span className="text-2xl font-bold font-serif text-[#F4B8DC]">
+              {twinMetrics ? `${twinMetrics.secondary_metric_share_to_signup_pct}%` : "0.0%"}
+            </span>
+            <span className="text-[10px] text-cyan-400 block">Attributed acquisition</span>
+          </div>
+        </div>
+
+        {/* Funnel Counters */}
+        <div className="grid grid-cols-3 gap-2 text-center text-xs pt-1">
+          <div className="p-2 rounded-xl bg-[#190F30] border border-[#2D1B50]">
+            <span className="text-[10px] text-[#8E82AA] block">Card Views</span>
+            <strong className="text-white text-sm">{twinMetrics?.funnel?.card_viewed ?? 0}</strong>
+          </div>
+          <div className="p-2 rounded-xl bg-[#190F30] border border-[#2D1B50]">
+            <span className="text-[10px] text-[#8E82AA] block">Shares Created</span>
+            <strong className="text-[#E5A93C] text-sm">{twinMetrics?.funnel?.share_created ?? 0}</strong>
+          </div>
+          <div className="p-2 rounded-xl bg-[#190F30] border border-[#2D1B50]">
+            <span className="text-[10px] text-[#8E82AA] block">Links Opened</span>
+            <strong className="text-emerald-400 text-sm">{twinMetrics?.funnel?.share_link_opened ?? 0}</strong>
+          </div>
         </div>
       </div>
 

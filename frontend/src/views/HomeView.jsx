@@ -3,6 +3,7 @@ import { Sparkles, ArrowRight, Compass, Moon, Sun, Shield, Clock, Flame, Gift } 
 import KundliChart from "../components/KundliChart";
 import DashaTimeline from "../components/DashaTimeline";
 import TransitsCard from "../components/TransitsCard";
+import DashaTwinCard from "../components/DashaTwinCard";
 import { t } from "../i18n";
 
 export default function HomeView({ chartFacts, profile, lang = "en", onSelectQuestion, onGoToAsk, onGoToRewards }) {
@@ -114,6 +115,16 @@ export default function HomeView({ chartFacts, profile, lang = "en", onSelectQue
           <ArrowRight className="w-3.5 h-3.5" />
         </div>
       </div>
+
+      {/* Standout Feature: Dasha Twin Milestone Card */}
+      <DashaTwinCard
+        userId={profile?.user_id || "default_user"}
+        lang={lang}
+        onAskQuestion={(prompt) => {
+          if (onSelectQuestion) onSelectQuestion(prompt);
+          else if (onGoToAsk) onGoToAsk();
+        }}
+      />
 
       {/* Feature 1: Interactive Visual Kundli Chart Wheel */}
       {chartFacts && (

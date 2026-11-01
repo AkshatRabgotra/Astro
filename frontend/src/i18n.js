@@ -58,6 +58,23 @@ export const translations = {
     antardashasIn: "9 Antardashas within",
     askDashaQuestion: "Ask reading about this Dasha window",
     duration: "Duration",
+
+    // Dasha Twin Feature
+    dashaTwin: "Dasha Twin",
+    dashaTwinBadge: "Cosmic Parallel",
+    shareTwin: "Share",
+    anotherParallel: "Another parallel",
+    askAboutThis: "Ask about this",
+    twinDisclaimer: "For reflection and fun, not prediction.",
+    approximateTimeBadge: "Approximate time (Mahadasha)",
+    copiedLink: "Link Copied!",
+    downloadCard: "Download 1080x1350 Card",
+    downloadStory: "Download 1080x1920 Story",
+    shareOnWhatsApp: "Share on WhatsApp",
+    includeFirstName: "Include my first name",
+    generatingCard: "Generating high-res card...",
+    source: "Source",
+    close: "Close",
     planetLord: "Planet Lord",
 
     // Transits (Gochara)
@@ -177,6 +194,23 @@ export const translations = {
     askDashaQuestion: "इस दशा अवधि का फल पूछें",
     duration: "अवधि",
     planetLord: "ग्रह स्वामी",
+
+    // Dasha Twin Feature
+    dashaTwin: "दशा ट्विन",
+    dashaTwinBadge: "वैदिक समानता",
+    shareTwin: "शेयर करें",
+    anotherParallel: "अन्य समानता",
+    askAboutThis: "इसके बारे में पूछें",
+    twinDisclaimer: "विचार और आनंद के लिए, भविष्यवाणी नहीं।",
+    approximateTimeBadge: "अनुमानित समय (महादशा)",
+    copiedLink: "लिंक कॉपी हो गया!",
+    downloadCard: "१०८०x१३५० कार्ड डाउनलोड करें",
+    downloadStory: "१०८०x१९२० स्टोरी डाउनलोड करें",
+    shareOnWhatsApp: "व्हाट्सएप पर शेयर करें",
+    includeFirstName: "मेरा नाम शामिल करें",
+    generatingCard: "कार्ड तैयार हो रहा है...",
+    source: "स्रोत",
+    close: "बंद करें",
 
     // Transits (Gochara)
     transitsTitle: "गोचर आज (ग्रहों का वर्तमान आकाश संचार)",

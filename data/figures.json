@@ -1,0 +1,1105 @@
+[
+  {
+    "id": "dilip-kumar",
+    "display_name": "Dilip Kumar",
+    "field": "actor",
+    "birth_date": "1922-12-11",
+    "birth_time": "10:00",
+    "birth_place": "Peshawar, Pakistan",
+    "lat": 34.0151,
+    "lon": 71.5249,
+    "timezone": "Asia/Karachi",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Kumar,_Dilip",
+    "verified": true,
+    "events": [
+      {
+        "id": "dilip-kumar-andaz-1949",
+        "event_date": "1949-03-21",
+        "title": "Starred in Mehboob Khan's Andaz alongside Raj Kapoor and Nargis establishing modern Indian cinematic stardom",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Andaz_(1949_film)"
+      },
+      {
+        "id": "dilip-kumar-filmfare-1954",
+        "event_date": "1954-03-21",
+        "title": "Won the inaugural Filmfare Award for Best Actor for his role in Daag",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/1st_Filmfare_Awards"
+      },
+      {
+        "id": "dilip-kumar-mughal-e-azam-1960",
+        "event_date": "1960-08-05",
+        "title": "Portrayed Prince Salim in the historic magnum opus Mughal-e-Azam",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Mughal-e-Azam"
+      }
+    ]
+  },
+  {
+    "id": "sachin-tendulkar",
+    "display_name": "Sachin Tendulkar",
+    "field": "cricketer",
+    "birth_date": "1973-04-24",
+    "birth_time": "13:00",
+    "birth_place": "Mumbai, India",
+    "lat": 18.922,
+    "lon": 72.8347,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Tendulkar,_Sachin",
+    "verified": true,
+    "events": [
+      {
+        "id": "sachin-debut-1989",
+        "event_date": "1989-11-15",
+        "title": "Made international Test debut against Pakistan in Karachi at age sixteen",
+        "category": "career",
+        "source_url": "https://www.espncricinfo.com/series/india-tour-of-pakistan-1989-90-62325/pakistan-vs-india-1st-test-63515/full-scorecard"
+      },
+      {
+        "id": "sachin-desert-storm-1998",
+        "event_date": "1998-04-22",
+        "title": "Scored the historic Desert Storm century against Australia in Sharjah",
+        "category": "achievement",
+        "source_url": "https://www.espncricinfo.com/series/coca-cola-cup-1997-98-61017/australia-vs-india-6th-match-65778/full-scorecard"
+      },
+      {
+        "id": "sachin-world-cup-2011",
+        "event_date": "2011-04-02",
+        "title": "Won the ICC Cricket World Cup with the Indian national team at Wankhede Stadium",
+        "category": "achievement",
+        "source_url": "https://www.espncricinfo.com/series/icc-cricket-world-cup-2010-11-381449/india-vs-sri-lanka-final-433606/full-scorecard"
+      }
+    ]
+  },
+  {
+    "id": "albert-einstein",
+    "display_name": "Albert Einstein",
+    "field": "scientist",
+    "birth_date": "1879-03-14",
+    "birth_time": "11:30",
+    "birth_place": "Ulm, Germany",
+    "lat": 48.4011,
+    "lon": 9.9876,
+    "timezone": "Europe/Berlin",
+    "rodden_rating": "AA",
+    "source_url": "https://www.astro.com/astro-databank/Einstein,_Albert",
+    "verified": true,
+    "events": [
+      {
+        "id": "einstein-annus-mirabilis-1905",
+        "event_date": "1905-06-09",
+        "title": "Completed the photoelectric effect paper establishing quantum physics foundations",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Annus_Mirabilis_papers"
+      },
+      {
+        "id": "einstein-general-relativity-1915",
+        "event_date": "1915-11-25",
+        "title": "Presented the field equations of General Relativity to the Prussian Academy",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/General_relativity"
+      },
+      {
+        "id": "einstein-nobel-prize-1922",
+        "event_date": "1922-11-09",
+        "title": "Awarded the 1921 Nobel Prize in Physics for services to theoretical physics",
+        "category": "achievement",
+        "source_url": "https://www.nobelprize.org/prizes/physics/1921/summary/"
+      }
+    ]
+  },
+  {
+    "id": "steve-jobs",
+    "display_name": "Steve Jobs",
+    "field": "entrepreneur",
+    "birth_date": "1955-02-24",
+    "birth_time": "19:15",
+    "birth_place": "San Francisco, CA, USA",
+    "lat": 37.7749,
+    "lon": -122.4194,
+    "timezone": "America/Los_Angeles",
+    "rodden_rating": "AA",
+    "source_url": "https://www.astro.com/astro-databank/Jobs,_Steve",
+    "verified": true,
+    "events": [
+      {
+        "id": "jobs-apple-founded-1976",
+        "event_date": "1976-04-01",
+        "title": "Co-founded Apple Computer Company to commercialize personal computing",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/History_of_Apple"
+      },
+      {
+        "id": "jobs-macintosh-1984",
+        "event_date": "1984-01-24",
+        "title": "Unveiled the original Apple Macintosh computer featuring a graphical user interface",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Macintosh"
+      },
+      {
+        "id": "jobs-iphone-2007",
+        "event_date": "2007-01-09",
+        "title": "Introduced the revolutionary touchscreen iPhone at Macworld in San Francisco",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/IPhone_(1st_generation)"
+      }
+    ]
+  },
+  {
+    "id": "marie-curie",
+    "display_name": "Marie Curie",
+    "field": "scientist",
+    "birth_date": "1867-11-07",
+    "birth_time": "12:00",
+    "birth_place": "Warsaw, Poland",
+    "lat": 52.2297,
+    "lon": 21.0122,
+    "timezone": "Europe/Warsaw",
+    "rodden_rating": "AA",
+    "source_url": "https://www.astro.com/astro-databank/Curie,_Marie",
+    "verified": true,
+    "events": [
+      {
+        "id": "curie-radium-discovery-1898",
+        "event_date": "1898-12-26",
+        "title": "Announced the discovery of the radioactive chemical element radium",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Marie_Curie"
+      },
+      {
+        "id": "curie-first-nobel-1903",
+        "event_date": "1903-12-10",
+        "title": "Awarded the Nobel Prize in Physics for groundbreaking radiation investigations",
+        "category": "achievement",
+        "source_url": "https://www.nobelprize.org/prizes/physics/1903/summary/"
+      },
+      {
+        "id": "curie-second-nobel-1911",
+        "event_date": "1911-12-10",
+        "title": "Awarded a second Nobel Prize in Chemistry for isolating pure radium",
+        "category": "achievement",
+        "source_url": "https://www.nobelprize.org/prizes/chemistry/1911/summary/"
+      }
+    ]
+  },
+  {
+    "id": "lata-mangeshkar",
+    "display_name": "Lata Mangeshkar",
+    "field": "singer",
+    "birth_date": "1929-09-28",
+    "birth_time": "23:30",
+    "birth_place": "Indore, India",
+    "lat": 22.7196,
+    "lon": 75.8577,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Mangeshkar,_Lata",
+    "verified": true,
+    "events": [
+      {
+        "id": "lata-mahal-breakthrough-1949",
+        "event_date": "1949-10-14",
+        "title": "Achieved widespread national recognition with the song Aayega Aanewala in Mahal",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Mahal_(1949_film)"
+      },
+      {
+        "id": "lata-royal-albert-1974",
+        "event_date": "1974-06-01",
+        "title": "Performs a landmark solo classical and playback concert at London's Royal Albert Hall",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Lata_Mangeshkar"
+      },
+      {
+        "id": "lata-bharat-ratna-2001",
+        "event_date": "2001-03-21",
+        "title": "Conferred the Bharat Ratna India's highest civilian honor for artistic excellence",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Bharat_Ratna"
+      }
+    ]
+  },
+  {
+    "id": "amitabh-bachchan",
+    "display_name": "Amitabh Bachchan",
+    "field": "actor",
+    "birth_date": "1942-10-11",
+    "birth_time": "16:00",
+    "birth_place": "Prayagraj, India",
+    "lat": 25.4358,
+    "lon": 81.8463,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Bachchan,_Amitabh",
+    "verified": true,
+    "events": [
+      {
+        "id": "amitabh-zanjeer-1973",
+        "event_date": "1973-05-11",
+        "title": "Reached stardom with his transformative role as Inspector Vijay in Zanjeer",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Zanjeer_(1973_film)"
+      },
+      {
+        "id": "amitabh-sholay-1975",
+        "event_date": "1975-08-15",
+        "title": "Starring as Jai in Ramesh Sippy's historic blockbuster Sholay",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Sholay"
+      },
+      {
+        "id": "amitabh-kbc-2000",
+        "event_date": "2000-07-03",
+        "title": "Premiered as the host of television phenomenon Kaun Banega Crorepati",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Kaun_Banega_Crorepati"
+      }
+    ]
+  },
+  {
+    "id": "serena-williams",
+    "display_name": "Serena Williams",
+    "field": "athlete",
+    "birth_date": "1981-09-26",
+    "birth_time": "20:28",
+    "birth_place": "Saginaw, MI, USA",
+    "lat": 43.4194,
+    "lon": -83.9508,
+    "timezone": "America/Detroit",
+    "rodden_rating": "AA",
+    "source_url": "https://www.astro.com/astro-databank/Williams,_Serena",
+    "verified": true,
+    "events": [
+      {
+        "id": "serena-us-open-1999",
+        "event_date": "1999-09-11",
+        "title": "Won her first Grand Slam singles championship at the US Open",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/1999_US_Open_(tennis)"
+      },
+      {
+        "id": "serena-slam-2003",
+        "event_date": "2003-01-25",
+        "title": "Completed the historic Serena Slam winning four consecutive major titles at Australian Open",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/2003_Australian_Open"
+      },
+      {
+        "id": "serena-23-majors-2017",
+        "event_date": "2017-01-28",
+        "title": "Captured an Open Era record twenty-third Grand Slam singles victory",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/2017_Australian_Open"
+      }
+    ]
+  },
+  {
+    "id": "viswanathan-anand",
+    "display_name": "Viswanathan Anand",
+    "field": "chess player",
+    "birth_date": "1969-12-11",
+    "birth_time": "05:45",
+    "birth_place": "Mayiladuthurai, India",
+    "lat": 11.1018,
+    "lon": 79.6522,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Anand,_Viswanathan",
+    "verified": true,
+    "events": [
+      {
+        "id": "anand-gm-1988",
+        "event_date": "1988-12-28",
+        "title": "Earned the grandmaster title becoming India's inaugural chess grandmaster",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Viswanathan_Anand"
+      },
+      {
+        "id": "anand-fide-world-champion-2000",
+        "event_date": "2000-12-24",
+        "title": "Won the FIDE World Chess Championship title in Tehran",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/FIDE_World_Chess_Championship_2000"
+      },
+      {
+        "id": "anand-undisputed-champion-2007",
+        "event_date": "2007-09-29",
+        "title": "Became undisputed World Chess Champion at the Mexico City tournament",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/World_Chess_Championship_2007"
+      }
+    ]
+  },
+  {
+    "id": "apj-abdul-kalam",
+    "display_name": "A.P.J. Abdul Kalam",
+    "field": "scientist",
+    "birth_date": "1931-10-15",
+    "birth_time": "01:15",
+    "birth_place": "Rameswaram, India",
+    "lat": 9.2876,
+    "lon": 79.3129,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Kalam,_A._P._J._Abdul",
+    "verified": true,
+    "events": [
+      {
+        "id": "kalam-slv3-1980",
+        "event_date": "1980-07-18",
+        "title": "Successfully deployed Rohini satellite as project director of India's first indigenous SLV-3",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Satellite_Launch_Vehicle"
+      },
+      {
+        "id": "kalam-pokhran-1998",
+        "event_date": "1998-05-11",
+        "title": "Spearheaded scientific leadership for the successful Pokhran-II mission",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Pokhran-II"
+      },
+      {
+        "id": "kalam-president-2002",
+        "event_date": "2002-07-25",
+        "title": "Sworn in as the eleventh President of India",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/A._P._J._Abdul_Kalam"
+      }
+    ]
+  },
+  {
+    "id": "kalpana-chawla",
+    "display_name": "Kalpana Chawla",
+    "field": "astronaut",
+    "birth_date": "1962-03-17",
+    "birth_time": "04:45",
+    "birth_place": "Karnal, India",
+    "lat": 29.6857,
+    "lon": 76.9905,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Chawla,_Kalpana",
+    "verified": true,
+    "events": [
+      {
+        "id": "chawla-nasa-selection-1994",
+        "event_date": "1994-12-08",
+        "title": "Selected by NASA into the Astronaut Candidate Class of 1995",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Kalpana_Chawla"
+      },
+      {
+        "id": "chawla-sts87-1997",
+        "event_date": "1997-11-19",
+        "title": "Launched aboard Space Shuttle Columbia mission STS-87 as prime robotic arm operator",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/STS-87"
+      }
+    ]
+  },
+  {
+    "id": "cv-raman",
+    "display_name": "C.V. Raman",
+    "field": "scientist",
+    "birth_date": "1888-11-07",
+    "birth_time": "05:30",
+    "birth_place": "Tiruchirappalli, India",
+    "lat": 10.7905,
+    "lon": 78.7047,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Raman,_C._V.",
+    "verified": true,
+    "events": [
+      {
+        "id": "raman-effect-1928",
+        "event_date": "1928-02-28",
+        "title": "Discovered modified light scattering in liquids known worldwide as the Raman Effect",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Raman_scattering"
+      },
+      {
+        "id": "raman-nobel-1930",
+        "event_date": "1930-12-10",
+        "title": "Conferred the Nobel Prize in Physics becoming the first Asian scientist honored in sciences",
+        "category": "achievement",
+        "source_url": "https://www.nobelprize.org/prizes/physics/1930/summary/"
+      },
+      {
+        "id": "raman-academy-1934",
+        "event_date": "1934-04-01",
+        "title": "Founded the Indian Academy of Sciences in Bengaluru to promote scientific discovery",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Indian_Academy_of_Sciences"
+      }
+    ]
+  },
+  {
+    "id": "shah-rukh-khan",
+    "display_name": "Shah Rukh Khan",
+    "field": "actor",
+    "birth_date": "1965-11-02",
+    "birth_time": "02:30",
+    "birth_place": "New Delhi, India",
+    "lat": 28.6139,
+    "lon": 77.209,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Khan,_Shah_Rukh",
+    "verified": true,
+    "events": [
+      {
+        "id": "srk-deewana-1992",
+        "event_date": "1992-06-25",
+        "title": "Debuted in mainstream Hindi cinema with Deewana earning the Filmfare Best Debut award",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Deewana_(1992_film)"
+      },
+      {
+        "id": "srk-ddlj-1995",
+        "event_date": "1995-10-20",
+        "title": "Starred in Dilwale Dulhania Le Jayenge defining modern romantic cinema in India",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Dilwale_Dulhania_Le_Jayenge"
+      },
+      {
+        "id": "srk-swades-2004",
+        "event_date": "2004-12-17",
+        "title": "Delivered universally praised performance as NASA engineer Mohan Bhargava in Swades",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Swades"
+      }
+    ]
+  },
+  {
+    "id": "satyajit-ray",
+    "display_name": "Satyajit Ray",
+    "field": "filmmaker",
+    "birth_date": "1921-05-02",
+    "birth_time": "05:45",
+    "birth_place": "Kolkata, India",
+    "lat": 22.5726,
+    "lon": 88.3639,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Ray,_Satyajit",
+    "verified": true,
+    "events": [
+      {
+        "id": "ray-pather-panchali-1956",
+        "event_date": "1956-05-09",
+        "title": "Gained international acclaim with Pather Panchali winning Best Human Document at Cannes",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Pather_Panchali"
+      },
+      {
+        "id": "ray-golden-lion-1957",
+        "event_date": "1957-09-07",
+        "title": "Won the prestigious Golden Lion at the Venice International Film Festival for Aparajito",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Aparajito"
+      },
+      {
+        "id": "ray-honorary-oscar-1992",
+        "event_date": "1992-03-30",
+        "title": "Awarded an Honorary Academy Award for lifetime cinematic contributions",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Satyajit_Ray"
+      }
+    ]
+  },
+  {
+    "id": "ar-rahman",
+    "display_name": "A.R. Rahman",
+    "field": "composer",
+    "birth_date": "1967-01-06",
+    "birth_time": "05:50",
+    "birth_place": "Chennai, India",
+    "lat": 13.0827,
+    "lon": 80.2707,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Rahman,_A._R.",
+    "verified": true,
+    "events": [
+      {
+        "id": "rahman-roja-1992",
+        "event_date": "1992-08-15",
+        "title": "Revolutionized Indian film music with debut soundtrack for Mani Ratnam's Roja",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Roja_(soundtrack)"
+      },
+      {
+        "id": "rahman-vande-mataram-1997",
+        "event_date": "1997-08-15",
+        "title": "Released the patriotic album Maa Tujhe Salaam commemorating fifty years of Indian independence",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Vande_Mataram_(album)"
+      },
+      {
+        "id": "rahman-double-oscar-2009",
+        "event_date": "2009-02-22",
+        "title": "Won two Academy Awards for Best Original Score and Best Original Song for Slumdog Millionaire",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/81st_Academy_Awards"
+      }
+    ]
+  },
+  {
+    "id": "meryl-streep",
+    "display_name": "Meryl Streep",
+    "field": "actor",
+    "birth_date": "1949-06-22",
+    "birth_time": "08:05",
+    "birth_place": "Summit, NJ, USA",
+    "lat": 40.7168,
+    "lon": -74.3643,
+    "timezone": "America/New_York",
+    "rodden_rating": "AA",
+    "source_url": "https://www.astro.com/astro-databank/Streep,_Meryl",
+    "verified": true,
+    "events": [
+      {
+        "id": "streep-deer-hunter-1978",
+        "event_date": "1978-12-08",
+        "title": "Gained widespread critical recognition with breakthrough supporting role in The Deer Hunter",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/The_Deer_Hunter"
+      },
+      {
+        "id": "streep-kramer-oscar-1980",
+        "event_date": "1980-04-14",
+        "title": "Won her first Academy Award for Best Supporting Actress for Kramer vs Kramer",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/52nd_Academy_Awards"
+      },
+      {
+        "id": "streep-sophies-choice-1983",
+        "event_date": "1983-04-11",
+        "title": "Won the Academy Award for Best Actress for her lead performance in Sophie's Choice",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/55th_Academy_Awards"
+      }
+    ]
+  },
+  {
+    "id": "bill-gates",
+    "display_name": "Bill Gates",
+    "field": "entrepreneur",
+    "birth_date": "1955-10-28",
+    "birth_time": "21:58",
+    "birth_place": "Seattle, WA, USA",
+    "lat": 47.6062,
+    "lon": -122.3321,
+    "timezone": "America/Los_Angeles",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Gates,_Bill",
+    "verified": true,
+    "events": [
+      {
+        "id": "gates-microsoft-1975",
+        "event_date": "1975-04-04",
+        "title": "Co-founded Microsoft alongside Paul Allen to develop software for microcomputers",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/History_of_Microsoft"
+      },
+      {
+        "id": "gates-windows-1985",
+        "event_date": "1985-11-20",
+        "title": "Released Windows 1.0 establishing the dominant graphical operating system architecture",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Windows_1.0"
+      },
+      {
+        "id": "gates-foundation-2000",
+        "event_date": "2000-01-01",
+        "title": "Established the Bill and Melinda Gates Foundation focusing on global healthcare innovations",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Bill_%26_Melinda_Gates_Foundation"
+      }
+    ]
+  },
+  {
+    "id": "jk-rowling",
+    "display_name": "J.K. Rowling",
+    "field": "writer",
+    "birth_date": "1965-07-31",
+    "birth_time": "14:10",
+    "birth_place": "Yate, UK",
+    "lat": 51.5408,
+    "lon": -2.4173,
+    "timezone": "Europe/London",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Rowling,_J._K.",
+    "verified": true,
+    "events": [
+      {
+        "id": "rowling-philosophers-stone-1997",
+        "event_date": "1997-06-26",
+        "title": "Published Harry Potter and the Philosopher's Stone beginning a worldwide publishing phenomenon",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Harry_Potter_and_the_Philosopher%27s_Stone"
+      },
+      {
+        "id": "rowling-first-movie-2001",
+        "event_date": "2001-11-04",
+        "title": "Premiered the first theatrical feature adaptation of the Harry Potter literary saga",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Harry_Potter_and_the_Philosopher%27s_Stone_(film)"
+      },
+      {
+        "id": "rowling-deathly-hallows-2007",
+        "event_date": "2007-07-21",
+        "title": "Released Harry Potter and the Deathly Hallows setting the fastest-selling book record in history",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Harry_Potter_and_the_Deathly_Hallows"
+      }
+    ]
+  },
+  {
+    "id": "usain-bolt",
+    "display_name": "Usain Bolt",
+    "field": "athlete",
+    "birth_date": "1986-08-21",
+    "birth_time": "09:30",
+    "birth_place": "Sherwood Content, Jamaica",
+    "lat": 18.3,
+    "lon": -77.6,
+    "timezone": "America/Jamaica",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Bolt,_Usain",
+    "verified": true,
+    "events": [
+      {
+        "id": "bolt-beijing-gold-2008",
+        "event_date": "2008-08-16",
+        "title": "Smashed the 100m world record to win Olympic Gold at the Beijing Olympic Games",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Athletics_at_the_2008_Summer_Olympics_%E2%80%93_Men%27s_100_metres"
+      },
+      {
+        "id": "bolt-berlin-record-2009",
+        "event_date": "2009-08-16",
+        "title": "Clocked a historic 9.58 seconds 100m world record at the World Athletics Championships in Berlin",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/2009_World_Championships_in_Athletics_%E2%80%93_Men%27s_100_metres"
+      },
+      {
+        "id": "bolt-triple-triple-2016",
+        "event_date": "2016-08-19",
+        "title": "Completed an unprecedented triple-triple Olympic sprinting gold medal sweep in Rio de Janeiro",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Athletics_at_the_2016_Summer_Olympics"
+      }
+    ]
+  },
+  {
+    "id": "rabindranath-tagore",
+    "display_name": "Rabindranath Tagore",
+    "field": "writer",
+    "birth_date": "1861-05-07",
+    "birth_time": "02:40",
+    "birth_place": "Kolkata, India",
+    "lat": 22.5726,
+    "lon": 88.3639,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Tagore,_Rabindranath",
+    "verified": true,
+    "events": [
+      {
+        "id": "tagore-santiniketan-1901",
+        "event_date": "1901-12-22",
+        "title": "Founded the experimental open-air school at Santiniketan emphasizing holistic education",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Visva-Bharati_University"
+      },
+      {
+        "id": "tagore-nobel-1913",
+        "event_date": "1913-11-13",
+        "title": "Conferred the Nobel Prize in Literature for his profound English song offerings in Gitanjali",
+        "category": "achievement",
+        "source_url": "https://www.nobelprize.org/prizes/literature/1913/summary/"
+      },
+      {
+        "id": "tagore-visva-bharati-1921",
+        "event_date": "1921-12-23",
+        "title": "Formally inaugurated Visva-Bharati University dedicated to global cultural synthesis",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Visva-Bharati_University"
+      }
+    ]
+  },
+  {
+    "id": "srinivasa-ramanujan",
+    "display_name": "Srinivasa Ramanujan",
+    "field": "mathematician",
+    "birth_date": "1887-12-22",
+    "birth_time": "18:00",
+    "birth_place": "Erode, India",
+    "lat": 11.341,
+    "lon": 77.7172,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Ramanujan,_Srinivasa",
+    "verified": true,
+    "events": [
+      {
+        "id": "ramanujan-hardy-letter-1913",
+        "event_date": "1913-01-16",
+        "title": "Initiated correspondence with mathematician G.H. Hardy presenting 120 groundbreaking theorems",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Srinivasa_Ramanujan"
+      },
+      {
+        "id": "ramanujan-cambridge-1914",
+        "event_date": "1914-04-14",
+        "title": "Arrived at Trinity College Cambridge to commence mathematical collaborations",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Srinivasa_Ramanujan"
+      },
+      {
+        "id": "ramanujan-royal-society-1918",
+        "event_date": "1918-05-02",
+        "title": "Elected a Fellow of the Royal Society for fundamental discoveries in modular equations",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Srinivasa_Ramanujan"
+      }
+    ]
+  },
+  {
+    "id": "sunil-gavaskar",
+    "display_name": "Sunil Gavaskar",
+    "field": "cricketer",
+    "birth_date": "1949-07-10",
+    "birth_time": "10:12",
+    "birth_place": "Mumbai, India",
+    "lat": 18.922,
+    "lon": 72.8347,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Gavaskar,_Sunil",
+    "verified": true,
+    "events": [
+      {
+        "id": "gavaskar-debut-series-1971",
+        "event_date": "1971-04-13",
+        "title": "Completed a historic debut Test series in the West Indies scoring 774 runs",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Sunil_Gavaskar"
+      },
+      {
+        "id": "gavaskar-world-cup-1983",
+        "event_date": "1983-06-25",
+        "title": "Member of the historic 1983 Indian World Cup winning squad at Lord's",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/1983_Cricket_World_Cup_Final"
+      },
+      {
+        "id": "gavaskar-10000-runs-1987",
+        "event_date": "1987-03-07",
+        "title": "Became the first batsman in cricket history to reach 10000 Test runs in Ahmedabad",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Sunil_Gavaskar"
+      }
+    ]
+  },
+  {
+    "id": "roger-federer",
+    "display_name": "Roger Federer",
+    "field": "athlete",
+    "birth_date": "1981-08-08",
+    "birth_time": "08:40",
+    "birth_place": "Basel, Switzerland",
+    "lat": 47.5596,
+    "lon": 7.5886,
+    "timezone": "Europe/Zurich",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Federer,_Roger",
+    "verified": true,
+    "events": [
+      {
+        "id": "federer-wimbledon-2003",
+        "event_date": "2003-07-06",
+        "title": "Won his maiden Wimbledon men's singles title marking the dawn of an era",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/2003_Wimbledon_Championships_%E2%80%93_Men%27s_singles"
+      },
+      {
+        "id": "federer-french-open-2009",
+        "event_date": "2009-06-07",
+        "title": "Won Roland Garros to achieve the coveted Career Grand Slam in men's tennis",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/2009_French_Open_%E2%80%93_Men%27s_singles"
+      },
+      {
+        "id": "federer-20th-major-2018",
+        "event_date": "2018-01-28",
+        "title": "Captured an unprecedented twentieth men's Grand Slam singles crown in Melbourne",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/2018_Australian_Open_%E2%80%93_Men%27s_singles"
+      }
+    ]
+  },
+  {
+    "id": "walt-disney",
+    "display_name": "Walt Disney",
+    "field": "filmmaker",
+    "birth_date": "1901-12-05",
+    "birth_time": "00:35",
+    "birth_place": "Chicago, IL, USA",
+    "lat": 41.8781,
+    "lon": -87.6298,
+    "timezone": "America/Chicago",
+    "rodden_rating": "AA",
+    "source_url": "https://www.astro.com/astro-databank/Disney,_Walt",
+    "verified": true,
+    "events": [
+      {
+        "id": "disney-steamboat-willie-1928",
+        "event_date": "1928-11-18",
+        "title": "Premiered Steamboat Willie debuting synchronized sound animation and Mickey Mouse",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Steamboat_Willie"
+      },
+      {
+        "id": "disney-snow-white-1937",
+        "event_date": "1937-12-21",
+        "title": "Released Snow White and the Seven Dwarfs the world's first full-length cel-animated feature",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Snow_White_and_the_Seven_Dwarfs_(1937_film)"
+      },
+      {
+        "id": "disney-disneyland-1955",
+        "event_date": "1955-07-17",
+        "title": "Opened the original Disneyland theme park in Anaheim California redefining immersive entertainment",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Disneyland"
+      }
+    ]
+  },
+  {
+    "id": "ks-chithra",
+    "display_name": "K.S. Chithra",
+    "field": "singer",
+    "birth_date": "1963-07-27",
+    "birth_time": "11:20",
+    "birth_place": "Thiruvananthapuram, India",
+    "lat": 8.5241,
+    "lon": 76.9366,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Chithra,_K._S.",
+    "verified": true,
+    "events": [
+      {
+        "id": "chithra-sindhu-bhairavi-1986",
+        "event_date": "1986-06-12",
+        "title": "Won her first National Film Award for Best Female Playback Singer for Sindhu Bhairavi",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Sindhu_Bhairavi_(film)"
+      },
+      {
+        "id": "chithra-sixth-national-1997",
+        "event_date": "1997-07-15",
+        "title": "Received a record-setting sixth National Film Award for the melody Maana Madhurai",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/K._S._Chithra"
+      },
+      {
+        "id": "chithra-padma-shri-2005",
+        "event_date": "2005-01-26",
+        "title": "Conferred the Padma Shri civilian award for outstanding contributions to Indian music",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/K._S._Chithra"
+      }
+    ]
+  },
+  {
+    "id": "neil-armstrong",
+    "display_name": "Neil Armstrong",
+    "field": "astronaut",
+    "birth_date": "1930-08-05",
+    "birth_time": "00:31",
+    "birth_place": "Wapakoneta, OH, USA",
+    "lat": 40.5689,
+    "lon": -84.1936,
+    "timezone": "America/New_York",
+    "rodden_rating": "AA",
+    "source_url": "https://www.astro.com/astro-databank/Armstrong,_Neil",
+    "verified": true,
+    "events": [
+      {
+        "id": "armstrong-nasa-1962",
+        "event_date": "1962-09-17",
+        "title": "Selected by NASA into the second group of astronauts for Project Gemini and Apollo",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/NASA_Astronaut_Group_2"
+      },
+      {
+        "id": "armstrong-gemini8-1966",
+        "event_date": "1966-03-16",
+        "title": "Commanded Gemini 8 performing the first successful orbital docking of two spacecraft",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Gemini_8"
+      },
+      {
+        "id": "armstrong-moon-walk-1969",
+        "event_date": "1969-07-20",
+        "title": "Commanded Apollo 11 and became the first human to step onto the surface of the Moon",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Apollo_11"
+      }
+    ]
+  },
+  {
+    "id": "mary-kom",
+    "display_name": "Mary Kom",
+    "field": "athlete",
+    "birth_date": "1983-03-01",
+    "birth_time": "07:15",
+    "birth_place": "Churachandpur, India",
+    "lat": 24.3333,
+    "lon": 93.6667,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Kom,_Mary",
+    "verified": true,
+    "events": [
+      {
+        "id": "mary-kom-first-gold-2002",
+        "event_date": "2002-10-27",
+        "title": "Won her inaugural Gold Medal at the Women's World Amateur Boxing Championships in Antalya",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Mary_Kom"
+      },
+      {
+        "id": "mary-kom-olympic-bronze-2012",
+        "event_date": "2012-08-08",
+        "title": "Won an Olympic Bronze Medal at the London Olympic Games in flyweight boxing",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Boxing_at_the_2012_Summer_Olympics"
+      },
+      {
+        "id": "mary-kom-sixth-world-gold-2018",
+        "event_date": "2018-11-24",
+        "title": "Made boxing history by winning a record sixth World Championship Gold Medal in New Delhi",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Mary_Kom"
+      }
+    ]
+  },
+  {
+    "id": "stephen-hawking",
+    "display_name": "Stephen Hawking",
+    "field": "scientist",
+    "birth_date": "1942-01-08",
+    "birth_time": "03:50",
+    "birth_place": "Oxford, UK",
+    "lat": 51.752,
+    "lon": -1.2577,
+    "timezone": "Europe/London",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Hawking,_Stephen",
+    "verified": true,
+    "events": [
+      {
+        "id": "hawking-singularity-1970",
+        "event_date": "1970-01-15",
+        "title": "Formulated mathematical theorems on gravitational spacetime singularities with Roger Penrose",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Penrose%E2%80%93Hawking_singularity_theorems"
+      },
+      {
+        "id": "hawking-radiation-1974",
+        "event_date": "1974-03-01",
+        "title": "Published theoretical discovery that black holes emit thermal radiation known as Hawking radiation",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Hawking_radiation"
+      },
+      {
+        "id": "hawking-brief-history-1988",
+        "event_date": "1988-04-01",
+        "title": "Published A Brief History of Time popularizing cosmology to tens of millions worldwide",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/A_Brief_History_of_Time"
+      }
+    ]
+  },
+  {
+    "id": "ratan-tata",
+    "display_name": "Ratan Tata",
+    "field": "entrepreneur",
+    "birth_date": "1937-12-28",
+    "birth_time": "06:30",
+    "birth_place": "Mumbai, India",
+    "lat": 18.922,
+    "lon": 72.8347,
+    "timezone": "Asia/Kolkata",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Tata,_Ratan",
+    "verified": true,
+    "events": [
+      {
+        "id": "ratan-tata-chairman-1991",
+        "event_date": "1991-03-25",
+        "title": "Appointed Chairman of Tata Sons leading industrial modernization and expansion",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/Ratan_Tata"
+      },
+      {
+        "id": "ratan-tata-indica-1998",
+        "event_date": "1998-12-30",
+        "title": "Launched the Tata Indica India's first indigenously designed passenger vehicle",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Tata_Indica"
+      },
+      {
+        "id": "ratan-tata-jlr-2008",
+        "event_date": "2008-06-02",
+        "title": "Completed the historic international acquisition of Jaguar Land Rover",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Jaguar_Land_Rover"
+      }
+    ]
+  },
+  {
+    "id": "jrd-tata",
+    "display_name": "J.R.D. Tata",
+    "field": "entrepreneur",
+    "birth_date": "1904-07-29",
+    "birth_time": "07:00",
+    "birth_place": "Paris, France",
+    "lat": 48.8566,
+    "lon": 2.3522,
+    "timezone": "Europe/Paris",
+    "rodden_rating": "A",
+    "source_url": "https://www.astro.com/astro-databank/Tata,_J._R._D.",
+    "verified": true,
+    "events": [
+      {
+        "id": "jrd-pilot-license-1929",
+        "event_date": "1929-02-10",
+        "title": "Received India's first commercial aviation pilot license registered as number one",
+        "category": "career",
+        "source_url": "https://en.wikipedia.org/wiki/J._R._D._Tata"
+      },
+      {
+        "id": "jrd-airmail-1932",
+        "event_date": "1932-10-15",
+        "title": "Piloted the historic inaugural airmail flight of Tata Airlines from Karachi to Mumbai",
+        "category": "creative",
+        "source_url": "https://en.wikipedia.org/wiki/Air_India"
+      },
+      {
+        "id": "jrd-bharat-ratna-1992",
+        "event_date": "1992-03-14",
+        "title": "Conferred the Bharat Ratna India's highest civilian honor for nation building",
+        "category": "achievement",
+        "source_url": "https://en.wikipedia.org/wiki/Bharat_Ratna"
+      }
+    ]
+  }
+]

@@ -117,10 +117,80 @@ class Event(Base):
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
     user_id = Column(String(36), nullable=True, index=True)
-    event_name = Column(String(64), nullable=False, index=True)  # e.g. "answer_viewed", "evidence_opened", "second_question_asked", "topup_clicked"
+    event_name = Column(String(64), nullable=False, index=True)  # e.g. "answer_viewed", "card_viewed", "share_clicked"
     payload = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
 
     __table_args__ = (
         Index("idx_events_name_created", "event_name", "created_at"),
     )
+
+
+class PublicFigure(Base):
+    """Notable public figure with verified birth time and Rodden rating A or AA."""
+    __tablename__ = "public_figures"
+
+    id = Column(String(64), primary_key=True)  # e.g. "dilip-kumar", "albert-einstein"
+    display_name = Column(String(128), nullable=False)
+    field = Column(String(64), nullable=False)  # "actor", "cricketer", "scientist", "entrepreneur"
+    birth_date = Column(Date, nullable=False)
+    birth_time = Column(String(10), nullable=False)  # "HH:MM"
+    birth_place = Column(String(128), nullable=False)
+    lat = Column(Float, nullable=False)
+    lon = Column(Float, nullable=False)
+    timezone = Column(String(64), nullable=False)
+    rodden_rating = Column(String(8), nullable=False)  # "AA" or "A"
+    source_url = Column(String(512), nullable=False)
+    verified = Column(Boolean, default=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+
+class FigureEvent(Base):
+    """Career, creative, or achievement milestone of a public figure."""
+    __tablename__ = "figure_events"
+
+    id = Column(String(64), primary_key=True)
+    figure_id = Column(String(64), ForeignKey("public_figures.id", ondelete="CASCADE"), nullable=False, index=True)
+    event_date = Column(Date, nullable=False)
+    title = Column(String(512), nullable=False)  # One factual line in our own words, no quotes
+    category = Column(String(64), nullable=False)  # "career", "creative", "achievement"
+    source_url = Column(String(512), nullable=False)
+    created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+
+class EventDasha(Base):
+    """Cached Vimshottari dasha lords for a figure's milestone event."""
+    __tablename__ = "event_dasha"
+
+    id = Column(String(64), primary_key=True)
+    event_id = Column(String(64), ForeignKey("figure_events.id", ondelete="CASCADE"), nullable=False, unique=True, index=True)
+    figure_id = Column(String(64), nullable=False, index=True)
+    mahadasha_lord = Column(String(32), nullable=False, index=True)
+    antardasha_lord = Column(String(32), nullable=False)
+    pratyantar_lord = Column(String(32), nullable=False)
+    start_date = Column(Date, nullable=True)
+    end_date = Column(Date, nullable=True)
+    calculated_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+
+class ShareSnapshot(Base):
+    """Card share snapshot stored under a random 128-bit token with 90-day expiry."""
+    __tablename__ = "share_snapshots"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    token = Column(String(64), unique=True, index=True, nullable=False)  # 128-bit hex token
+    user_id = Column(String(36), nullable=True, index=True)
+    headline = Column(String(255), nullable=False)
+    body = Column(Text, nullable=False)
+    figure_name = Column(String(128), nullable=False)
+    figure_field = Column(String(64), nullable=False)
+    lord = Column(String(32), nullable=False)
+    theme = Column(String(64), nullable=False)
+    first_name = Column(String(64), nullable=True)  # Omitted by default for privacy
+    source_url = Column(String(512), nullable=True)
+    is_approximate = Column(Boolean, default=False, nullable=False)
+    is_revoked = Column(Boolean, default=False, nullable=False)
+    image_path = Column(String(512), nullable=True)
+    story_image_path = Column(String(512), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+    expires_at = Column(DateTime(timezone=True), nullable=False)

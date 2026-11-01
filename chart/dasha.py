@@ -1,7 +1,7 @@
 """Vimshottari Dasha calculation module (Mahadasha and Antardasha)."""
 
 from datetime import date, datetime, timedelta
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from chart.models import DashaPeriod
 from chart.nakshatra import NAKSHATRAS, NAKSHATRA_SPAN
 
@@ -117,9 +117,29 @@ def calculate_vimshottari_periods(
         )
         ad_runner = ad_finish
 
+    # Calculate 9 Pratyantardashas within active Antardasha
+    ad_lord_name, ad_active_start, ad_active_end = active_ad
+    ad_total_seconds = (ad_active_end - ad_active_start).total_seconds()
+    ad_lord_idx = LORD_ORDER.index(ad_lord_name)
+    pd_runner = ad_active_start
+    active_pd = (ad_lord_name, ad_active_start, ad_active_end)
+
+    for k in range(len(LORD_ORDER)):
+        pd_lord = LORD_ORDER[(ad_lord_idx + k) % len(LORD_ORDER)]
+        pd_years = LORD_DURATIONS[pd_lord]
+        pd_fraction = pd_years / 120.0
+        pd_duration = timedelta(days=ad_total_seconds / 86400.0 * pd_fraction)
+        pd_finish = pd_runner + pd_duration
+
+        if pd_runner <= target_dt < pd_finish:
+            active_pd = (pd_lord, pd_runner, pd_finish)
+            break
+        pd_runner = pd_finish
+
     current_dasha = DashaPeriod(
         mahadasha_lord=md_lord,
         antardasha_lord=active_ad[0],
+        pratyantardasha_lord=active_pd[0],
         start_date=active_ad[1].strftime("%Y-%m-%d"),
         end_date=active_ad[2].strftime("%Y-%m-%d"),
         is_approximate=is_approximate,
@@ -131,6 +151,7 @@ def calculate_vimshottari_periods(
             DashaPeriod(
                 mahadasha_lord=md[0],
                 antardasha_lord=md[0],  # Indicating start of MD
+                pratyantardasha_lord=md[0],
                 start_date=md[1].strftime("%Y-%m-%d"),
                 end_date=md[2].strftime("%Y-%m-%d"),
                 is_approximate=is_approximate,
@@ -138,3 +159,29 @@ def calculate_vimshottari_periods(
         )
 
     return current_dasha, all_summaries, all_antardashas
+
+
+def get_dasha_hierarchy_at_date(
+    moon_longitude: float,
+    birth_dt: datetime,
+    target_dt: datetime,
+    is_approximate: bool = False,
+) -> Dict[str, Any]:
+    """
+    Get full Mahadasha, Antardasha, and Pratyantardasha at a specific target date.
+    Deterministic and pure function.
+    """
+    curr, _, _ = calculate_vimshottari_periods(
+        moon_longitude=moon_longitude,
+        birth_dt=birth_dt,
+        target_dt=target_dt,
+        is_approximate=is_approximate,
+    )
+    return {
+        "mahadasha_lord": curr.mahadasha_lord,
+        "antardasha_lord": curr.antardasha_lord,
+        "pratyantar_lord": curr.pratyantardasha_lord,
+        "start_date": curr.start_date,
+        "end_date": curr.end_date,
+        "is_approximate": is_approximate,
+    }

@@ -45,6 +45,7 @@ class DashaPeriod(BaseModel):
     """Vimshottari Dasha period."""
     mahadasha_lord: str = Field(..., description="Mahadasha lord")
     antardasha_lord: str = Field(..., description="Antardasha lord")
+    pratyantardasha_lord: Optional[str] = Field(None, description="Pratyantardasha lord (sub-sub-period)")
     start_date: str = Field(..., description="Period start date in YYYY-MM-DD")
     end_date: str = Field(..., description="Period end date in YYYY-MM-DD")
     is_approximate: bool = Field(False, description="True if birth time was unknown and noon was assumed")
