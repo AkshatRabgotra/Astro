@@ -3,6 +3,15 @@ import { Gift, Flame, Share2, Copy, Check, Volume2, Play, Pause, Sparkles, Chevr
 import confetti from "canvas-confetti";
 import { t } from "../i18n";
 
+const PLANET_EMBLEMS = {
+  Sun: { symbol: "☉", bg: "from-amber-600 via-yellow-600 to-amber-500", glow: "shadow-amber-500/40" },
+  Moon: { symbol: "☽", bg: "from-cyan-700 via-sky-600 to-indigo-600", glow: "shadow-cyan-500/40" },
+  Mars: { symbol: "♂", bg: "from-rose-800 via-red-600 to-amber-700", glow: "shadow-rose-600/40" },
+  Jupiter: { symbol: "♃", bg: "from-yellow-700 via-amber-600 to-yellow-500", glow: "shadow-yellow-500/40" },
+  Venus: { symbol: "♀", bg: "from-pink-700 via-fuchsia-600 to-rose-500", glow: "shadow-pink-500/40" },
+  Saturn: { symbol: "♄", bg: "from-blue-900 via-indigo-700 to-slate-700", glow: "shadow-blue-500/40" },
+};
+
 export default function RewardsView({ user, balance, lang = "en", onRefreshBalance, onOpenPaywall }) {
   const [rewardsState, setRewardsState] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -331,60 +340,95 @@ export default function RewardsView({ user, balance, lang = "en", onRefreshBalan
           </div>
         </div>
 
-        {/* Selected or Default Mantra (Mars Mantra - Screenshot 1) */}
+        {/* Planetary Mantra Jaap Cards */}
         {rewardsState?.mantras?.map((m) => {
           const isSelected = activeMantra?.planet === m.planet;
+          const emblem = PLANET_EMBLEMS[m.planet] || PLANET_EMBLEMS.Mars;
 
           return (
             <div
               key={m.planet}
               className={`p-4 rounded-2xl border transition-all ${
                 isSelected
-                  ? "bg-[#1F143B] border-[#B21E68] shadow-lg"
-                  : "bg-[#150E28] border-[#2E204B] hover:border-[#3F2B64]"
+                  ? "bg-gradient-to-b from-[#22133D] to-[#120924] border-[#E5A93C] shadow-xl"
+                  : "bg-[#150E28] border-[#2E204B] hover:border-[#4B346F]"
               }`}
             >
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  {/* Planet Visual Circle */}
-                  <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-amber-700 via-rose-800 to-rose-600 flex items-center justify-center text-white font-serif font-bold shadow-md shadow-rose-900/40 shrink-0">
-                    ♂
+                  {/* Planet Visual Circle with correct astronomical symbol */}
+                  <div className={`w-11 h-11 rounded-full bg-gradient-to-tr ${emblem.bg} flex items-center justify-center text-white font-serif font-bold text-base shadow-lg ${emblem.glow} shrink-0`}>
+                    {emblem.symbol}
                   </div>
                   <div>
                     <h4 className="font-serif text-sm font-bold text-white">
                       {m.title}
                     </h4>
-                    <p className="font-serif text-xs text-[#E5A93C] italic mt-0.5">
-                      {m.transliteration}
-                    </p>
-                    <p className="text-[10px] text-[#8E82AA] mt-0.5 line-clamp-1">
+                    <p className="text-[11px] text-[#A299BC] mt-0.5 line-clamp-1">
                       {m.significance}
                     </p>
+
+                    {/* Locked / Unlocked Status Indicator */}
+                    {!isSelected ? (
+                      <span className="inline-flex items-center gap-1 mt-1 text-[10px] text-[#E5A93C] font-semibold">
+                        <span>🔒</span>
+                        <span>{t("unlockToChant", lang)}</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 mt-1 text-[10px] text-emerald-400 font-semibold">
+                        <span>✓</span>
+                        <span>{t("unlockedChant", lang)}</span>
+                      </span>
+                    )}
                   </div>
                 </div>
 
                 <button
                   onClick={() => {
                     setActiveMantra(m);
-                    setChantCount((prev) => prev + 1);
+                    setChantCount((prev) => (isSelected ? prev : 0));
                   }}
-                  className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-[#B21E68]/30 border border-[#E5A93C]/40 text-[#FDE68A] text-xs font-semibold hover:border-[#E5A93C] transition-all flex items-center gap-1 active:scale-95 shrink-0"
+                  className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all flex items-center gap-1 active:scale-95 shrink-0 ${
+                    isSelected
+                      ? "bg-emerald-500/20 border-emerald-400/50 text-emerald-300"
+                      : "bg-gradient-to-r from-amber-500/20 to-[#B21E68]/30 border-[#E5A93C]/40 text-[#FDE68A] hover:border-[#E5A93C]"
+                  }`}
                 >
-                  <span>{t("claimCoin", lang)}</span>
+                  <span>{isSelected ? "Active" : t("claimCoin", lang)}</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              {/* Active Chanting Drawer */}
+              {/* Active Chanting Drawer - Only Revealed When Claim / Unlock is Pressed */}
               {isSelected && (
-                <div className="mt-3 pt-3 border-t border-[#312250] space-y-3">
-                  <div className="p-3 rounded-xl bg-[#0F0A1E] text-center space-y-1">
-                    <span className="font-serif text-base text-[#F4B8DC] font-bold block">
-                      {m.sanskrit}
-                    </span>
-                    <span className="text-[11px] text-[#A299BC] block">
-                      "{m.transliteration}"
-                    </span>
+                <div className="mt-3.5 pt-3.5 border-t border-[#312250] space-y-3.5 animate-in fade-in duration-200">
+                  {/* Both Hindi (Devanagari Sanskrit) and English Transliterated Display */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-b from-[#110A22] to-[#080414] border border-[#E5A93C]/40 text-center space-y-2 shadow-inner">
+                    <div className="flex items-center justify-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-[#E5A93C]">
+                      <span>✦</span>
+                      <span>{t("unlockedChant", lang)}</span>
+                      <span>✦</span>
+                    </div>
+
+                    {/* 1. Hindi (Devanagari Sanskrit) */}
+                    <div className="py-1">
+                      <span className="text-[10px] uppercase text-[#A299BC] font-semibold tracking-wider block mb-0.5">
+                        संस्कृत / हिन्दी मन्त्र:
+                      </span>
+                      <span className="font-serif text-lg sm:text-xl text-[#FDE68A] font-bold tracking-wide block leading-relaxed drop-shadow-md">
+                        {m.sanskrit}
+                      </span>
+                    </div>
+
+                    {/* 2. English (IAST Transliteration) */}
+                    <div className="pt-2 border-t border-[#291B48]">
+                      <span className="text-[10px] uppercase text-[#A299BC] font-semibold tracking-wider block mb-0.5">
+                        English Transliteration:
+                      </span>
+                      <span className="text-xs sm:text-sm text-[#DDD5EE] italic font-medium block">
+                        "{m.transliteration}"
+                      </span>
+                    </div>
                   </div>
 
                   {/* Audio Waveform Player Simulation */}
@@ -413,14 +457,14 @@ export default function RewardsView({ user, balance, lang = "en", onRefreshBalan
                   {/* Complete & Claim Button */}
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => setChantCount((c) => c + 1)}
+                      onClick={() => setChantCount((c) => Math.min(c + 1, 14))}
                       className="flex-1 py-2 px-3 rounded-xl bg-[#281A49] hover:bg-[#342260] text-white text-xs font-semibold transition-all active:scale-95"
                     >
                       {t("chantMalaBead", lang)}
                     </button>
                     <button
                       onClick={() => handleClaimMantraReward(m.planet)}
-                      className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-[#931B58] to-[#B21E68] text-white text-xs font-bold transition-all shadow-md active:scale-95 hover:brightness-110"
+                      className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-[#931B58] via-[#B21E68] to-[#E5A93C] text-white text-xs font-bold transition-all shadow-md active:scale-95 hover:brightness-110"
                     >
                       {t("claimFreeQuestionMantra", lang)}
                     </button>
