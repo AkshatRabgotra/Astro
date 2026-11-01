@@ -166,3 +166,19 @@
   - `backend/config.py`: Added `ENABLE_OFFLINE_DEMO` flag (defaults to True).
   - `llm/client.py`: Added `DemoAstrologyProvider` that automatically generates rich, 100% grounded Vedic readings directly from computed chart facts when no external API keys are configured, allowing full end-to-end evaluation (streaming tokens, fact chips, paywalls, retention metrics) out of the box.
 - **Verification Status**: 33/33 pytest tests PASSED; live server running on `http://localhost:8000`.
+
+## Log Entry 13: Challenge Standout Features (Visual Kundli, Dasha Scrubber, Live Transits, Multi-Turn Memory)
+- **Objective**: Implement 4 advanced, high-impact features requested from the challenge roadmap:
+  1. **Visual Kundli Chart (`frontend/src/components/KundliChart.jsx`)**: Responsive North Indian diamond SVG chart wheel (400x400 viewBox) mapping houses 1–12 with counter-clockwise orientation, dynamic Lagna sign mapping, occupying Grahas with retro markers, list/table toggle, and an interactive House Inspector with 1-tap "Ask reading about House X" questions.
+  2. **Vimshottari Dasha 120-Year Timeline Scrubber (`chart/dasha.py`, `frontend/src/components/DashaTimeline.jsx`)**: Enhanced Dasha engine to calculate all 9 Antardashas for the active Mahadasha period; interactive timeline scrubber with active badge, duration progress bar, Mahadasha sequence selector, and 1-tap question trigger.
+  3. **Live Planetary Transits Engine (Gochara & Sade Sati) (`chart/transits.py`, `frontend/src/components/TransitsCard.jsx`)**: Real-time Swiss Ephemeris calculation of all 9 Grahas (Sun through Ketu) overlaid against natal Lagna and Moon (Chandra Lagna), automated Sade Sati phase detection (Rising, Peak, Setting), Jupiter transit (Guru Gochara) evaluation, and `GET /api/chart/{birth_profile_id}/transits` endpoint.
+  4. **Multi-Turn Conversational Follow-Up Memory (`llm/prompts.py`, `backend/streaming.py`, `frontend/src/views/AskView.jsx`)**: Built conversational history block into prompt generation; streaming pipeline queries prior completed Q&As to preserve context; added 1-tap follow-up question chips above input bar for seamless conversational flow.
+- **Files Created / Updated**:
+  - `chart/transits.py`: Real-time Gochara calculation with Swiss Ephemeris.
+  - `chart/dasha.py`, `chart/engine.py`, `chart/models.py`: Antardasha sequence calculations and data models.
+  - `backend/main.py`: Added transits endpoint.
+  - `backend/streaming.py`, `llm/prompts.py`: Multi-turn conversational memory context injection.
+  - `frontend/src/components/KundliChart.jsx`, `frontend/src/components/DashaTimeline.jsx`, `frontend/src/components/TransitsCard.jsx`: Interactive UI components.
+  - `frontend/src/views/HomeView.jsx`, `frontend/src/App.jsx`, `frontend/src/views/AskView.jsx`: Integrated components and follow-up chips.
+  - `tests/test_transits_and_dashas.py`: 3 new integration and unit tests.
+- **Verification Status**: 36/36 pytest tests PASSED; Vite production build compiled in 13s.

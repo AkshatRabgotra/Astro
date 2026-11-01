@@ -92,20 +92,30 @@ def calculate_vimshottari_periods(
 
     # Calculate 9 Antardashas within active Mahadasha
     md_lord_idx = LORD_ORDER.index(md_lord)
-    ad_start = md_start
+    ad_runner = md_start
     active_ad = (LORD_ORDER[md_lord_idx], md_start, md_end)
+    all_antardashas: List[DashaPeriod] = []
 
     for j in range(len(LORD_ORDER)):
         ad_lord = LORD_ORDER[(md_lord_idx + j) % len(LORD_ORDER)]
         ad_years = LORD_DURATIONS[ad_lord]
         ad_fraction = ad_years / 120.0
         ad_duration = timedelta(days=md_total_duration.total_seconds() / 86400.0 * ad_fraction)
-        ad_end = ad_start + ad_duration
-        
-        if ad_start <= target_dt < ad_end:
-            active_ad = (ad_lord, ad_start, ad_end)
-            break
-        ad_start = ad_end
+        ad_finish = ad_runner + ad_duration
+
+        if ad_runner <= target_dt < ad_finish:
+            active_ad = (ad_lord, ad_runner, ad_finish)
+
+        all_antardashas.append(
+            DashaPeriod(
+                mahadasha_lord=md_lord,
+                antardasha_lord=ad_lord,
+                start_date=ad_runner.strftime("%Y-%m-%d"),
+                end_date=ad_finish.strftime("%Y-%m-%d"),
+                is_approximate=is_approximate,
+            )
+        )
+        ad_runner = ad_finish
 
     current_dasha = DashaPeriod(
         mahadasha_lord=md_lord,
@@ -127,4 +137,4 @@ def calculate_vimshottari_periods(
             )
         )
 
-    return current_dasha, all_summaries
+    return current_dasha, all_summaries, all_antardashas

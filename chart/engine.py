@@ -229,7 +229,7 @@ def calculate_chart_facts(
 
     # 3. Vimshottari Dasha
     moon_planet = next(p for p in calculated_planets if p.planet == "Moon")
-    current_dasha, _ = calculate_vimshottari_periods(
+    current_dasha, all_dashas, antardashas = calculate_vimshottari_periods(
         moon_longitude=moon_planet.longitude,
         birth_dt=utc_dt,
         target_dt=target_dt or datetime.now(timezone.utc),
@@ -447,6 +447,8 @@ def calculate_chart_facts(
         formatted_lagna_degree=formatted_lagna_deg,
         planets=calculated_planets,
         current_dasha=current_dasha,
+        all_dashas=all_dashas,
+        antardashas=antardashas,
         aspects=aspects,
         facts=facts,
     )

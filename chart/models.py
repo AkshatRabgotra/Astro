@@ -85,6 +85,8 @@ class ChartFacts(BaseModel):
     formatted_lagna_degree: Optional[str] = None
     planets: List[PlanetPosition]
     current_dasha: Optional[DashaPeriod] = None
+    all_dashas: List[DashaPeriod] = Field(default_factory=list)
+    antardashas: List[DashaPeriod] = Field(default_factory=list)
     aspects: List[AspectRelation] = Field(default_factory=list)
     facts: List[ChartFact] = Field(default_factory=list)
 

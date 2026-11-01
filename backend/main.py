@@ -18,6 +18,8 @@ from backend.ledger import (
 from backend.models import Answer, BalanceLedger, BirthProfile, Chart, Event, Question, User
 from backend.places import search_cities
 from backend.service import OnboardingService, QuestionService
+from chart.models import ChartFacts
+from chart.transits import calculate_today_transits
 from backend.streaming import stream_question_answer
 import os
 from fastapi.staticfiles import StaticFiles
@@ -245,6 +247,25 @@ def get_profile_chart(birth_profile_id: str, db: Session = Depends(get_db)):
     if not chart:
         raise HTTPException(status_code=404, detail="Chart not found")
     return chart.facts_json
+
+
+@app.get("/api/chart/{birth_profile_id}/transits")
+def get_chart_transits(birth_profile_id: str, db: Session = Depends(get_db)):
+    """Calculate today's real-time planetary transits overlaid on natal chart."""
+    chart = db.query(Chart).filter(Chart.birth_profile_id == birth_profile_id).first()
+    if not chart:
+        raise HTTPException(status_code=404, detail="Chart not found")
+
+    facts = ChartFacts.model_validate(chart.facts_json)
+    moon_planet = next((p for p in facts.planets if p.planet == "Moon"), None)
+    if not moon_planet:
+        raise HTTPException(status_code=400, detail="Moon position missing in chart")
+
+    report = calculate_today_transits(
+        natal_lagna_sign_num=facts.lagna_sign_number,
+        natal_moon_sign_num=moon_planet.sign_number,
+    )
+    return report.model_dump()
 
 
 @app.post("/api/events")

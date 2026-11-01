@@ -49,7 +49,29 @@ def stream_question_answer(
     try:
         yield sse_event("status", {"state": "generating", "provider": "gemini", "message": "Consulting planetary positions..."})
 
-        prompt = build_reading_prompt(chart_facts, question.question_text)
+        # Retrieve recent conversation turns for multi-turn follow-ups
+        recent_qs = (
+            db.query(Question)
+            .filter(
+                Question.user_id == question.user_id,
+                Question.status == "completed",
+                Question.id != question.id,
+            )
+            .order_by(Question.created_at.desc())
+            .limit(2)
+            .all()
+        )
+        conversation_history = []
+        for rq in reversed(recent_qs):
+            ans = db.query(Answer).filter(Answer.question_id == rq.id).first()
+            if ans and ans.answer_text:
+                conversation_history.append({"user": rq.question_text, "assistant": ans.answer_text})
+
+        prompt = build_reading_prompt(
+            chart_facts=chart_facts,
+            question=question.question_text,
+            conversation_history=conversation_history,
+        )
         resp = orchestrator.generate(prompt=prompt, system_prompt=SYSTEM_PROMPT)
         provider = resp.provider
 
@@ -71,9 +93,10 @@ def stream_question_answer(
             # Retry once with violations fed back
             yield sse_event("status", {"state": "validating", "message": "Grounding verification check in progress..."})
             retry_prompt = build_reading_prompt(
-                chart_facts,
-                question.question_text,
+                chart_facts=chart_facts,
+                question=question.question_text,
                 previous_error="; ".join(val_result.violations),
+                conversation_history=conversation_history,
             )
             try:
                 retry_resp = orchestrator.generate(prompt=retry_prompt, system_prompt=SYSTEM_PROMPT)

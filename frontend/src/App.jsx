@@ -106,6 +106,7 @@ export default function App() {
         {activeTab === "home" && (
           <HomeView
             chartFacts={chartFacts}
+            profile={profile}
             onSelectQuestion={handleSelectQuestionFromHome}
             onGoToAsk={() => setActiveTab("ask")}
           />

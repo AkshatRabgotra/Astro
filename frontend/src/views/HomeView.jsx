@@ -1,7 +1,10 @@
 import React from "react";
 import { Sparkles, ArrowRight, Compass, Moon, Sun, Shield, Clock } from "lucide-react";
+import KundliChart from "../components/KundliChart";
+import DashaTimeline from "../components/DashaTimeline";
+import TransitsCard from "../components/TransitsCard";
 
-export default function HomeView({ chartFacts, onSelectQuestion, onGoToAsk }) {
+export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoToAsk }) {
   const suggestedQuestions = [
     "When will my career enter its strongest period?",
     "Will someone in my close circle betray my trust this year?",
@@ -70,6 +73,30 @@ export default function HomeView({ chartFacts, onSelectQuestion, onGoToAsk }) {
           </div>
         </div>
       </div>
+
+      {/* Feature 1: Interactive Visual Kundli Chart Wheel */}
+      {chartFacts && (
+        <KundliChart
+          chartFacts={chartFacts}
+          onSelectHouseQuestion={onSelectQuestion}
+        />
+      )}
+
+      {/* Feature 2: Interactive Vimshottari Dasha 120-Year Timeline Scrubber */}
+      {chartFacts && (
+        <DashaTimeline
+          chartFacts={chartFacts}
+          onSelectDashaQuestion={onSelectQuestion}
+        />
+      )}
+
+      {/* Feature 4: Today's Live Planetary Transits (Gochara & Sade Sati) */}
+      {profile && (
+        <TransitsCard
+          profile={profile}
+          onSelectTransitQuestion={onSelectQuestion}
+        />
+      )}
 
       {/* Your Birth Chart Summary Card */}
       {chartFacts && (

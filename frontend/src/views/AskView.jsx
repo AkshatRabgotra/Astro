@@ -383,6 +383,30 @@ export default function AskView({
 
       {/* Bottom Input Area - Lifted cleanly above BottomNav */}
       <div className="shrink-0 border-t border-[#23173D] pt-2 pb-1 bg-[#080511]">
+        {/* Follow-up Question Chips (Feature 5: Conversational Continuity) */}
+        {messages.length > 0 && !isStreaming && (
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-2 pt-0.5 no-scrollbar scroll-smooth">
+            <span className="text-[10px] text-[#A299BC] font-medium shrink-0 flex items-center gap-1 pl-1">
+              <Sparkles className="w-3 h-3 text-[#E5A93C]" />
+              Follow-up:
+            </span>
+            {[
+              "What remedies harmonize this energy?",
+              "How will this affect my career?",
+              "Which upcoming dates are auspicious?",
+              "What precautions should I take?",
+            ].map((prompt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleAsk(prompt)}
+                className="shrink-0 px-2.5 py-1 rounded-full text-[11px] bg-[#1E1438] border border-[#3E2963] text-[#DDD5EE] hover:border-[#B21E68] hover:text-white transition-all active:scale-95 shadow-sm"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Balance status pill */}
         <div className="flex items-center justify-between text-[11px] mb-1.5 px-1">
           <span className="text-[#8E82AA]">
