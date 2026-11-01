@@ -3,13 +3,14 @@ import { Sparkles, ArrowRight, Compass, Moon, Sun, Shield, Clock, Flame, Gift } 
 import KundliChart from "../components/KundliChart";
 import DashaTimeline from "../components/DashaTimeline";
 import TransitsCard from "../components/TransitsCard";
+import { t } from "../i18n";
 
-export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoToAsk, onGoToRewards }) {
+export default function HomeView({ chartFacts, profile, lang = "en", onSelectQuestion, onGoToAsk, onGoToRewards }) {
   const suggestedQuestions = [
-    "When will my career enter its strongest period?",
-    "Will someone in my close circle betray my trust this year?",
-    "What does my current Mahadasha say about relocating or finances?",
-    "What spiritual practices will protect my energy right now?",
+    t("q1", lang),
+    t("q2", lang),
+    t("q3", lang),
+    t("q4", lang),
   ];
 
   return (
@@ -22,7 +23,7 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
         <div className="flex items-center gap-2">
           <span className="text-amber-400 text-xs">✦</span>
           <span className="text-xs sm:text-sm text-[#BDB2D9] font-medium group-hover:text-white transition-colors">
-            Ask about exam, career, or love...
+            {t("quickAskPlaceholder", lang)}
           </span>
         </div>
         <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#931B58] via-[#B21E68] to-[#E5A93C] text-white flex items-center justify-center shadow-md shadow-[#B21E68]/30 group-hover:scale-105 transition-transform shrink-0">
@@ -40,10 +41,10 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
         <div className="flex items-center justify-between text-xs text-[#8E82AA]">
           <span className="font-semibold uppercase tracking-wider text-[#A299BC] flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#E5A93C] inline-block" />
-            Your Daily Horoscope
+            {t("dailyHoroscopeTitle", lang)}
           </span>
           <span className="astro-badge px-2.5 py-0.5 rounded-full text-[10.5px] font-semibold text-[#DDD5EE]">
-            Today
+            {t("today", lang)}
           </span>
         </div>
 
@@ -55,13 +56,13 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
 
           <div>
             <h3 className="font-serif text-lg font-bold text-white leading-snug">
-              Today a doubter comes around
+              {t("horoscopeQuote", lang)}
             </h3>
             <div className="inline-flex items-center gap-2 mt-2 px-3 py-1 rounded-full astro-badge text-xs text-[#E1DBEF]">
               <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block shadow-sm shadow-cyan-400/50" />
-              <span className="font-medium">Wear Light Blue</span>
+              <span className="font-medium">{t("wearLightBlue", lang)}</span>
               <span className="text-[#685C83]">|</span>
-              <span>Lucky No. <strong className="text-[#FDE68A]">2</strong></span>
+              <span>{t("luckyNumber", lang)} <strong className="text-[#FDE68A]">2</strong></span>
             </div>
           </div>
         </div>
@@ -75,13 +76,13 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-serif text-base font-bold text-white">Labh</span>
+              <span className="font-serif text-base font-bold text-white">{t("labhTitle", lang)}</span>
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#B21E68]/30 border border-[#B21E68]/50 text-[#F4B8DC] font-semibold">
-                Active Muhurta
+                {t("activeMuhurta", lang)}
               </span>
             </div>
             <p className="text-xs text-[#C7BEDC] mt-0.5">
-              A good hour for financial decisions, signing deals, and practical work.
+              {t("labhDesc", lang)}
             </p>
           </div>
         </div>
@@ -98,13 +99,13 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
           </div>
           <div>
             <h4 className="font-serif text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
-              <span>Keep Your Streak Alive!</span>
+              <span>{t("keepStreakTitle", lang)}</span>
               <span className="text-[10px] px-2 py-0.2 rounded bg-amber-400/20 text-[#FDE68A] font-bold">
-                Day 1-7
+                {t("dayRange", lang)}
               </span>
             </h4>
             <p className="text-[11px] text-[#A299BC] mt-0.5">
-              Collect your daily karma rewards & chant planetary mantras
+              {t("collectKarmaRewards", lang)}
             </p>
           </div>
         </div>
@@ -118,6 +119,7 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
       {chartFacts && (
         <KundliChart
           chartFacts={chartFacts}
+          lang={lang}
           onSelectHouseQuestion={onSelectQuestion}
         />
       )}
@@ -126,6 +128,7 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
       {chartFacts && (
         <DashaTimeline
           chartFacts={chartFacts}
+          lang={lang}
           onSelectDashaQuestion={onSelectQuestion}
         />
       )}
@@ -134,6 +137,7 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
       {profile && (
         <TransitsCard
           profile={profile}
+          lang={lang}
           onSelectTransitQuestion={onSelectQuestion}
         />
       )}
@@ -149,24 +153,24 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
             <div className="flex items-center gap-2">
               <Compass className="w-4 h-4 text-[#E5A93C]" />
               <h3 className="font-serif text-sm font-bold text-white">
-                Your Vedic Placements
+                {t("vedicPlacements", lang)}
               </h3>
             </div>
             <span className="astro-badge px-2 py-0.5 rounded-full text-[10.5px] font-semibold text-[#DDD5EE]">
-              Lahiri Sidereal
+              {t("lahiriSidereal", lang)}
             </span>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="p-3 rounded-xl astro-badge">
-              <span className="text-[#8478A0] block text-[10px] font-medium">Ascendant (Lagna)</span>
+              <span className="text-[#8478A0] block text-[10px] font-medium">{t("ascendantLagna", lang)}</span>
               <span className="font-bold text-white text-xs mt-1 block truncate">
-                {chartFacts.lagna_sign ? `${chartFacts.lagna_sign} (${chartFacts.formatted_lagna_degree})` : "Unavailable"}
+                {chartFacts.lagna_sign ? `${chartFacts.lagna_sign} (${chartFacts.formatted_lagna_degree})` : t("unavailable", lang)}
               </span>
             </div>
 
             <div className="p-3 rounded-xl astro-badge">
-              <span className="text-[#8478A0] block text-[10px] font-medium">Moon Nakshatra</span>
+              <span className="text-[#8478A0] block text-[10px] font-medium">{t("moonNakshatra", lang)}</span>
               <span className="font-bold text-white text-xs mt-1 block truncate">
                 {chartFacts.planets?.find(p => p.planet === "Moon")?.nakshatra?.name || "Moon"}
               </span>
@@ -174,12 +178,12 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
 
             {chartFacts.current_dasha && (
               <div className="p-3 rounded-xl astro-badge border-l-2 border-l-[#B21E68] col-span-2">
-                <span className="text-[#8478A0] block text-[10px] font-medium">Active Vimshottari Dasha</span>
+                <span className="text-[#8478A0] block text-[10px] font-medium">{t("activeDasha", lang)}</span>
                 <span className="font-bold text-[#F4B8DC] text-xs mt-0.5 block">
-                  {chartFacts.current_dasha.mahadasha_lord} Mahadasha • {chartFacts.current_dasha.antardasha_lord} Antardasha
+                  {chartFacts.current_dasha.mahadasha_lord} • {chartFacts.current_dasha.antardasha_lord}
                 </span>
                 <span className="text-[10.5px] text-[#A299BC] block mt-0.5">
-                  Active until {chartFacts.current_dasha.end_date}
+                  {t("activeUntil", lang)} {chartFacts.current_dasha.end_date}
                 </span>
               </div>
             )}
@@ -192,7 +196,7 @@ export default function HomeView({ chartFacts, profile, onSelectQuestion, onGoTo
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-[#E5A93C]" />
           <h3 className="font-serif text-sm font-bold text-white">
-            Questions For You
+            {t("questionsForYou", lang)}
           </h3>
         </div>
 

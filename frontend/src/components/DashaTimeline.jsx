@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Clock, Calendar, Sparkles, ChevronRight, Zap } from "lucide-react";
+import { t } from "../i18n";
 
 const PLANET_COLORS = {
   Sun: { bg: "bg-amber-500/20", border: "border-amber-500/50", text: "text-amber-300", accent: "#F59E0B" },
@@ -25,7 +26,7 @@ const DASHA_SIGNIFICANCE = {
   Venus: "Relationships, luxuries, arts, harmony, financial prosperity, public appeal",
 };
 
-export default function DashaTimeline({ chartFacts, onSelectDashaQuestion }) {
+export default function DashaTimeline({ chartFacts, lang = "en", onSelectDashaQuestion }) {
   const [selectedPeriod, setSelectedPeriod] = useState(null);
 
   if (!chartFacts || !chartFacts.current_dasha) {
@@ -65,10 +66,10 @@ export default function DashaTimeline({ chartFacts, onSelectDashaQuestion }) {
           </div>
           <div>
             <h3 className="font-serif text-sm sm:text-base font-bold text-white flex items-center gap-1.5">
-              Vimshottari Dasha Timeline (120-Year Cycle)
+              {t("dashaTitle", lang)}
             </h3>
             <p className="text-[11px] text-[#A299BC]">
-              Planetary time-lord cycles that govern your major life chapters
+              {t("dashaDesc", lang)}
             </p>
           </div>
         </div>
@@ -83,16 +84,16 @@ export default function DashaTimeline({ chartFacts, onSelectDashaQuestion }) {
           </div>
           <div>
             <span className="text-[10px] uppercase font-semibold text-[#F4B8DC] tracking-wider block">
-              Active Period Right Now
+              {t("activePeriodNow", lang)}
             </span>
             <strong className="text-sm text-white font-serif">
-              {activeMD} Mahadasha • {activeAD} Antardasha
+              {activeMD} • {activeAD}
             </strong>
           </div>
         </div>
         <div className="text-right text-[11px] text-[#A299BC]">
           <span className="block font-mono text-white text-[11px]">{currentDasha.start_date}</span>
-          <span className="text-[10px] text-[#7F739A]">to {currentDasha.end_date}</span>
+          <span className="text-[10px] text-[#7F739A]">{t("activeUntil", lang)} {currentDasha.end_date}</span>
         </div>
       </div>
 

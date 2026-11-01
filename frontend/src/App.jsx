@@ -108,6 +108,7 @@ export default function App() {
           <HomeView
             chartFacts={chartFacts}
             profile={profile}
+            lang={lang}
             onSelectQuestion={handleSelectQuestionFromHome}
             onGoToAsk={() => setActiveTab("ask")}
             onGoToRewards={() => setActiveTab("rewards")}
@@ -118,6 +119,7 @@ export default function App() {
           <RewardsView
             user={user}
             balance={balance}
+            lang={lang}
             onRefreshBalance={() => user && refreshBalance(user.id)}
             onOpenPaywall={() => setShowPaywall(true)}
           />
@@ -129,6 +131,7 @@ export default function App() {
             profile={profile}
             chartFacts={chartFacts}
             balance={balance}
+            lang={lang}
             onOpenPaywall={() => setShowPaywall(true)}
             onOpenEvidence={(fact) => setSelectedFact(fact)}
             initialQuestion={selectedQuestionPrompt}
@@ -139,24 +142,26 @@ export default function App() {
         {activeTab === "history" && (
           <HistoryView
             user={user}
+            lang={lang}
             onOpenEvidence={(fact) => setSelectedFact(fact)}
           />
         )}
 
-        {activeTab === "metrics" && <MetricsView />}
+        {activeTab === "metrics" && <MetricsView lang={lang} />}
       </main>
 
       {/* Bottom Navigation */}
-      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} lang={lang} />
 
       {/* Modals */}
       {showOnboarding && (
-        <OnboardingModal onOnboardSuccess={handleOnboardSuccess} />
+        <OnboardingModal onOnboardSuccess={handleOnboardSuccess} lang={lang} />
       )}
 
       {showPaywall && (
         <PaywallModal
           user={user}
+          lang={lang}
           onTopupSuccess={handleTopupSuccess}
           onClose={() => setShowPaywall(false)}
         />
@@ -165,6 +170,7 @@ export default function App() {
       {selectedFact && (
         <EvidenceModal
           fact={selectedFact}
+          lang={lang}
           onClose={() => setSelectedFact(null)}
         />
       )}

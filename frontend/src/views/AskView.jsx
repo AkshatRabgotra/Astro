@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send, Sparkles, RefreshCw, AlertCircle, ShieldCheck, Compass, Mic, ArrowRight } from "lucide-react";
+import { t } from "../i18n";
 
 /**
  * Parses bold text (**text**) and in-text fact chips ([F01]..[F25])
@@ -105,6 +106,7 @@ export default function AskView({
   profile,
   chartFacts,
   balance,
+  lang = "en",
   onOpenPaywall,
   onOpenEvidence,
   initialQuestion,
@@ -289,10 +291,10 @@ export default function AskView({
               <Sparkles className="w-7 h-7" />
             </div>
             <h3 className="font-serif text-lg font-bold text-white">
-              Ask Vaani Astrologer
+              {t("askAstrologerTitle", lang)}
             </h3>
             <p className="text-xs text-[#A299BC] max-w-xs mx-auto mt-1 leading-relaxed">
-              Ask about career shifts, relationship compatibility, or life timing. Answers are 100% grounded in your birth chart.
+              {t("askAstrologerSubtitle", lang)}
             </p>
           </div>
         )}
@@ -383,26 +385,26 @@ export default function AskView({
           <div className="p-4 rounded-2xl crystal-card border border-[#B21E68]/50 space-y-3 relative overflow-hidden">
             <div className="flex items-center gap-2 text-[#F4B8DC] text-xs font-medium">
               <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>You don't have enough balance. Please recharge to get answers for your questions.</span>
+              <span>{t("insufficientBalanceAlert", lang)}</span>
             </div>
 
             <div className="p-3.5 rounded-xl bg-gradient-to-tr from-[#24133F] via-[#351A52] to-[#1C0E33] border border-[#B21E68]/40 space-y-2 relative">
               <div className="flex items-center justify-between">
                 <h4 className="font-serif text-xs sm:text-sm font-bold text-white">
-                  Get 10 questions at 66% discount
+                  {t("promoTitle", lang)}
                 </h4>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E5A93C]/20 text-[#FDE68A] font-bold">
                   QUESTMORE
                 </span>
               </div>
               <p className="text-[11px] text-[#DDD5EE] leading-relaxed">
-                Your question balance is ZERO. Use promo code <strong>QUESTMORE</strong> to unlock 10 questions at 66% discount!
+                {t("promoDesc", lang)}
               </p>
               <button
                 onClick={onOpenPaywall}
                 className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#931B58] via-[#B21E68] to-[#D8227E] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
               >
-                <span>Buy Questions Now</span>
+                <span>{t("buyQuestionsNow", lang)}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -419,13 +421,13 @@ export default function AskView({
           <div className="flex items-center gap-1.5 overflow-x-auto pb-2 pt-0.5 no-scrollbar scroll-smooth">
             <span className="text-[10px] text-[#A299BC] font-medium shrink-0 flex items-center gap-1 pl-1">
               <Sparkles className="w-3 h-3 text-[#E5A93C]" />
-              Follow-up:
+              {t("followUpLabel", lang)}
             </span>
             {[
-              "What remedies harmonize this energy?",
-              "How will this affect my career?",
-              "Which upcoming dates are auspicious?",
-              "What precautions should I take?",
+              t("followUp1", lang),
+              t("followUp2", lang),
+              t("followUp3", lang),
+              t("followUp4", lang),
             ].map((prompt, idx) => (
               <button
                 key={idx}
@@ -441,14 +443,14 @@ export default function AskView({
         {/* Balance status pill */}
         <div className="flex items-center justify-between text-[11px] mb-1.5 px-1">
           <span className="text-[#8E82AA]">
-            {balance} question credit remaining
+            {balance} {balance === 1 ? t("questionLeft", lang) : t("questionsLeft", lang)}
           </span>
           {balance <= 0 && (
             <button
               onClick={onOpenPaywall}
               className="text-[#F4B8DC] font-semibold hover:underline"
             >
-              + Add Free Questions
+              + {t("addFree", lang)}
             </button>
           )}
         </div>
@@ -460,7 +462,7 @@ export default function AskView({
             value={questionText}
             onChange={(e) => setQuestionText(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAsk()}
-            placeholder={balance <= 0 ? "Top up to ask your next question..." : "Ask your astrology question..."}
+            placeholder={balance <= 0 ? t("buyQuestionsNow", lang) : t("askPlaceholder", lang)}
             disabled={isStreaming}
             className="flex-1 bg-transparent text-sm text-white placeholder-[#786B94] focus:outline-none"
           />

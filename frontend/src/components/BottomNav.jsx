@@ -1,13 +1,14 @@
 import React from "react";
 import { Home, Sparkles, History, BarChart3, Eye, Gift } from "lucide-react";
+import { t } from "../i18n";
 
-export default function BottomNav({ activeTab, setActiveTab }) {
+export default function BottomNav({ activeTab, setActiveTab, lang = "en" }) {
   const tabs = [
-    { id: "home", label: "Home", icon: Home },
-    { id: "rewards", label: "Rewards", icon: Gift },
-    { id: "ask", label: "Ask", icon: Sparkles, isCenter: true },
-    { id: "history", label: "History", icon: History },
-    { id: "metrics", label: "Metrics", icon: BarChart3 },
+    { id: "home", label: t("home", lang), icon: Home },
+    { id: "rewards", label: t("rewards", lang), icon: Gift },
+    { id: "ask", label: t("ask", lang), icon: Sparkles, isCenter: true },
+    { id: "history", label: t("history", lang), icon: History },
+    { id: "metrics", label: t("metrics", lang), icon: BarChart3 },
   ];
 
   return (

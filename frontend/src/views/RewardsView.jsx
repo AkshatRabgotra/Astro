@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Gift, Flame, Share2, Copy, Check, Volume2, Play, Pause, Sparkles, ChevronRight, CheckCircle2, ArrowRight } from "lucide-react";
 import confetti from "canvas-confetti";
+import { t } from "../i18n";
 
-export default function RewardsView({ user, balance, onRefreshBalance, onOpenPaywall }) {
+export default function RewardsView({ user, balance, lang = "en", onRefreshBalance, onOpenPaywall }) {
   const [rewardsState, setRewardsState] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
@@ -143,7 +144,7 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
             <Gift className="w-4 h-4 text-[#FDE68A]" />
           </div>
           <h1 className="font-serif text-2xl font-bold text-white tracking-wide">
-            Rewards
+            {t("rewardsTitle", lang)}
           </h1>
         </div>
 
@@ -152,7 +153,7 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
           onClick={onOpenPaywall}
           className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#18112C] border border-[#3E2963] cursor-pointer hover:border-[#B21E68] transition-all shadow-md group"
         >
-          <span className="text-xs text-[#A299BC] font-medium">Wallet</span>
+          <span className="text-xs text-[#A299BC] font-medium">{t("wallet", lang)}</span>
           <div className="flex items-center gap-1">
             <span className="w-3.5 h-3.5 rounded-full gold-coin inline-block shrink-0" />
             <span className="text-sm font-bold text-white group-hover:text-[#FDE68A] transition-colors">
@@ -173,11 +174,11 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
           </div>
           <div>
             <h3 className="font-serif text-base font-bold text-white flex items-center gap-2">
-              Keep Your Streak Alive!
+              {t("keepStreakTitle", lang)}
               <Flame className="w-4 h-4 text-orange-400 fill-orange-400" />
             </h3>
             <p className="text-xs text-[#A299BC]">
-              Collect your daily rewards here
+              {t("collectDailyRewards", lang)}
             </p>
           </div>
         </div>
@@ -191,7 +192,7 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
             return (
               <div key={item.day} className="flex flex-col items-center gap-1.5">
                 <span className="text-[10px] text-[#8E82AA] font-semibold">
-                  Day {item.day}
+                  {t("day", lang)} {item.day}
                 </span>
 
                 <div
@@ -227,12 +228,12 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
               className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#931B58] via-[#B21E68] to-[#E5A93C] text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg hover:brightness-110 active:scale-95 transition-all cosmic-glow"
             >
               <Sparkles className="w-4 h-4 text-[#FDE68A]" />
-              <span>Claim ₹{rewardsState?.today_reward_coins} Today (Adds +{rewardsState?.today_reward_questions} Question)</span>
+              <span>{t("claimTodayReward", lang)} (+{rewardsState?.today_reward_questions})</span>
             </button>
           ) : (
             <div className="w-full py-2.5 px-4 rounded-xl bg-[#17102A] border border-[#302150] text-[#A299BC] text-xs text-center font-medium flex items-center justify-center gap-2">
               <Check className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Claimed today! Get ₹{rewardsState?.next_reward_coins} more tomorrow</span>
+              <span>{t("claimedTodayMoreTomorrow", lang)}</span>
             </div>
           )}
         </div>
@@ -246,10 +247,10 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
         <div className="flex items-start justify-between">
           <div>
             <h3 className="font-serif text-base font-bold text-white flex items-center gap-1.5">
-              Refer a friend & both earn <span className="text-[#E5A93C]">🪙 ₹50</span>
+              {t("referFriendTitle", lang)} <span className="text-[#E5A93C]">🪙 ₹50</span>
             </h3>
             <p className="text-xs text-[#A299BC] mt-0.5">
-              Give 5 free questions. You earn 5 questions when they ask their first reading.
+              {t("referFriendDesc", lang)}
             </p>
           </div>
 
@@ -265,12 +266,12 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
             className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20BE5A] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all"
           >
             <Share2 className="w-4 h-4" />
-            <span>Refer a friend via WhatsApp</span>
+            <span>{t("referViaWhatsApp", lang)}</span>
           </button>
 
           <div className="flex items-center justify-between p-2 pl-3 rounded-xl bg-[#140D26] border border-[#352554]">
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-[#8E82AA]">Your Referral Code:</span>
+              <span className="text-[#8E82AA]">{t("yourReferralCode", lang)}</span>
               <span className="font-mono font-bold text-[#F4B8DC] text-sm tracking-widest">
                 {rewardsState?.referral_code || "MELOO-9X47"}
               </span>
@@ -281,7 +282,7 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
               className="px-3 py-1.5 rounded-lg bg-[#271A45] hover:bg-[#B21E68] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-95"
             >
               {copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copiedCode ? "Copied" : "Copy"}</span>
+              <span>{copiedCode ? t("copied", lang) : t("copy", lang)}</span>
             </button>
           </div>
         </div>
@@ -289,7 +290,7 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
         {/* Redeem friend code input */}
         <div className="pt-2 border-t border-[#291B45]">
           <span className="text-[11px] text-[#8E82AA] block mb-1.5 font-medium">
-            Have a friend's referral code?
+            {t("haveFriendCode", lang)}
           </span>
           <div className="flex items-center gap-2">
             <input
@@ -304,7 +305,7 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
               disabled={!friendCode.trim()}
               className="px-3.5 py-2 rounded-xl bg-[#B21E68] hover:bg-[#931B58] text-white text-xs font-semibold disabled:opacity-40 transition-all active:scale-95"
             >
-              Redeem
+              {t("redeem", lang)}
             </button>
           </div>
           {redeemStatus && (
@@ -319,16 +320,14 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
       <div className="crystal-card p-5 space-y-4">
         <div className="text-center space-y-1">
           <div className="flex items-center justify-center gap-2 text-xs font-serif font-bold text-[#E5A93C] tracking-widest uppercase">
-            <span>✦</span>
-            <span>MANTRA JAAP</span>
-            <span>✦</span>
+            <span>{t("mantraJaap", lang)}</span>
           </div>
           <p className="text-xs text-[#A299BC] max-w-xs mx-auto">
-            Chant mantras and find peace, earn rewards as you stay consistent.
+            {t("mantraJaapDesc", lang)}
           </p>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#1A1230] border border-[#382759] text-[11px] text-[#E5A93C] font-semibold mt-1">
             <span className="w-2 h-2 rounded-full gold-coin inline-block" />
-            <span>Claimed: {rewardsState?.mantra_claims_today || 0}/14</span>
+            <span>{t("claimedStatus", lang)}: {rewardsState?.mantra_claims_today || 0}/14</span>
           </div>
         </div>
 
@@ -371,7 +370,7 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
                   }}
                   className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-[#B21E68]/30 border border-[#E5A93C]/40 text-[#FDE68A] text-xs font-semibold hover:border-[#E5A93C] transition-all flex items-center gap-1 active:scale-95 shrink-0"
                 >
-                  <span>Claim 🪙 ₹1</span>
+                  <span>{t("claimCoin", lang)}</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -407,7 +406,7 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
                     </div>
 
                     <div className="text-[11px] font-mono text-[#A299BC]">
-                      Chants: <strong className="text-white">{chantCount}/14</strong>
+                      {t("chantsCount", lang)}: <strong className="text-white">{chantCount}/14</strong>
                     </div>
                   </div>
 
@@ -417,13 +416,13 @@ export default function RewardsView({ user, balance, onRefreshBalance, onOpenPay
                       onClick={() => setChantCount((c) => c + 1)}
                       className="flex-1 py-2 px-3 rounded-xl bg-[#281A49] hover:bg-[#342260] text-white text-xs font-semibold transition-all active:scale-95"
                     >
-                      ✦ Chant Mala Bead (+1)
+                      {t("chantMalaBead", lang)}
                     </button>
                     <button
                       onClick={() => handleClaimMantraReward(m.planet)}
                       className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-[#931B58] to-[#B21E68] text-white text-xs font-bold transition-all shadow-md active:scale-95 hover:brightness-110"
                     >
-                      Claim +1 Question Free
+                      {t("claimFreeQuestionMantra", lang)}
                     </button>
                   </div>
                 </div>

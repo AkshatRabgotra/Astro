@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { X, Sparkles, Zap, CheckCircle2, Shield } from "lucide-react";
 import confetti from "canvas-confetti";
+import { t } from "../i18n";
 
-export default function PaywallModal({ user, onTopupSuccess, onClose }) {
+export default function PaywallModal({ user, lang = "en", onTopupSuccess, onClose }) {
   const [loading, setLoading] = useState(false);
 
   const handleTopup = async (count = 5) => {
@@ -65,13 +66,13 @@ export default function PaywallModal({ user, onTopupSuccess, onClose }) {
             <Sparkles className="w-7 h-7 text-[#FDE68A]" />
           </div>
           <span className="block text-xs font-bold uppercase tracking-wider text-[#F4B8DC] mb-1">
-            Melooha Challenge Demo Mode
+            {t("hiringChallengeMode", lang)}
           </span>
           <h2 className="font-serif text-2xl font-bold text-white">
-            Add 5 Free Questions
+            {t("add5QuestionsFree", lang)}
           </h2>
           <p className="text-xs text-[#A299BC] mt-1 max-w-xs mx-auto">
-            Your question balance is currently 0. Add instant credits with no real payment to keep exploring your chart.
+            {t("zeroBalanceModalDesc", lang)}
           </p>
         </div>
 
@@ -110,13 +111,13 @@ export default function PaywallModal({ user, onTopupSuccess, onClose }) {
           ) : (
             <>
               <Sparkles className="w-5 h-5 text-[#FDE68A]" />
-              <span>Add 5 Questions Free</span>
+              <span>{t("add5QuestionsFree", lang)}</span>
             </>
           )}
         </button>
 
         <p className="text-center text-[10.5px] text-[#8E82AA] font-medium">
-          Hiring Challenge Demo Mode • No payment method required
+          {t("noRealPayment", lang)}
         </p>
       </div>
     </div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Compass, Sparkles, AlertCircle, Shield, ChevronRight, RefreshCw, Sun, Moon } from "lucide-react";
+import { t } from "../i18n";
 
-export default function TransitsCard({ profile, onSelectTransitQuestion }) {
+export default function TransitsCard({ profile, lang = "en", onSelectTransitQuestion }) {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -51,10 +52,10 @@ export default function TransitsCard({ profile, onSelectTransitQuestion }) {
           </div>
           <div>
             <h3 className="font-serif text-sm sm:text-base font-bold text-white flex items-center gap-1.5">
-              Live Planetary Transits (Gochara Today)
+              {t("transitsTitle", lang)}
             </h3>
             <p className="text-[11px] text-[#A299BC]">
-              Real-time positions in the sky relative to your natal Moon in {report.natal_moon_sign}
+              {t("transitsDesc", lang)} {report.natal_moon_sign}
             </p>
           </div>
         </div>
@@ -71,7 +72,7 @@ export default function TransitsCard({ profile, onSelectTransitQuestion }) {
         <Shield className={`w-4 h-4 mt-0.5 shrink-0 ${report.sade_sati_active ? "text-amber-400" : "text-[#E5A93C]"}`} />
         <div className="text-xs space-y-0.5">
           <strong className="block text-white font-semibold">
-            {report.sade_sati_active ? "Sade Sati Active" : "No Sade Sati Active"}
+            {report.sade_sati_active ? t("sadeSatiActive", lang) : t("noSadeSati", lang)}
           </strong>
           <p className="text-[11px] text-[#B5A8D3] leading-relaxed">
             {report.sade_sati_status}

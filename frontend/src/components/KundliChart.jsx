@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Sparkles, Eye, Info, ChevronRight, HelpCircle } from "lucide-react";
+import { t } from "../i18n";
 
 const HOUSE_THEMES = {
   1: { name: "Tanu Bhava (Self)", significations: "Physical vitality, appearance, self-identity, constitution" },
@@ -44,7 +45,7 @@ const NORTH_HOUSES = [
   { id: 12, points: "200,0 400,0 300,100", center: { x: 300, y: 50 }, labelPos: { x: 300, y: 30 } },
 ];
 
-export default function KundliChart({ chartFacts, onSelectHouseQuestion }) {
+export default function KundliChart({ chartFacts, lang = "en", onSelectHouseQuestion }) {
   const [selectedHouse, setSelectedHouse] = useState(1);
   const [chartStyle, setChartStyle] = useState("north"); // 'north' | 'table'
 
@@ -87,13 +88,13 @@ export default function KundliChart({ chartFacts, onSelectHouseQuestion }) {
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#E5A93C] animate-pulse shadow-sm shadow-[#E5A93C]" />
             <h3 className="font-serif text-sm sm:text-base font-bold text-white flex items-center gap-1.5">
-              Visual Kundli Chart (D1 Rashi)
+              {t("kundliTitle", lang)}
             </h3>
           </div>
           <p className="text-[11px] text-[#A299BC] mt-0.5">
             {timeKnown
-              ? `Lagna: ${chartFacts.lagna_sign || "Aries"} • Lahiri Sidereal`
-              : "Solar Noon Reference (Houses reserved without exact time)"}
+              ? `${t("lagnaLabel", lang)}: ${chartFacts.lagna_sign || "Aries"} • ${t("lahiriSidereal", lang)}`
+              : t("solarNoonRef", lang)}
           </p>
         </div>
 
@@ -107,7 +108,7 @@ export default function KundliChart({ chartFacts, onSelectHouseQuestion }) {
                 : "text-[#8E82AA] hover:text-white"
             }`}
           >
-            Chart
+            {t("chartTab", lang)}
           </button>
           <button
             onClick={() => setChartStyle("table")}
@@ -117,7 +118,7 @@ export default function KundliChart({ chartFacts, onSelectHouseQuestion }) {
                 : "text-[#8E82AA] hover:text-white"
             }`}
           >
-            List
+            {t("listTab", lang)}
           </button>
         </div>
       </div>
@@ -286,7 +287,7 @@ export default function KundliChart({ chartFacts, onSelectHouseQuestion }) {
         {/* Occupying Planets in Selected House */}
         <div className="pt-2 border-t border-[#291B48]">
           <span className="text-[10px] uppercase tracking-wider text-[#8A7EA6] font-semibold block mb-1">
-            Planets in this House ({selectedPlanets.length})
+            {t("occupyingPlanets", lang)} ({selectedPlanets.length})
           </span>
           {selectedPlanets.length > 0 ? (
             <div className="flex flex-wrap gap-2">
@@ -309,7 +310,7 @@ export default function KundliChart({ chartFacts, onSelectHouseQuestion }) {
             </div>
           ) : (
             <span className="text-xs text-[#73688E] italic">
-              No planets placed here in your birth chart (acts through its sign lord).
+              {t("noPlanetsInHouse", lang)}
             </span>
           )}
         </div>
@@ -324,7 +325,7 @@ export default function KundliChart({ chartFacts, onSelectHouseQuestion }) {
             }
             className="w-full mt-2 py-2 px-3 rounded-xl bg-[#B21E68]/20 hover:bg-[#B21E68]/40 border border-[#B21E68]/50 text-xs font-semibold text-[#F4B8DC] flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]"
           >
-            <span>Ask question about House {selectedHouse}</span>
+            <span>{t("askHouseQuestion", lang)} {selectedHouse}</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
         )}

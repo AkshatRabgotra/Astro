@@ -25,11 +25,10 @@ export default function Header({ user, balance, lang, setLang, onOpenPaywall, on
           </div>
           <div className="flex flex-col">
             <span className="text-xs font-bold text-white tracking-wide truncate max-w-[90px] group-hover:text-[#F4B8DC] transition-colors">
-              {user ? user.name : "New User"}
+              {user ? user.name : t("newUser", lang)}
             </span>
             <span className="text-[9.5px] text-[#A299BC] -mt-0.5 flex items-center gap-0.5">
-              <span>Reading</span>
-              <span className="text-[#E5A93C]">✦</span>
+              <span>{t("readingAura", lang)}</span>
             </span>
           </div>
         </button>
