@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, RefreshCw, AlertCircle, ShieldCheck, Compass } from "lucide-react";
+import { Send, Sparkles, RefreshCw, AlertCircle, ShieldCheck, Compass, Mic, ArrowRight } from "lucide-react";
 
 /**
  * Parses bold text (**text**) and in-text fact chips ([F01]..[F25])
@@ -378,6 +378,37 @@ export default function AskView({
           </div>
         )}
 
+        {/* Zero-Balance Promo Discount Card (Screenshot 2) */}
+        {balance <= 0 && !isStreaming && messages.length > 0 && (
+          <div className="p-4 rounded-2xl crystal-card border border-[#B21E68]/50 space-y-3 relative overflow-hidden">
+            <div className="flex items-center gap-2 text-[#F4B8DC] text-xs font-medium">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>You don't have enough balance. Please recharge to get answers for your questions.</span>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-gradient-to-tr from-[#24133F] via-[#351A52] to-[#1C0E33] border border-[#B21E68]/40 space-y-2 relative">
+              <div className="flex items-center justify-between">
+                <h4 className="font-serif text-xs sm:text-sm font-bold text-white">
+                  Get 10 questions at 66% discount
+                </h4>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E5A93C]/20 text-[#FDE68A] font-bold">
+                  QUESTMORE
+                </span>
+              </div>
+              <p className="text-[11px] text-[#DDD5EE] leading-relaxed">
+                Your question balance is ZERO. Use promo code <strong>QUESTMORE</strong> to unlock 10 questions at 66% discount!
+              </p>
+              <button
+                onClick={onOpenPaywall}
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#931B58] via-[#B21E68] to-[#D8227E] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
+              >
+                <span>Buy Questions Now</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -433,6 +464,15 @@ export default function AskView({
             disabled={isStreaming}
             className="flex-1 bg-transparent text-sm text-white placeholder-[#786B94] focus:outline-none"
           />
+
+          <button
+            type="button"
+            title="Voice input shortcut"
+            onClick={() => handleAsk("What does my current Mahadasha indicate for my career?")}
+            className="w-8 h-8 rounded-full bg-[#271A45] hover:bg-[#3B2564] text-[#F4B8DC] hover:text-white flex items-center justify-center shrink-0 transition-colors active:scale-95"
+          >
+            <Mic className="w-4 h-4" />
+          </button>
 
           <button
             onClick={() => handleAsk()}

@@ -9,6 +9,7 @@ import HomeView from "./views/HomeView";
 import AskView from "./views/AskView";
 import HistoryView from "./views/HistoryView";
 import MetricsView from "./views/MetricsView";
+import RewardsView from "./views/RewardsView";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -109,6 +110,15 @@ export default function App() {
             profile={profile}
             onSelectQuestion={handleSelectQuestionFromHome}
             onGoToAsk={() => setActiveTab("ask")}
+          />
+        )}
+
+        {activeTab === "rewards" && (
+          <RewardsView
+            user={user}
+            balance={balance}
+            onRefreshBalance={() => user && refreshBalance(user.id)}
+            onOpenPaywall={() => setShowPaywall(true)}
           />
         )}
 

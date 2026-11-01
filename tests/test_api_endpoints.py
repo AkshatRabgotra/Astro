@@ -9,13 +9,19 @@ from sqlalchemy.orm import sessionmaker
 from backend.database import Base
 from backend.main import (
     AskQuestionRequest,
+    ClaimMantraRequest,
     OnboardingRequest,
+    RedeemReferralRequest,
     TopupRequest,
     ask_question,
     get_metrics,
     get_profile_chart,
+    get_rewards_state,
     get_user_balance,
     get_user_history,
+    handle_claim_mantra,
+    handle_claim_streak,
+    handle_redeem_referral,
     health_check,
     onboard_user,
     search_places,
@@ -135,3 +141,26 @@ def test_api_onboarding_and_balance_flow(db):
     assert metrics["second_question_retention_rate_pct"] == 100.0
     assert metrics["total_questions_asked"] == 2
     assert metrics["total_topups"] == 1
+
+    # 10. Rewards: Get initial streak state
+    rewards = get_rewards_state(user_id, db)
+    assert rewards["can_claim_today"] is True
+    assert rewards["streak_count"] == 1
+    assert rewards["referral_code"] is not None
+
+    # 11. Claim streak reward -> increases balance
+    initial_bal = get_user_balance(user_id, db)["balance"]
+    claim_res = handle_claim_streak(user_id, db)
+    assert claim_res["success"] is True
+    new_bal = get_user_balance(user_id, db)["balance"]
+    assert new_bal > initial_bal
+
+    # 12. Claim mantra jaap reward
+    mantra_res = handle_claim_mantra(user_id, ClaimMantraRequest(planet="Mars"), db)
+    assert mantra_res["success"] is True
+    assert get_user_balance(user_id, db)["balance"] == new_bal + 1
+
+    # 13. Redeem referral code
+    ref_res = handle_redeem_referral(user_id, RedeemReferralRequest(code="FRIEND99"), db)
+    assert ref_res["success"] is True
+    assert get_user_balance(user_id, db)["balance"] == new_bal + 1 + 5

@@ -18,6 +18,12 @@ from backend.ledger import (
 from backend.models import Answer, BalanceLedger, BirthProfile, Chart, Event, Question, User
 from backend.places import search_cities
 from backend.service import OnboardingService, QuestionService
+from backend.rewards import (
+    claim_mantra_reward,
+    claim_streak_reward,
+    get_user_reward_state,
+    redeem_referral_code,
+)
 from chart.models import ChartFacts
 from chart.transits import calculate_today_transits
 from backend.streaming import stream_question_answer
@@ -266,6 +272,38 @@ def get_chart_transits(birth_profile_id: str, db: Session = Depends(get_db)):
         natal_moon_sign_num=moon_planet.sign_number,
     )
     return report.model_dump()
+
+
+class ClaimMantraRequest(BaseModel):
+    planet: str = "Mars"
+
+
+class RedeemReferralRequest(BaseModel):
+    code: str
+
+
+@app.get("/api/user/{user_id}/rewards")
+def get_rewards_state(user_id: str, db: Session = Depends(get_db)):
+    """Fetch user's daily streak, referral code, and mantra progress."""
+    return get_user_reward_state(db, user_id)
+
+
+@app.post("/api/user/{user_id}/rewards/claim-streak")
+def handle_claim_streak(user_id: str, db: Session = Depends(get_db)):
+    """Claim today's 7-day streak reward."""
+    return claim_streak_reward(db, user_id)
+
+
+@app.post("/api/user/{user_id}/rewards/claim-mantra")
+def handle_claim_mantra(user_id: str, req: ClaimMantraRequest, db: Session = Depends(get_db)):
+    """Claim remedial mantra reward for peace and consistency."""
+    return claim_mantra_reward(db, user_id, req.planet)
+
+
+@app.post("/api/user/{user_id}/rewards/redeem-referral")
+def handle_redeem_referral(user_id: str, req: RedeemReferralRequest, db: Session = Depends(get_db)):
+    """Redeem friend's referral code to get +5 questions free."""
+    return redeem_referral_code(db, user_id, req.code)
 
 
 @app.post("/api/events")

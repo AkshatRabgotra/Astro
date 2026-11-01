@@ -1,9 +1,10 @@
 import React from "react";
-import { Home, Sparkles, History, BarChart3, Eye } from "lucide-react";
+import { Home, Sparkles, History, BarChart3, Eye, Gift } from "lucide-react";
 
 export default function BottomNav({ activeTab, setActiveTab }) {
   const tabs = [
     { id: "home", label: "Home", icon: Home },
+    { id: "rewards", label: "Rewards", icon: Gift },
     { id: "ask", label: "Ask", icon: Sparkles, isCenter: true },
     { id: "history", label: "History", icon: History },
     { id: "metrics", label: "Metrics", icon: BarChart3 },
