@@ -41,8 +41,13 @@ You MUST respond with a single valid JSON object matching this exact schema:
 """
 
 
-def build_reading_prompt(chart_facts: ChartFacts, question: str, previous_error: Optional[str] = None) -> str:
-    """Build grounded user prompt with chart facts context and user question."""
+def build_reading_prompt(
+    chart_facts: ChartFacts,
+    question: str,
+    previous_error: Optional[str] = None,
+    conversation_history: Optional[list] = None,
+) -> str:
+    """Build grounded user prompt with chart facts context, conversation history, and user question."""
     context = chart_facts.to_llm_context()
 
     q_lower = question.lower()
@@ -54,9 +59,17 @@ def build_reading_prompt(chart_facts: ChartFacts, question: str, previous_error:
     elif any(w in q_lower for w in ["marriage", "love", "relationship", "partner", "spouse"]):
         guidance = "Focus on 7th house (partnership), Venus (karaka), 2nd house (family), and active Dasha timing."
 
+    history_block = ""
+    if conversation_history:
+        lines = ["PREVIOUS CONVERSATION CONTEXT (for continuity and follow-up reference):"]
+        for turn in conversation_history:
+            lines.append(f"User: {turn.get('user', '')}")
+            lines.append(f"Astrologer: {turn.get('assistant', '')[:280]}...")
+        history_block = "\n".join(lines) + "\n\n"
+
     prompt = f"""{context}
 
-USER QUESTION:
+{history_block}USER QUESTION:
 "{question}"
 
 ANALYSIS GUIDANCE:
