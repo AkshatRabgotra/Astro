@@ -34,6 +34,9 @@ class User(Base):
     id = Column(String(36), primary_key=True, default=generate_uuid)
     name = Column(String(100), nullable=True)
     email = Column(String(255), nullable=True, unique=True)
+    google_id = Column(String(100), nullable=True, unique=True, index=True)
+    avatar_url = Column(String(500), nullable=True)
+    auth_provider = Column(String(50), default="google")
     created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
 
 
@@ -194,3 +197,84 @@ class ShareSnapshot(Base):
     story_image_path = Column(String(512), nullable=True)
     created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
     expires_at = Column(DateTime(timezone=True), nullable=False)
+
+
+class Experiment(Base):
+    """A/B experiment assignment for users (e.g. control vs treatment for Past Check)."""
+    __tablename__ = "experiments"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    user_id = Column(String(36), unique=True, index=True, nullable=False)
+    arm = Column(String(16), nullable=False)  # "control" or "treatment"
+    assigned_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+
+class PastCheckSet(Base):
+    """Past Check set tied to a user and their chart hash."""
+    __tablename__ = "past_check_sets"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    user_id = Column(String(36), index=True, nullable=False)
+    chart_hash = Column(String(64), index=True, nullable=False)
+    has_decoy = Column(Boolean, default=False, nullable=False)
+    is_skipped = Column(Boolean, default=False, nullable=False)
+    created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "chart_hash", name="uq_user_chart_hash"),
+    )
+
+
+class PastCheckItem(Base):
+    """Individual statement item within a Past Check set."""
+    __tablename__ = "past_check_items"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    set_id = Column(String(36), ForeignKey("past_check_sets.id", ondelete="CASCADE"), index=True, nullable=False)
+    fact_id = Column(String(64), nullable=False)
+    event_date = Column(Date, nullable=False)
+    theme = Column(String(32), nullable=False)  # "relationships", "career", "money", "home", "learning"
+    text_en = Column(String(512), nullable=False)
+    text_hi = Column(String(512), nullable=False)
+    is_decoy = Column(Boolean, default=False, nullable=False)
+    answer = Column(String(16), nullable=True)  # "yes", "not_really", "cant_recall"
+    answered_at = Column(DateTime(timezone=True), nullable=True)
+
+
+class MuhurtaPlan(Base):
+    """Auspicious Muhurta Plan requested by user with personalized Vedic rankings."""
+    __tablename__ = "muhurta_plans"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    birth_profile_id = Column(String(36), ForeignKey("birth_profiles.id", ondelete="SET NULL"), nullable=True, index=True)
+    query_text = Column(Text, nullable=False)
+    category = Column(String(64), nullable=False)
+    override = Column(String(64), nullable=True)
+    location_name = Column(String(255), nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    timezone_str = Column(String(64), nullable=False)
+    target_start_date = Column(Date, nullable=False)
+    target_end_date = Column(Date, nullable=False)
+    time_preference = Column(String(32), default="any", nullable=False)
+    slots_json = Column(JSON, nullable=False)
+    advisory_note = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+
+class MuhurtaNotification(Base):
+    """Proactive WhatsApp/Telegram/Push alerts scheduled for upcoming Muhurta windows."""
+    __tablename__ = "muhurta_notifications"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    muhurta_plan_id = Column(String(36), ForeignKey("muhurta_plans.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    channel = Column(String(32), default="push", nullable=False)  # "push", "whatsapp", "telegram"
+    trigger_time = Column(DateTime(timezone=True), nullable=False, index=True)
+    reminder_type = Column(String(16), nullable=False)  # "24h", "1h"
+    status = Column(String(32), default="pending", nullable=False)  # "pending", "sent", "failed"
+    payload = Column(JSON, nullable=True)
+    sent_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+

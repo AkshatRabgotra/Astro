@@ -1,11 +1,29 @@
 services:
   - type: web
-    name: melooha-ai
-    env: python
-    buildCommand: "pip install -r requirements.txt && cd frontend && npm install && npm run build && cd .."
-    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    name: melooha-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
-        value: 3.12.5
-      - key: PORT
-        value: 8000
+        value: 3.11.9
+      - key: DATABASE_URL
+        fromDatabase:
+          name: melooha-db
+          property: connectionString
+      - key: ENABLE_OFFLINE_DEMO
+        value: "true"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+
+databases:
+  - name: melooha-db
+    databaseName: melooha
+    user: melooha_user
+    plan: free

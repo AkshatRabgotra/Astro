@@ -2,14 +2,22 @@ import React, { useState, useEffect } from "react";
 import { Compass, Sparkles, AlertCircle, Shield, ChevronRight, RefreshCw, Sun, Moon } from "lucide-react";
 import { t } from "../i18n";
 
-export default function TransitsCard({ profile, lang = "en", onSelectTransitQuestion }) {
+export default function TransitsCard({ profile, birthProfileId, lang = "en", onSelectTransitQuestion }) {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!profile || !profile.id) return;
+  let effectiveProfileId = profile?.id || birthProfileId;
+  if (!effectiveProfileId && typeof window !== "undefined") {
+    try {
+      const saved = JSON.parse(localStorage.getItem("melooha_user_data") || "{}");
+      effectiveProfileId = saved?.profile?.id || saved?.user?.id;
+    } catch (_) {}
+  }
 
-    fetch(`/api/chart/${profile.id}/transits`)
+  const fetchTransits = () => {
+    setLoading(true);
+    const targetId = effectiveProfileId || "default";
+    fetch(`/api/chart/${targetId}/transits`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load transits");
         return res.json();
@@ -22,7 +30,11 @@ export default function TransitsCard({ profile, lang = "en", onSelectTransitQues
         console.error("Transits load error:", err);
         setLoading(false);
       });
-  }, [profile]);
+  };
+
+  useEffect(() => {
+    fetchTransits();
+  }, [effectiveProfileId]);
 
   if (loading) {
     return (
@@ -34,7 +46,19 @@ export default function TransitsCard({ profile, lang = "en", onSelectTransitQues
   }
 
   if (!report) {
-    return null;
+    return (
+      <div className="crystal-card p-6 text-center text-xs text-[#A299BC] space-y-3">
+        <Compass className="w-6 h-6 text-[#E5A93C] mx-auto animate-pulse" />
+        <p>{lang === "hi" ? "गोचर डेटा लोड नहीं हो सका।" : "Could not load planetary transits."}</p>
+        <button
+          onClick={fetchTransits}
+          className="py-1.5 px-3 rounded-xl bg-[#251342] border border-[#B21E68]/40 text-white font-semibold inline-flex items-center gap-1.5 text-xs hover:border-[#E5A93C] transition-all"
+        >
+          <RefreshCw className="w-3.5 h-3.5" />
+          <span>{lang === "hi" ? "पुनः प्रयास करें" : "Retry Transits"}</span>
+        </button>
+      </div>
+    );
   }
 
   return (

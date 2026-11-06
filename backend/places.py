@@ -71,14 +71,17 @@ CITIES_DB: List[Dict[str, Any]] = [
     {"name": "Guwahati, Assam, India", "lat": 26.1445, "lon": 91.7362, "tz": "Asia/Kolkata"},
 
     # Global Centers
+    {"name": "Austin, Texas, USA", "lat": 30.2672, "lon": -97.7431, "tz": "America/Chicago"},
     {"name": "New York, USA", "lat": 40.7128, "lon": -74.0060, "tz": "America/New_York"},
+    {"name": "San Francisco, USA", "lat": 37.7749, "lon": -122.4194, "tz": "America/Los_Angeles"},
+    {"name": "Seattle, USA", "lat": 47.6062, "lon": -122.3321, "tz": "America/Los_Angeles"},
+    {"name": "Chicago, USA", "lat": 41.8781, "lon": -87.6298, "tz": "America/Chicago"},
     {"name": "London, UK", "lat": 51.5074, "lon": -0.1278, "tz": "Europe/London"},
     {"name": "Dubai, UAE", "lat": 25.2048, "lon": 55.2708, "tz": "Asia/Dubai"},
     {"name": "Singapore", "lat": 1.3521, "lon": 103.8198, "tz": "Asia/Singapore"},
     {"name": "Toronto, Canada", "lat": 43.6532, "lon": -79.3832, "tz": "America/Toronto"},
     {"name": "Sydney, Australia", "lat": -33.8688, "lon": 151.2093, "tz": "Australia/Sydney"},
     {"name": "Tokyo, Japan", "lat": 35.6762, "lon": 139.6503, "tz": "Asia/Tokyo"},
-    {"name": "San Francisco, USA", "lat": 37.7749, "lon": -122.4194, "tz": "America/Los_Angeles"},
     {"name": "Paris, France", "lat": 48.8566, "lon": 2.3522, "tz": "Europe/Paris"},
     {"name": "Berlin, Germany", "lat": 52.5200, "lon": 13.4050, "tz": "Europe/Berlin"},
 ]
@@ -220,9 +223,13 @@ def search_cities(query: str, limit: int = 15) -> List[Dict[str, Any]]:
             if len(matches) >= limit:
                 return matches
 
+    # If we already have matches from curated fast database, return immediately without network latency
+    if matches:
+        return matches[:limit]
+
     # 2. Query Live Open-Meteo Global Geocoder (covers every town/village worldwide)
-    if len(matches) < limit and len(q_raw) >= 2:
-        om_results = _search_open_meteo(q_raw, limit=limit - len(matches))
+    if len(q_raw) >= 2:
+        om_results = _search_open_meteo(q_raw, limit=limit)
         for res in om_results:
             if not any(abs(res["lat"] - m["lat"]) < 0.05 and abs(res["lon"] - m["lon"]) < 0.05 for m in matches):
                 matches.append(res)

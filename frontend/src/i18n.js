@@ -2,9 +2,11 @@ export const translations = {
   en: {
     appName: "Melooha",
     home: "Home",
+    chart: "Chart",
     rewards: "Rewards",
     ask: "Ask",
     history: "History",
+    profile: "Profile",
     metrics: "Metrics",
     questionLeft: "Question left",
     questionsLeft: "Questions left",
@@ -113,7 +115,7 @@ export const translations = {
 
     // Ask View
     askAstrologerTitle: "Ask Vaani Astrologer",
-    askAstrologerSubtitle: "Ask about career shifts, relationship compatibility, or life timing. Answers are 100% grounded in your birth chart.",
+    askAstrologerSubtitle: "Ask about career shifts, relationship compatibility, or life timing. Personalized Vedic guidance based on your birth chart.",
     followUpLabel: "Follow-up:",
     followUp1: "What remedies harmonize this energy?",
     followUp2: "How will this affect my career?",
@@ -137,9 +139,11 @@ export const translations = {
   hi: {
     appName: "मेलूहा",
     home: "मुख्य",
+    chart: "चक्र",
     rewards: "इनाम",
     ask: "पूछें",
     history: "इतिहास",
+    profile: "प्रोफ़ाइल",
     metrics: "आंकड़े",
     questionLeft: "प्रश्न शेष",
     questionsLeft: "प्रश्न शेष",
@@ -248,7 +252,7 @@ export const translations = {
 
     // Ask View
     askAstrologerTitle: "वाणी ज्योतिषी से पूछें",
-    askAstrologerSubtitle: "करियर बदलाव, संबंध अनुकूलता या जीवन के समय के बारे में पूछें। सभी उत्तर आपकी जन्म कुंडली पर १००% आधारित हैं।",
+    askAstrologerSubtitle: "करियर बदलाव, संबंध अनुकूलता या जीवन के समय के बारे में पूछें। आपकी जन्म कुंडली पर आधारित व्यक्तिगत वैदिक मार्गदर्शन।",
     followUpLabel: "अगला प्रश्न:",
     followUp1: "क्या उपाय इस ऊर्जा को संतुलित करते हैं?",
     followUp2: "यह मेरे करियर को कैसे प्रभावित करेगा?",

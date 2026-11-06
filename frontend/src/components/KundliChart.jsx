@@ -17,7 +17,7 @@ const HOUSE_THEMES = {
   12: { name: "Vyaya Bhava (Liberation)", significations: "Spiritual liberation, foreign lands, expenditure, sub-conscious" },
 };
 
-const PLANET_SHORT = {
+export const PLANET_SHORT = {
   Sun: "Su",
   Moon: "Mo",
   Mars: "Ma",
@@ -30,7 +30,7 @@ const PLANET_SHORT = {
 };
 
 // North Indian Diamond Polygon Paths (400x400 SVG viewport)
-const NORTH_HOUSES = [
+export const NORTH_HOUSES = [
   { id: 1, points: "200,0 100,100 200,200 300,100", center: { x: 200, y: 100 }, labelPos: { x: 200, y: 55 } },
   { id: 2, points: "0,0 200,0 100,100", center: { x: 100, y: 50 }, labelPos: { x: 100, y: 30 } },
   { id: 3, points: "0,0 0,200 100,100", center: { x: 50, y: 100 }, labelPos: { x: 30, y: 100 } },
@@ -43,6 +43,22 @@ const NORTH_HOUSES = [
   { id: 10, points: "400,200 300,300 200,200 300,100", center: { x: 300, y: 200 }, labelPos: { x: 345, y: 200 } },
   { id: 11, points: "400,0 400,200 300,100", center: { x: 350, y: 100 }, labelPos: { x: 370, y: 100 } },
   { id: 12, points: "200,0 400,0 300,100", center: { x: 300, y: 50 }, labelPos: { x: 300, y: 30 } },
+];
+
+// South Indian Fixed-Zodiac Perimeter Boxes (4x4 grid in 400x400 SVG viewport)
+const SOUTH_BOXES = [
+  { signNum: 12, col: 0, row: 0, x: 0, y: 0, name: "Pisces", hi: "मीन" },
+  { signNum: 1, col: 1, row: 0, x: 100, y: 0, name: "Aries", hi: "मेष" },
+  { signNum: 2, col: 2, row: 0, x: 200, y: 0, name: "Taurus", hi: "वृषभ" },
+  { signNum: 3, col: 3, row: 0, x: 300, y: 0, name: "Gemini", hi: "मिथुन" },
+  { signNum: 4, col: 3, row: 1, x: 300, y: 100, name: "Cancer", hi: "कर्क" },
+  { signNum: 5, col: 3, row: 2, x: 300, y: 200, name: "Leo", hi: "सिंह" },
+  { signNum: 6, col: 3, row: 3, x: 300, y: 300, name: "Virgo", hi: "कन्या" },
+  { signNum: 7, col: 2, row: 3, x: 200, y: 300, name: "Libra", hi: "तुला" },
+  { signNum: 8, col: 1, row: 3, x: 100, y: 300, name: "Scorpio", hi: "वृश्चिक" },
+  { signNum: 9, col: 0, row: 3, x: 0, y: 300, name: "Sagittarius", hi: "धनु" },
+  { signNum: 10, col: 0, row: 2, x: 0, y: 200, name: "Capricorn", hi: "मकर" },
+  { signNum: 11, col: 0, row: 1, x: 0, y: 100, name: "Aquarius", hi: "कुंभ" },
 ];
 
 export default function KundliChart({ chartFacts, lang = "en", onSelectHouseQuestion }) {
@@ -102,17 +118,27 @@ export default function KundliChart({ chartFacts, lang = "en", onSelectHouseQues
         <div className="flex items-center gap-1 bg-[#150E28] p-1 rounded-xl border border-[#302150] shadow-sm">
           <button
             onClick={() => setChartStyle("north")}
-            className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+            className={`px-2 py-1 rounded-lg text-[11px] font-semibold transition-all ${
               chartStyle === "north"
                 ? "bg-gradient-to-r from-[#931B58] to-[#B21E68] text-white shadow-sm"
                 : "text-[#8E82AA] hover:text-white"
             }`}
           >
-            {t("chartTab", lang)}
+            {lang === "hi" ? "उत्तर" : "North"}
+          </button>
+          <button
+            onClick={() => setChartStyle("south")}
+            className={`px-2 py-1 rounded-lg text-[11px] font-semibold transition-all ${
+              chartStyle === "south"
+                ? "bg-gradient-to-r from-[#931B58] to-[#B21E68] text-white shadow-sm"
+                : "text-[#8E82AA] hover:text-white"
+            }`}
+          >
+            {lang === "hi" ? "दक्षिण" : "South"}
           </button>
           <button
             onClick={() => setChartStyle("table")}
-            className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+            className={`px-2 py-1 rounded-lg text-[11px] font-semibold transition-all ${
               chartStyle === "table"
                 ? "bg-gradient-to-r from-[#931B58] to-[#B21E68] text-white shadow-sm"
                 : "text-[#8E82AA] hover:text-white"
@@ -123,7 +149,7 @@ export default function KundliChart({ chartFacts, lang = "en", onSelectHouseQues
         </div>
       </div>
 
-      {chartStyle === "north" ? (
+      {chartStyle === "north" && (
         <div className="flex flex-col items-center">
           {/* SVG North Indian Kundli Chart */}
           <div className="relative w-full max-w-[340px] aspect-square">
@@ -227,7 +253,203 @@ export default function KundliChart({ chartFacts, lang = "en", onSelectHouseQues
             Tap any house to inspect its planetary alignments & significance
           </span>
         </div>
-      ) : (
+      )}
+
+      {chartStyle === "south" && (
+        <div className="flex flex-col items-center">
+          {/* SVG South Indian Fixed-Zodiac Kundli Chart */}
+          <div className="relative w-full max-w-[340px] aspect-square">
+            <svg
+              viewBox="0 0 400 400"
+              className="w-full h-full filter drop-shadow-xl select-none"
+            >
+              {/* Outer border */}
+              <rect
+                x="2"
+                y="2"
+                width="396"
+                height="396"
+                fill="#120B24"
+                stroke="#641C48"
+                strokeWidth="2"
+                rx="8"
+              />
+
+              {/* 12 Perimeter Fixed-Zodiac Boxes */}
+              {SOUTH_BOXES.map((b) => {
+                const houseNum = ((b.signNum - lagnaNum + 12) % 12) + 1;
+                const isSelected = selectedHouse === houseNum;
+                const isLagna = b.signNum === lagnaNum && timeKnown;
+                const occupyingPlanets = chartFacts.planets.filter(
+                  (p) => p.sign_number === b.signNum
+                );
+
+                return (
+                  <g
+                    key={b.signNum}
+                    onClick={() => setSelectedHouse(houseNum)}
+                    className="cursor-pointer group"
+                  >
+                    <rect
+                      x={b.x}
+                      y={b.y}
+                      width="100"
+                      height="100"
+                      fill={
+                        isSelected
+                          ? "rgba(178, 30, 104, 0.40)"
+                          : isLagna
+                          ? "rgba(229, 169, 60, 0.12)"
+                          : "rgba(24, 15, 44, 0.85)"
+                      }
+                      stroke={
+                        isSelected
+                          ? "#E5A93C"
+                          : isLagna
+                          ? "#F4B8DC"
+                          : "#3A2158"
+                      }
+                      strokeWidth={isSelected ? "2" : "1"}
+                      className="transition-colors group-hover:fill-[#931B58]/25"
+                    />
+
+                    {/* Sign abbreviation */}
+                    <text
+                      x={b.x + 8}
+                      y={b.y + 16}
+                      className="text-[9px] font-sans font-semibold fill-[#A299BC] select-none"
+                    >
+                      {lang === "hi" ? b.hi : b.name.slice(0, 3)}
+                    </text>
+
+                    {/* House number relative to Lagna */}
+                    <text
+                      x={b.x + 92}
+                      y={b.y + 16}
+                      textAnchor="end"
+                      className={`text-[9.5px] font-mono font-bold select-none ${
+                        isSelected ? "fill-[#FFE27D]" : "fill-[#DDD5EE]"
+                      }`}
+                    >
+                      H{houseNum}
+                    </text>
+
+                    {/* South Indian Ascendant Slash Marker */}
+                    {isLagna && (
+                      <g className="pointer-events-none">
+                        <line
+                          x1={b.x + 5}
+                          y1={b.y + 95}
+                          x2={b.x + 95}
+                          y2={b.y + 5}
+                          stroke="#E5A93C"
+                          strokeWidth="1.5"
+                          strokeDasharray="3 2"
+                          opacity="0.85"
+                        />
+                        <rect
+                          x={b.x + 6}
+                          y={b.y + 78}
+                          width="34"
+                          height="16"
+                          rx="3"
+                          fill="#E5A93C"
+                        />
+                        <text
+                          x={b.x + 23}
+                          y={b.y + 90}
+                          textAnchor="middle"
+                          className="text-[8.5px] font-bold fill-[#120B24] uppercase tracking-wider"
+                        >
+                          ASC
+                        </text>
+                      </g>
+                    )}
+
+                    {/* Occupying Planets */}
+                    {occupyingPlanets.length > 0 && (
+                      <g className="pointer-events-none">
+                        {occupyingPlanets.map((p, pIdx) => {
+                          const count = occupyingPlanets.length;
+                          const offset = (pIdx - (count - 1) / 2) * 13;
+                          return (
+                            <text
+                              key={p.planet}
+                              x={b.x + 50}
+                              y={b.y + 54 + offset}
+                              textAnchor="middle"
+                              dominantBaseline="middle"
+                              className={`text-[11.5px] font-sans font-bold ${
+                                isSelected ? "fill-[#FFE27D]" : "fill-[#F4B8DC]"
+                              }`}
+                            >
+                              {PLANET_SHORT[p.planet] || p.planet.slice(0, 2)}
+                              {p.is_retrograde && "®"}
+                            </text>
+                          );
+                        })}
+                      </g>
+                    )}
+                  </g>
+                );
+              })}
+
+              {/* Hollow 200x200 Center Emblem Box */}
+              <rect
+                x="100"
+                y="100"
+                width="200"
+                height="200"
+                fill="#0C061A"
+                stroke="#4C1E40"
+                strokeWidth="1.5"
+              />
+              <circle cx="200" cy="200" r="70" fill="none" stroke="#68214C" strokeWidth="0.75" strokeDasharray="3 3" />
+              <circle cx="200" cy="200" r="45" fill="none" stroke="#E5A93C" strokeWidth="0.5" opacity="0.4" />
+              <circle cx="200" cy="200" r="3" fill="#E5A93C" />
+
+              <text
+                x="200"
+                y="172"
+                textAnchor="middle"
+                className="text-[11px] font-serif font-bold fill-white uppercase tracking-wider"
+              >
+                {lang === "hi" ? "दक्षिण भारतीय कुंडली" : "South Indian D1"}
+              </text>
+              <text
+                x="200"
+                y="190"
+                textAnchor="middle"
+                className="text-[9.5px] font-sans fill-[#F4B8DC]"
+              >
+                {chartFacts.lagna_sign} Lagna • {chartFacts.planets?.find((p) => p.planet === "Moon")?.sign || "Rashi"}
+              </text>
+              <text
+                x="200"
+                y="206"
+                textAnchor="middle"
+                className="text-[8.5px] font-mono fill-[#A299BC]"
+              >
+                Lahiri Sidereal (Fixed Zodiac)
+              </text>
+              <text
+                x="200"
+                y="226"
+                textAnchor="middle"
+                className="text-[9px] font-semibold fill-[#E5A93C]"
+              >
+                ✦ Click any box for House details ✦
+              </text>
+            </svg>
+          </div>
+
+          <span className="text-[10px] text-[#867B9F] mt-2">
+            Fixed clockwise signs (Pisces to Aquarius). Lagna marked with diagonal ASC.
+          </span>
+        </div>
+      )}
+
+      {chartStyle === "table" && (
         /* Table View */
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => {

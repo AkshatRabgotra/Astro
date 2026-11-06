@@ -40,34 +40,76 @@ class OnboardingService:
         time_known: bool = True,
         place_name: Optional[str] = None,
         email: Optional[str] = None,
+        user_id: Optional[str] = None,
+        profile_id: Optional[str] = None,
+        is_new_profile: bool = False,
     ) -> Tuple[User, BirthProfile, Chart, ChartFacts]:
         """
-        Create a new user, birth profile, grant +1 free credit, and compute & cache ChartFacts.
+        Create new member profile or update existing birth profile, compute & cache ChartFacts.
         """
-        # 1. Create User
-        user = User(name=name, email=email)
-        db.add(user)
-        db.flush()
+        # 1. Fetch existing User or create new
+        user = None
+        if user_id:
+            user = db.query(User).filter(User.id == user_id).first()
+        if not user and email:
+            user = db.query(User).filter(User.email == email).first()
 
-        # 2. Grant initial free question credit (+1)
-        grant_signup_credit(db, user.id)
+        if not user:
+            user = User(name=name, email=email)
+            db.add(user)
+            db.flush()
+            grant_signup_credit(db, user.id)
+        else:
+            # If user has no name yet and we're not adding a secondary member, set name
+            if name and not user.name and not is_new_profile:
+                user.name = name
 
-        # 3. Create Birth Profile
-        profile = BirthProfile(
-            user_id=user.id,
-            name=name,
-            birth_date=birth_date,
-            birth_time=birth_time if time_known else None,
-            time_known=time_known,
-            latitude=latitude,
-            longitude=longitude,
-            timezone_str=timezone_str,
-            place_name=place_name,
-        )
-        db.add(profile)
-        db.flush()
+        # 2. Determine target Birth Profile
+        profile = None
+        if profile_id:
+            # Explicit update to a specific profile
+            profile = db.query(BirthProfile).filter(
+                BirthProfile.id == profile_id,
+                BirthProfile.user_id == user.id
+            ).first()
 
-        # 4. Compute Chart using pure-Python engine
+        if not profile and not is_new_profile:
+            # Not adding a new member -> update primary/latest existing profile
+            profile = (
+                db.query(BirthProfile)
+                .filter(BirthProfile.user_id == user.id)
+                .order_by(BirthProfile.created_at.desc())
+                .first()
+            )
+
+        if not profile or is_new_profile:
+            # Creating a new member profile (e.g. Avantika)
+            profile = BirthProfile(
+                user_id=user.id,
+                name=name,
+                birth_date=birth_date,
+                birth_time=birth_time if time_known else None,
+                time_known=time_known,
+                latitude=latitude,
+                longitude=longitude,
+                timezone_str=timezone_str,
+                place_name=place_name,
+            )
+            db.add(profile)
+            db.flush()
+        else:
+            # Updating existing profile
+            profile.name = name
+            profile.birth_date = birth_date
+            profile.birth_time = birth_time if time_known else None
+            profile.time_known = time_known
+            profile.latitude = latitude
+            profile.longitude = longitude
+            profile.timezone_str = timezone_str
+            profile.place_name = place_name
+            db.flush()
+
+        # 3. Compute Chart using pure-Python engine
         birth_input = BirthInput(
             birth_date=birth_date,
             birth_time=birth_time,
@@ -79,19 +121,26 @@ class OnboardingService:
         )
         chart_facts = calculate_chart_facts(birth_input)
 
-        # 5. Cache Chart in database
-        chart = Chart(
-            birth_profile_id=profile.id,
-            ayanamsa=chart_facts.ayanamsa_name,
-            facts_json=json.loads(chart_facts.model_dump_json()),
-        )
-        db.add(chart)
+        # 4. Cache or update Chart in database
+        chart = db.query(Chart).filter(Chart.birth_profile_id == profile.id).first()
+        if not chart:
+            chart = Chart(
+                birth_profile_id=profile.id,
+                ayanamsa=chart_facts.ayanamsa_name,
+                facts_json=json.loads(chart_facts.model_dump_json()),
+            )
+            db.add(chart)
+        else:
+            chart.ayanamsa = chart_facts.ayanamsa_name
+            chart.facts_json = json.loads(chart_facts.model_dump_json())
 
-        # 6. Log onboarding event
+        # 5. Log onboarding event
         event = Event(
             user_id=user.id,
-            event_name="user_onboarded",
+            event_name="member_profile_added" if is_new_profile else "profile_saved",
             payload={
+                "profile_id": profile.id,
+                "profile_name": profile.name,
                 "has_birth_time": time_known,
                 "place_name": place_name,
                 "lagna": chart_facts.lagna_sign,
@@ -159,11 +208,22 @@ class QuestionService:
         # Track question asked event
         user_total_questions = db.query(Question).filter(Question.user_id == user_id).count()
         event_name = "second_question_asked" if user_total_questions == 1 else "question_asked"
+        arm = "control"
+        try:
+            from backend.past_check import get_or_assign_experiment_arm
+            arm = get_or_assign_experiment_arm(db, user_id)
+        except Exception:
+            pass
+
         db.add(
             Event(
                 user_id=user_id,
                 event_name=event_name,
-                payload={"question_id": question_id, "question_number": user_total_questions + 1},
+                payload={
+                    "question_id": question_id,
+                    "question_number": user_total_questions + 1,
+                    "arm": arm,
+                },
             )
         )
 

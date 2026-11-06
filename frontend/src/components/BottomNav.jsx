@@ -1,18 +1,18 @@
 import React from "react";
-import { Home, Sparkles, History, BarChart3, Eye, Gift } from "lucide-react";
+import { Home, Compass, User, FileText, Eye } from "lucide-react";
 import { t } from "../i18n";
 
 export default function BottomNav({ activeTab, setActiveTab, lang = "en" }) {
   const tabs = [
     { id: "home", label: t("home", lang), icon: Home },
-    { id: "rewards", label: t("rewards", lang), icon: Gift },
-    { id: "ask", label: t("ask", lang), icon: Sparkles, isCenter: true },
-    { id: "history", label: t("history", lang), icon: History },
-    { id: "metrics", label: t("metrics", lang), icon: BarChart3 },
+    { id: "reports", label: lang === "hi" ? "रिपोर्ट्स" : "Reports", icon: FileText },
+    { id: "ask", label: t("ask", lang), isCenter: true },
+    { id: "chart", label: t("chart", lang), icon: Compass },
+    { id: "profile", label: t("profile", lang), icon: User },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[#0E091D]/95 backdrop-blur-lg border-t border-[#261A42] py-2 px-6 nav-shadow">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-t from-[#080312] via-[#120822]/95 to-[#190C2E]/90 backdrop-blur-xl border-t border-[#4A1132]/60 py-1.5 px-4 nav-shadow">
       <div className="max-w-md mx-auto flex items-center justify-around relative">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -23,18 +23,22 @@ export default function BottomNav({ activeTab, setActiveTab, lang = "en" }) {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className="relative -top-4 flex flex-col items-center group focus:outline-none"
+                className="relative -top-5 flex flex-col items-center group focus:outline-none"
               >
                 <div
-                  className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl ${
+                  className={`w-14 h-14 rounded-full overflow-hidden flex items-center justify-center transition-all duration-300 ${
                     isActive
-                      ? "bg-gradient-to-tr from-[#931B58] via-[#B21E68] to-[#D8227E] text-white cosmic-glow scale-105"
-                      : "bg-[#1C1438] border-2 border-[#B21E68]/70 text-[#F4B8DC] hover:scale-105"
+                      ? "ring-2 ring-white ring-offset-2 ring-offset-[#120822] scale-110 shadow-[0_0_30px_rgba(255,255,255,0.95),0_0_16px_rgba(216,34,126,0.85)]"
+                      : "ring-2 ring-white/80 ring-offset-1 ring-offset-[#120822] hover:scale-105 shadow-[0_0_22px_rgba(255,255,255,0.7),0_0_12px_rgba(216,34,126,0.6)]"
                   }`}
                 >
-                  <Eye className="w-6 h-6 text-[#E5A93C]" />
+                  <img
+                    src="/melooha-logo.png"
+                    alt="Ask Melooha"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <span className={`text-[11px] font-semibold mt-1 transition-colors ${isActive ? "text-[#F4B8DC]" : "text-[#8E82AA]"}`}>
+                <span className={`text-[11px] font-bold mt-1 transition-colors ${isActive ? "text-white" : "text-[#DDD5EE]"}`}>
                   {tab.label}
                 </span>
               </button>
@@ -45,16 +49,18 @@ export default function BottomNav({ activeTab, setActiveTab, lang = "en" }) {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex flex-col items-center py-1 px-3 text-center transition-colors focus:outline-none"
+              className={`flex flex-col items-center py-1 px-3 text-center transition-all relative focus:outline-none rounded-xl ${
+                isActive ? "bg-white/10 shadow-[0_0_14px_rgba(255,255,255,0.08)]" : ""
+              }`}
             >
               <Icon
                 className={`w-5 h-5 transition-transform duration-200 ${
-                  isActive ? "text-[#F4B8DC] scale-110" : "text-[#7B7096] hover:text-[#A299BC]"
+                  isActive ? "text-white scale-105" : "text-[#887B9F] hover:text-[#C5B9DF]"
                 }`}
               />
               <span
-                className={`text-[10px] mt-1 font-medium transition-colors ${
-                  isActive ? "text-[#F4B8DC] font-semibold" : "text-[#7B7096]"
+                className={`text-[10px] mt-0.5 font-medium transition-colors ${
+                  isActive ? "text-white font-bold" : "text-[#887B9F]"
                 }`}
               >
                 {tab.label}

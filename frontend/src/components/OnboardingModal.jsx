@@ -12,15 +12,62 @@ const POPULAR_PRESETS = [
   { name: "Dubai, UAE", lat: 25.2048, lon: 55.2708, tz: "Asia/Dubai", short: "Dubai" },
 ];
 
-export default function OnboardingModal({ onOnboardSuccess }) {
-  const [name, setName] = useState("Akshat");
-  const [birthDate, setBirthDate] = useState("1995-05-24");
-  const [birthTime, setBirthTime] = useState("14:15");
-  const [timeKnown, setTimeKnown] = useState(true);
+export default function OnboardingModal({
+  user,
+  profile,
+  mode = "edit", // "edit" | "add_member"
+  targetProfile = null,
+  onOnboardSuccess,
+  onClose,
+  canClose,
+  lang = "en",
+}) {
+  const isAddMode = mode === "add_member";
+  const activeProfileToUse = isAddMode ? null : targetProfile || profile;
+
+  // Pre-populate if editing existing profile, or fresh defaults for new member
+  const [name, setName] = useState(
+    isAddMode ? "" : activeProfileToUse?.name || user?.name || "Akshat"
+  );
+  const [birthDate, setBirthDate] = useState(
+    isAddMode ? "2000-01-01" : activeProfileToUse?.birth_date || "2005-07-20"
+  );
+
+  // Parse initial birth time into 12-hour AM/PM
+  const initRawTime = isAddMode
+    ? "12:00:00"
+    : activeProfileToUse?.birth_time || "15:15:00";
+  const [initH, initM] = initRawTime.split(":");
+  const hNum = parseInt(initH || "12", 10);
+  const initialAmPm = hNum >= 12 ? "PM" : "AM";
+  const initialH12 = hNum % 12 === 0 ? "12" : String(hNum % 12).padStart(2, "0");
+  const initialM12 = String(parseInt(initM || "00", 10)).padStart(2, "0");
+
+  const [timeHour, setTimeHour] = useState(initialH12);
+  const [timeMinute, setTimeMinute] = useState(initialM12);
+  const [timeAmPm, setTimeAmPm] = useState(initialAmPm);
+  const [timeKnown, setTimeKnown] = useState(
+    isAddMode ? true : activeProfileToUse?.time_known ?? true
+  );
 
   // Selected place object
-  const [selectedPlace, setSelectedPlace] = useState(POPULAR_PRESETS[0]);
-  const [searchQuery, setSearchQuery] = useState(POPULAR_PRESETS[0].name);
+  const [selectedPlace, setSelectedPlace] = useState(() => {
+    if (!isAddMode && activeProfileToUse?.place_name) {
+      return {
+        name: activeProfileToUse.place_name,
+        lat: activeProfileToUse.latitude || POPULAR_PRESETS[0].lat,
+        lon: activeProfileToUse.longitude || POPULAR_PRESETS[0].lon,
+        tz: activeProfileToUse.timezone_str || POPULAR_PRESETS[0].tz,
+        short: activeProfileToUse.place_name.split(",")[0],
+      };
+    }
+    return POPULAR_PRESETS[0];
+  });
+  const [searchQuery, setSearchQuery] = useState(
+    !isAddMode && activeProfileToUse?.place_name
+      ? activeProfileToUse.place_name
+      : POPULAR_PRESETS[0].name
+  );
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -92,6 +139,16 @@ export default function OnboardingModal({ onOnboardSuccess }) {
     setShowDropdown(false);
   };
 
+  const getComputed24HourTime = () => {
+    let h = parseInt(timeHour, 10);
+    if (isNaN(h)) h = 12;
+    if (timeAmPm === "PM" && h < 12) h += 12;
+    if (timeAmPm === "AM" && h === 12) h = 0;
+    const m = parseInt(timeMinute, 10);
+    const mVal = isNaN(m) ? 0 : Math.min(59, Math.max(0, m));
+    return `${String(h).padStart(2, "0")}:${String(mVal).padStart(2, "0")}:00`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !birthDate) {
@@ -102,15 +159,21 @@ export default function OnboardingModal({ onOnboardSuccess }) {
     setLoading(true);
     setError(null);
 
+    const computedTime = timeKnown ? getComputed24HourTime() : null;
+
     const payload = {
+      user_id: user?.id,
+      email: user?.email,
       name: name.trim(),
       birth_date: birthDate,
-      birth_time: timeKnown ? (birthTime ? `${birthTime}:00` : null) : null,
+      birth_time: computedTime,
       time_known: timeKnown,
       latitude: showManualCoords ? parseFloat(customLat) : selectedPlace.lat,
       longitude: showManualCoords ? parseFloat(customLon) : selectedPlace.lon,
       timezone_str: showManualCoords ? customTz : selectedPlace.tz,
       place_name: selectedPlace.name,
+      is_new_profile: isAddMode,
+      profile_id: isAddMode ? null : activeProfileToUse?.id || null,
     };
 
     try {
@@ -136,17 +199,52 @@ export default function OnboardingModal({ onOnboardSuccess }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4">
-      <div className="w-full max-w-lg bg-[#130E26] border border-[#B21E68]/50 rounded-3xl p-6 sm:p-8 shadow-2xl relative animate-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <div className="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-[#931B58] to-[#B21E68] text-white shadow-lg shadow-[#B21E68]/30 mb-2">
-            <Compass className="w-7 h-7 text-[#E5A93C]" />
+      <div className="w-full max-w-lg bg-gradient-to-b from-[#180E2B] via-[#100820] to-[#090314] border border-[#F4B8DC]/20 rounded-3xl p-6 sm:p-7 shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_50px_rgba(178,30,104,0.18)] relative animate-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
+        {/* Subtle Background Star Dust */}
+        <div className="absolute inset-0 pointer-events-none opacity-20">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="15%" cy="18%" r="1" fill="#FFFFFF" />
+            <circle cx="85%" cy="12%" r="1.5" fill="#FDE68A" />
+            <circle cx="20%" cy="80%" r="1.2" fill="#F4B8DC" />
+            <circle cx="80%" cy="85%" r="1" fill="#FFFFFF" />
+          </svg>
+        </div>
+
+        {/* Close Button if user can cancel */}
+        {canClose && onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute top-5 right-5 p-2 rounded-full bg-[#1E1138] border border-[#392160] text-[#A299BC] hover:text-white transition-colors z-20"
+            title="Close"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+
+        {/* Header with Seamless Glowing Melooha Emblem */}
+        <div className="text-center mb-5 relative z-10">
+          <div className="relative w-16 h-16 mx-auto mb-2 flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#931B58] via-[#B21E68] to-[#E5A93C] blur-xl opacity-75 animate-pulse" />
+            <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-[0_0_24px_rgba(216,34,126,0.75)] ring-2 ring-[#F4B8DC] ring-offset-2 ring-offset-[#0d061a] bg-[#160A24] flex items-center justify-center">
+              <img
+                src="/melooha-logo.png"
+                alt="Melooha"
+                className="w-full h-full object-cover scale-105"
+              />
+            </div>
           </div>
-          <h2 className="font-serif text-2xl font-bold text-white">
-            Welcome to Melooha
+          <h2 className="font-serif text-2xl font-bold text-white tracking-wide">
+            {isAddMode
+              ? "Add Family Member"
+              : canClose
+              ? `Edit Profile: ${activeProfileToUse?.name || "Member"}`
+              : "Welcome to Melooha"}
           </h2>
-          <p className="text-xs text-[#A299BC] mt-1">
-            Enter your birth details to generate your grounded Vedic birth chart.
+          <p className="text-xs text-[#C5B9DF] mt-1">
+            {isAddMode
+              ? "Enter birth details to generate their personalized Vedic Kundali."
+              : "Enter your exact birth details to ground your personalized Vedic Kundali."}
           </p>
         </div>
 
@@ -188,12 +286,12 @@ export default function OnboardingModal({ onOnboardSuccess }) {
             />
           </div>
 
-          {/* Birth Time & "I don't know my time" toggle */}
+          {/* Birth Time with 12h AM/PM Selectors */}
           <div>
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-1.5">
               <label className="text-xs font-medium text-[#C8BFDE] flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-[#E5A93C]" />
-                Time of Birth
+                Time of Birth (12-Hour AM / PM)
               </label>
               <button
                 type="button"
@@ -205,12 +303,85 @@ export default function OnboardingModal({ onOnboardSuccess }) {
             </div>
 
             {timeKnown ? (
-              <input
-                type="time"
-                value={birthTime}
-                onChange={(e) => setBirthTime(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#1D1438] border border-[#3A275E] text-white focus:outline-none focus:border-[#B21E68] text-sm"
-              />
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  {/* Hour */}
+                  <div className="flex-1">
+                    <label className="text-[10px] text-[#8E82AA] font-semibold block mb-0.5">Hour (1-12)</label>
+                    <select
+                      value={timeHour}
+                      onChange={(e) => setTimeHour(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl bg-[#1D1438] border border-[#3A275E] text-white focus:outline-none focus:border-[#B21E68] text-sm font-mono cursor-pointer"
+                    >
+                      {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => {
+                        const val = String(h).padStart(2, "0");
+                        return (
+                          <option key={val} value={val} className="bg-[#130E26] text-white">
+                            {val}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+
+                  <span className="text-[#A299BC] font-bold text-lg pt-4">:</span>
+
+                  {/* Minute */}
+                  <div className="flex-1">
+                    <label className="text-[10px] text-[#8E82AA] font-semibold block mb-0.5">Minute (00-59)</label>
+                    <select
+                      value={timeMinute}
+                      onChange={(e) => setTimeMinute(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl bg-[#1D1438] border border-[#3A275E] text-white focus:outline-none focus:border-[#B21E68] text-sm font-mono cursor-pointer"
+                    >
+                      {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0")).map((m) => (
+                        <option key={m} value={m} className="bg-[#130E26] text-white">
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* AM / PM Segmented Control */}
+                  <div className="shrink-0">
+                    <label className="text-[10px] text-[#8E82AA] font-semibold block mb-0.5">AM / PM</label>
+                    <div className="flex rounded-xl bg-[#180C2E] border border-[#3A275E] p-1">
+                      <button
+                        type="button"
+                        onClick={() => setTimeAmPm("AM")}
+                        className={`min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          timeAmPm === "AM"
+                            ? "bg-gradient-to-r from-[#931B58] to-[#B21E68] text-white shadow-md cosmic-glow"
+                            : "text-[#A299BC] hover:text-white"
+                        }`}
+                      >
+                        AM
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTimeAmPm("PM")}
+                        className={`min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          timeAmPm === "PM"
+                            ? "bg-gradient-to-r from-[#931B58] to-[#B21E68] text-white shadow-md cosmic-glow"
+                            : "text-[#A299BC] hover:text-white"
+                        }`}
+                      >
+                        PM
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Selected Time Confirmation Badge */}
+                <div className="flex items-center justify-between px-2 py-1.5 rounded-lg bg-[#180F30] border border-[#2B1B47] text-[11px] text-[#A299BC]">
+                  <span>
+                    Selected: <strong className="text-white font-mono">{timeHour}:{timeMinute} {timeAmPm}</strong>
+                  </span>
+                  <span className="font-mono text-[#FDE68A] text-[10.5px]">
+                    24h: {getComputed24HourTime().slice(0, 5)}
+                  </span>
+                </div>
+              </div>
             ) : (
               <div className="p-3 rounded-xl bg-[#1A1230] border border-[#3B295A] text-xs text-[#A299BC] leading-relaxed">
                 <span className="text-[#E5A93C] font-semibold block mb-0.5">Time-dependent facts reserved</span>
@@ -329,15 +500,15 @@ export default function OnboardingModal({ onOnboardSuccess }) {
             </div>
 
             {/* Currently Selected Location Pill */}
-            <div className="mt-2 p-2.5 rounded-xl bg-[#181130] border border-[#352554] flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2 overflow-hidden">
+            <div className="mt-2.5 p-3 rounded-xl bg-[#170E2C]/90 border border-[#3E2864] flex items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5 min-w-0">
                 <Globe className="w-4 h-4 text-[#E5A93C] shrink-0" />
-                <div className="truncate">
-                  <span className="text-[#A299BC] block text-[10px]">Selected Birth Place</span>
-                  <strong className="text-white truncate block">{selectedPlace.name}</strong>
+                <div className="min-w-0">
+                  <span className="text-[#A299BC] block text-[10px] leading-tight">Selected Birth Place</span>
+                  <span className="text-white font-medium text-xs truncate block leading-normal">{selectedPlace.name}</span>
                 </div>
               </div>
-              <div className="text-right text-[10px] text-[#867A9F] shrink-0 pl-2">
+              <div className="text-right text-[10px] text-[#A299BC] shrink-0 font-mono bg-[#231542] px-2 py-0.5 rounded border border-[#442872]">
                 <span>{selectedPlace.tz}</span>
               </div>
             </div>
@@ -389,14 +560,20 @@ export default function OnboardingModal({ onOnboardSuccess }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-4 py-3.5 px-6 rounded-2xl font-semibold text-white bg-gradient-to-r from-[#931B58] via-[#B21E68] to-[#D8227E] hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-[#B21E68]/30 flex items-center justify-center gap-2"
+            className="w-full mt-4 py-3.5 px-6 rounded-2xl font-semibold text-white bg-gradient-to-r from-[#931B58] via-[#B21E68] to-[#D8227E] hover:opacity-95 active:scale-[0.98] transition-all shadow-[0_0_24px_rgba(178,30,104,0.4)] flex items-center justify-center gap-2"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
-                <Sparkles className="w-4 h-4 text-[#E5A93C]" />
-                <span>Calculate My Chart & Get 1 Free Question</span>
+                <Sparkles className="w-4 h-4 text-[#FDE68A]" />
+                <span>
+                  {isAddMode
+                    ? "Add Member & Calculate Chart"
+                    : canClose
+                    ? "Save Changes & Recalculate Chart"
+                    : "Calculate My Chart & Get 1 Free Question"}
+                </span>
               </>
             )}
           </button>

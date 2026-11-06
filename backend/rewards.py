@@ -84,40 +84,64 @@ def generate_referral_code(user_id: str) -> str:
     return f"{digest[0:2]}{digest[4:6]}{digest[8:10]}"
 
 
-def get_user_reward_state(db: Session, user_id: str) -> Dict[str, Any]:
-    """Calculate the user's current streak, claimable state, and mantras."""
+def get_user_reward_state(db: Session, user_id: str, profile_id: Optional[str] = None) -> Dict[str, Any]:
+    """Calculate the user's current streak, claimable state, and mantras, segregated per profile if provided."""
     today = datetime.now(timezone.utc).date()
     ref_code = generate_referral_code(user_id)
 
-    # Find streak claim events
-    streak_events = (
+    # Find streak claim events, filtering by profile_id if available
+    query = (
         db.query(Event)
         .filter(Event.user_id == user_id, Event.event_name == "streak_claimed")
         .order_by(Event.created_at.desc())
-        .all()
     )
+    all_events = query.all()
+
+    # Filter to this specific profile or legacy global events
+    if profile_id:
+        streak_events = [
+            e for e in all_events
+            if (e.payload or {}).get("profile_id") == profile_id
+        ]
+    else:
+        streak_events = all_events
 
     last_claim_date = None
     streak_count = 1
+    streak_was_broken = False
 
     if streak_events:
         last_evt = streak_events[0]
-        last_claim_date = last_evt.created_at.date()
+        # In SQLite/Postgres normalize date
+        created_dt = last_evt.created_at
+        if isinstance(created_dt, str):
+            try:
+                last_claim_date = datetime.fromisoformat(created_dt.replace("Z", "+00:00")).date()
+            except Exception:
+                last_claim_date = today
+        elif hasattr(created_dt, "date"):
+            last_claim_date = created_dt.date()
+        else:
+            last_claim_date = today
+
         payload = last_evt.payload or {}
-        streak_count = payload.get("day", 1)
+        prev_day = payload.get("day", 1)
 
         diff = (today - last_claim_date).days
         if diff == 0:
             # Already claimed today
             can_claim_today = False
+            streak_count = prev_day
         elif diff == 1:
-            # Active continuous streak
-            streak_count = (streak_count % 7) + 1
+            # Active strictly consecutive streak
+            streak_count = (prev_day % 7) + 1
             can_claim_today = True
         else:
-            # Streak broken
+            # Broken streak (e.g. came day 1, skipped day 2, came on day 3)
+            # Must restart at Day 1
             streak_count = 1
             can_claim_today = True
+            streak_was_broken = True
     else:
         can_claim_today = True
         streak_count = 1
@@ -143,9 +167,11 @@ def get_user_reward_state(db: Session, user_id: str) -> Dict[str, Any]:
 
     return {
         "user_id": user_id,
+        "profile_id": profile_id,
         "referral_code": ref_code,
         "streak_count": streak_count,
         "can_claim_today": can_claim_today,
+        "streak_was_broken": streak_was_broken,
         "today_reward_coins": curr_tier["reward_coins"],
         "today_reward_questions": curr_tier["reward_questions"],
         "next_reward_coins": next_tier["reward_coins"],
@@ -157,10 +183,10 @@ def get_user_reward_state(db: Session, user_id: str) -> Dict[str, Any]:
     }
 
 
-def claim_streak_reward(db: Session, user_id: str) -> Dict[str, Any]:
+def claim_streak_reward(db: Session, user_id: str, profile_id: Optional[str] = None) -> Dict[str, Any]:
     """Claim today's streak reward idempotently, adding question credits to balance."""
     today = datetime.now(timezone.utc).date()
-    state = get_user_reward_state(db, user_id)
+    state = get_user_reward_state(db, user_id, profile_id=profile_id)
 
     if not state["can_claim_today"]:
         return {
@@ -172,7 +198,8 @@ def claim_streak_reward(db: Session, user_id: str) -> Dict[str, Any]:
     day_num = state["streak_count"]
     coins = state["today_reward_coins"]
     questions = state["today_reward_questions"]
-    idempotency_key = f"streak_{user_id}_{today.isoformat()}"
+    p_key = profile_id or "default"
+    idempotency_key = f"streak_{user_id}_{p_key}_{today.isoformat()}"
 
     # Verify idempotency in ledger
     existing = (
@@ -186,21 +213,27 @@ def claim_streak_reward(db: Session, user_id: str) -> Dict[str, Any]:
             amount=questions,
             entry_type="reward_streak",
             idempotency_key=idempotency_key,
-            reference_id=f"day_{day_num}",
+            reference_id=f"day_{day_num}_{p_key}",
             description=f"Day {day_num} Streak Reward (+{coins} coins / +{questions} free questions)",
         )
         db.add(ledger_entry)
 
-        # Log event
+        # Log event with profile_id
         evt = Event(
             user_id=user_id,
             event_name="streak_claimed",
-            payload={"day": day_num, "coins": coins, "questions": questions, "date": today.isoformat()},
+            payload={
+                "profile_id": profile_id,
+                "day": day_num,
+                "coins": coins,
+                "questions": questions,
+                "date": today.isoformat(),
+            },
         )
         db.add(evt)
         db.commit()
 
-    updated_state = get_user_reward_state(db, user_id)
+    updated_state = get_user_reward_state(db, user_id, profile_id=profile_id)
     return {
         "success": True,
         "message": f"Claimed ₹{coins} reward! Added +{questions} question credit to your balance.",

@@ -26,16 +26,27 @@ const DASHA_SIGNIFICANCE = {
   Venus: "Relationships, luxuries, arts, harmony, financial prosperity, public appeal",
 };
 
-export default function DashaTimeline({ chartFacts, lang = "en", onSelectDashaQuestion }) {
+export default function DashaTimeline({
+  chartFacts,
+  currentDasha: propCurrentDasha,
+  allMahadashas: propAllMahadashas,
+  lang = "en",
+  onSelectDashaQuestion,
+}) {
   const [selectedPeriod, setSelectedPeriod] = useState(null);
 
-  if (!chartFacts || !chartFacts.current_dasha) {
-    return null;
-  }
+  const currentDasha = propCurrentDasha || chartFacts?.current_dasha;
+  const allDashas = chartFacts?.all_dashas || propAllMahadashas || [];
+  const antardashas = chartFacts?.antardashas || [];
 
-  const currentDasha = chartFacts.current_dasha;
-  const allDashas = chartFacts.all_dashas || [];
-  const antardashas = chartFacts.antardashas || [];
+  if (!currentDasha) {
+    return (
+      <div className="crystal-card p-6 text-center text-xs text-[#A299BC] space-y-2">
+        <Clock className="w-5 h-5 text-[#E5A93C] mx-auto animate-pulse" />
+        <p>{lang === "hi" ? "दशा चक्र लोड हो रहा है..." : "Loading planetary dasha cycles..."}</p>
+      </div>
+    );
+  }
 
   const activeMD = currentDasha.mahadasha_lord;
   const activeAD = currentDasha.antardasha_lord;

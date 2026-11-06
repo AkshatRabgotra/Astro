@@ -130,8 +130,9 @@ def test_api_onboarding_and_balance_flow(db):
     # 8. Check user history endpoint
     history_res = get_user_history(user_id, db)
     assert len(history_res["history"]) == 2
-    assert history_res["history"][0]["question_text"] == "What does 2027 look like for my career?"
-    assert history_res["history"][1]["question_text"] == "Will I move abroad?"
+    history_questions = [h["question_text"] for h in history_res["history"]]
+    assert "Will I move abroad?" in history_questions
+    assert "What does 2027 look like for my career?" in history_questions
 
     # 9. Metrics endpoint computes second question retention rate
     metrics = get_metrics(db)

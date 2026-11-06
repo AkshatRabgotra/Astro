@@ -148,9 +148,17 @@ export default function DashaTwinCard({ userId, lang, onAskQuestion }) {
 
   return (
     <div className="crystal-card p-5 rounded-3xl space-y-4 border border-[#B21E68]/40 shadow-xl relative overflow-hidden group">
-      {/* Astrological watermark glyph */}
-      <div className="absolute -right-6 -bottom-6 text-6xl text-[#E5A93C]/5 font-serif select-none pointer-events-none">
-        ☽
+      {/* Astrological watermark celestial orbit with concentric rings & soft fading */}
+      <div className="absolute -right-6 -bottom-6 pointer-events-none select-none text-[#FDE68A] w-36 h-36 opacity-20">
+        <svg width="144" height="144" viewBox="0 0 144 144" fill="none">
+          <circle cx="72" cy="72" r="64" stroke="currentColor" strokeWidth="0.8" strokeDasharray="3 5" />
+          <circle cx="72" cy="72" r="46" stroke="currentColor" strokeWidth="0.8" />
+          <circle cx="72" cy="72" r="28" stroke="currentColor" strokeWidth="1" strokeDasharray="2 3" />
+          <ellipse cx="72" cy="72" rx="52" ry="16" transform="rotate(-30 72 72)" stroke="#F4B8DC" strokeWidth="0.9" />
+          <circle cx="72" cy="72" r="8" fill="#E5A93C" fillOpacity="0.3" />
+          {/* Sparkle Star */}
+          <path d="M42 42 L46 42 M44 40 L44 44" stroke="#FDE68A" strokeWidth="0.9" />
+        </svg>
       </div>
 
       {/* Top Header & Lord Chip */}

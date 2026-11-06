@@ -10,7 +10,7 @@ from backend.models import Answer, BirthProfile, Chart, Question
 from backend.service import QuestionService
 from chart.models import ChartFacts
 from llm.client import AllProvidersFailedError, ModelOrchestrator
-from llm.fallback import build_safe_templated_answer
+from llm.fallback import build_safe_templated_answer, build_astro_references
 from llm.prompts import SYSTEM_PROMPT, build_reading_prompt
 from llm.validator import AnswerValidator, parse_llm_json
 
@@ -43,6 +43,10 @@ def stream_question_answer(
         yield sse_event("error", {"message": "Birth chart not found", "refunded": False})
         return
 
+    # Fetch member profile for personalized consultation
+    profile = db.query(BirthProfile).filter(BirthProfile.id == question.birth_profile_id).first()
+    user_name = profile.name if profile and profile.name else "Friend"
+
     chart_facts = ChartFacts.model_validate(chart.facts_json)
 
     # 1. Attempt generation via dual-provider orchestrator
@@ -54,6 +58,7 @@ def stream_question_answer(
             db.query(Question)
             .filter(
                 Question.user_id == question.user_id,
+                Question.birth_profile_id == question.birth_profile_id,
                 Question.status == "completed",
                 Question.id != question.id,
             )
@@ -71,6 +76,7 @@ def stream_question_answer(
             chart_facts=chart_facts,
             question=question.question_text,
             conversation_history=conversation_history,
+            user_name=user_name,
         )
         resp = orchestrator.generate(prompt=prompt, system_prompt=SYSTEM_PROMPT)
         provider = resp.provider
@@ -97,6 +103,7 @@ def stream_question_answer(
                 question=question.question_text,
                 previous_error="; ".join(val_result.violations),
                 conversation_history=conversation_history,
+                user_name=user_name,
             )
             try:
                 retry_resp = orchestrator.generate(prompt=retry_prompt, system_prompt=SYSTEM_PROMPT)
@@ -134,20 +141,26 @@ def stream_question_answer(
                 for f in val_result.verified_cited_facts
             ]
 
+            astro_refs = parsed_data.get("astro_references")
+            if not astro_refs or not isinstance(astro_refs, list):
+                astro_refs = build_astro_references(chart_facts, cited_ids, question.question_text)
+
             yield sse_event(
                 "verified",
                 {
                     "status": "completed",
                     "provider": provider,
                     "cited_facts": evidence,
+                    "astro_references": astro_refs,
                 },
             )
 
         else:
             # Grounding violation persisted: fall back to safe deterministic templated reading
-            fallback = build_safe_templated_answer(chart_facts, question.question_text)
+            fallback = build_safe_templated_answer(chart_facts, question.question_text, user_name=user_name)
             fallback_text = fallback["answer"]
             fallback_ids = fallback["cited_fact_ids"]
+            fallback_astro_refs = fallback.get("astro_references") or build_astro_references(chart_facts, fallback_ids, question.question_text)
 
             QuestionService.complete_question(
                 db=db,
@@ -178,6 +191,7 @@ def stream_question_answer(
                     "provider": "template_fallback",
                     "answer": fallback_text,
                     "cited_facts": evidence,
+                    "astro_references": fallback_astro_refs,
                     "reason": "Grounding verification correction applied",
                 },
             )

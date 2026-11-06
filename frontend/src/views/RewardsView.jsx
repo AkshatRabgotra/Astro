@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Gift, Flame, Share2, Copy, Check, Volume2, Play, Pause, Sparkles, ChevronRight, CheckCircle2, ArrowRight } from "lucide-react";
+import { ArrowLeft, Gift, Flame, Share2, Copy, Check, Volume2, Play, Pause, Sparkles, ChevronRight, CheckCircle2, ArrowRight } from "lucide-react";
 import confetti from "canvas-confetti";
 import { t } from "../i18n";
 
@@ -12,7 +12,7 @@ const PLANET_EMBLEMS = {
   Saturn: { symbol: "♄", bg: "from-blue-900 via-indigo-700 to-slate-700", glow: "shadow-blue-500/40" },
 };
 
-export default function RewardsView({ user, balance, lang = "en", onRefreshBalance, onOpenPaywall }) {
+export default function RewardsView({ user, profile, balance, lang = "en", onRefreshBalance, onOpenPaywall, onGoToHome }) {
   const [rewardsState, setRewardsState] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
@@ -20,16 +20,79 @@ export default function RewardsView({ user, balance, lang = "en", onRefreshBalan
   const [redeemStatus, setRedeemStatus] = useState(null);
   const [activeMantra, setActiveMantra] = useState(null);
   const [chantCount, setChantCount] = useState(0);
+  const [malaRounds, setMalaRounds] = useState(0);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+
+  // Stop mantra audio when unmounted
+  useEffect(() => {
+    return () => {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const handleToggleMantraVoice = (sanskritText) => {
+    if (!("speechSynthesis" in window)) {
+      setIsPlayingAudio(!isPlayingAudio);
+      return;
+    }
+
+    if (isPlayingAudio) {
+      window.speechSynthesis.cancel();
+      setIsPlayingAudio(false);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(sanskritText);
+    utterance.rate = 0.82; // Sacred, meditative slow cadence
+    utterance.pitch = 0.95;
+    utterance.lang = "hi-IN";
+
+    const voices = window.speechSynthesis.getVoices();
+    const hiVoice = voices.find((v) => v.lang.startsWith("hi"));
+    if (hiVoice) utterance.voice = hiVoice;
+
+    utterance.onend = () => setIsPlayingAudio(false);
+    utterance.onerror = () => setIsPlayingAudio(false);
+
+    setIsPlayingAudio(true);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const handleTapMalaBead = (planet) => {
+    if (navigator.vibrate) {
+      navigator.vibrate(18);
+    }
+
+    if (chantCount + 1 >= 108) {
+      setChantCount(108);
+      setMalaRounds((r) => r + 1);
+      confetti({
+        particleCount: 108,
+        spread: 90,
+        origin: { y: 0.6 },
+        colors: ["#E5A93C", "#B21E68", "#FFD700", "#F4B8DC"],
+      });
+      // Auto claim mantra rewards upon completing full 108 Mala
+      handleClaimMantraReward(planet);
+    } else {
+      setChantCount((c) => c + 1);
+    }
+  };
 
   useEffect(() => {
     if (!user?.id) return;
     loadRewards();
-  }, [user]);
+  }, [user?.id, profile?.id]);
 
   const loadRewards = async () => {
     try {
-      const res = await fetch(`/api/user/${user.id}/rewards`);
+      const url = profile?.id
+        ? `/api/user/${user.id}/rewards?profile_id=${profile.id}`
+        : `/api/user/${user.id}/rewards`;
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         setRewardsState(data);
@@ -44,7 +107,10 @@ export default function RewardsView({ user, balance, lang = "en", onRefreshBalan
   const handleClaimStreak = async () => {
     if (!user?.id) return;
     try {
-      const res = await fetch(`/api/user/${user.id}/rewards/claim-streak`, {
+      const url = profile?.id
+        ? `/api/user/${user.id}/rewards/claim-streak?profile_id=${profile.id}`
+        : `/api/user/${user.id}/rewards/claim-streak`;
+      const res = await fetch(url, {
         method: "POST",
       });
       const data = await res.json();
@@ -146,13 +212,22 @@ export default function RewardsView({ user, balance, lang = "en", onRefreshBalan
 
   return (
     <div className="space-y-4 pb-28 max-w-md mx-auto px-4 pt-3">
-      {/* Top Header Bar with Wallet (Screenshot 1) */}
+      {/* Top Header Bar with Back Button & Wallet */}
       <div className="flex items-center justify-between pb-1">
         <div className="flex items-center gap-2">
+          {onGoToHome && (
+            <button
+              onClick={onGoToHome}
+              className="p-1.5 -ml-1 rounded-xl bg-[#1C0F33] hover:bg-[#2C1548] border border-[#B21E68]/40 hover:border-[#B21E68] text-[#FDE68A] transition-all flex items-center justify-center shadow-sm active:scale-95 shrink-0"
+              title={lang === "hi" ? "होम पर वापस जाएं" : "Back to Home"}
+            >
+              <ArrowLeft className="w-4 h-4 text-[#FDE68A]" />
+            </button>
+          )}
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#931B58] to-[#B21E68] text-white flex items-center justify-center shadow-lg shadow-[#B21E68]/30">
             <Gift className="w-4 h-4 text-[#FDE68A]" />
           </div>
-          <h1 className="font-serif text-2xl font-bold text-white tracking-wide">
+          <h1 className="font-serif text-xl sm:text-2xl font-bold text-white tracking-wide">
             {t("rewardsTitle", lang)}
           </h1>
         </div>
@@ -183,7 +258,7 @@ export default function RewardsView({ user, balance, lang = "en", onRefreshBalan
           </div>
           <div>
             <h3 className="font-serif text-base font-bold text-white flex items-center gap-2">
-              {t("keepStreakTitle", lang)}
+              {profile?.name ? `${profile.name}'s ${t("keepStreakTitle", lang)}` : t("keepStreakTitle", lang)}
               <Flame className="w-4 h-4 text-orange-400 fill-orange-400" />
             </h3>
             <p className="text-xs text-[#A299BC]">
@@ -191,6 +266,13 @@ export default function RewardsView({ user, balance, lang = "en", onRefreshBalan
             </p>
           </div>
         </div>
+
+        {rewardsState?.streak_was_broken && (
+          <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/40 text-[#FDE68A] text-xs flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>Streak reset to Day 1. Come back every consecutive day to keep your streak burning!</span>
+          </div>
+        )}
 
         {/* 7-Day Progress Circles */}
         <div className="grid grid-cols-7 gap-1.5 pt-1">
@@ -431,43 +513,132 @@ export default function RewardsView({ user, balance, lang = "en", onRefreshBalan
                     </div>
                   </div>
 
-                  {/* Audio Waveform Player Simulation */}
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#140D26] border border-[#2D1F49]">
-                    <button
-                      onClick={() => setIsPlayingAudio(!isPlayingAudio)}
-                      className="w-8 h-8 rounded-full bg-[#B21E68] text-white flex items-center justify-center shadow-md active:scale-95"
-                    >
-                      {isPlayingAudio ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
-                    </button>
-
-                    {/* Waveform bars */}
-                    <div className="flex items-center gap-1 h-5 px-3 flex-1 justify-center">
-                      <div className={`w-1 bg-[#E5A93C] rounded-full ${isPlayingAudio ? "wave-bar" : "h-2"}`} />
-                      <div className={`w-1 bg-[#B21E68] rounded-full ${isPlayingAudio ? "wave-bar" : "h-4"}`} />
-                      <div className={`w-1 bg-[#F4B8DC] rounded-full ${isPlayingAudio ? "wave-bar" : "h-3"}`} />
-                      <div className={`w-1 bg-[#E5A93C] rounded-full ${isPlayingAudio ? "wave-bar" : "h-5"}`} />
-                      <div className={`w-1 bg-[#B21E68] rounded-full ${isPlayingAudio ? "wave-bar" : "h-2"}`} />
+                  {/* Interactive 108-Bead Japa Mala Interface (Milestone 4) */}
+                  <div className="p-4 rounded-2xl bg-[#0E061A] border border-[#3A1F52] space-y-4 text-center">
+                    {/* Mala Progress Ring Header */}
+                    <div className="flex items-center justify-between text-xs px-1">
+                      <div className="flex items-center gap-1.5 text-[#FDE68A] font-bold">
+                        <span className="text-base">📿</span>
+                        <span>108-Bead Japa Mala</span>
+                      </div>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#201036] border border-[#3E2464] text-[#E5A93C]">
+                        {lang === "hi" ? `माला चक्र: ${malaRounds}` : `Mala Rounds: ${malaRounds}`}
+                      </span>
                     </div>
 
-                    <div className="text-[11px] font-mono text-[#A299BC]">
-                      {t("chantsCount", lang)}: <strong className="text-white">{chantCount}/14</strong>
-                    </div>
-                  </div>
+                    {/* Circular Bead Progress Gauge */}
+                    <div className="relative w-36 h-36 mx-auto flex items-center justify-center">
+                      <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                        {/* Background track */}
+                        <circle
+                          cx="50"
+                          cy="50"
+                          r="42"
+                          fill="none"
+                          stroke="#22123A"
+                          strokeWidth="6"
+                        />
+                        {/* Active Progress fill */}
+                        <circle
+                          cx="50"
+                          cy="50"
+                          r="42"
+                          fill="none"
+                          stroke="url(#malaGradient)"
+                          strokeWidth="6"
+                          strokeDasharray={2 * Math.PI * 42}
+                          strokeDashoffset={2 * Math.PI * 42 * (1 - chantCount / 108)}
+                          strokeLinecap="round"
+                          className="transition-all duration-150"
+                        />
+                        {/* Gradient definition */}
+                        <defs>
+                          <linearGradient id="malaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#931B58" />
+                            <stop offset="50%" stopColor="#B21E68" />
+                            <stop offset="100%" stopColor="#E5A93C" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
 
-                  {/* Complete & Claim Button */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setChantCount((c) => Math.min(c + 1, 14))}
-                      className="flex-1 py-2 px-3 rounded-xl bg-[#281A49] hover:bg-[#342260] text-white text-xs font-semibold transition-all active:scale-95"
-                    >
-                      {t("chantMalaBead", lang)}
-                    </button>
-                    <button
-                      onClick={() => handleClaimMantraReward(m.planet)}
-                      className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-[#931B58] via-[#B21E68] to-[#E5A93C] text-white text-xs font-bold transition-all shadow-md active:scale-95 hover:brightness-110"
-                    >
-                      {t("claimFreeQuestionMantra", lang)}
-                    </button>
+                      {/* Center Numerical Count & Sumeru Bead */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                        <span className="text-2xl font-serif font-extrabold text-white leading-none">
+                          {chantCount}
+                        </span>
+                        <span className="text-[10px] font-mono text-[#A299BC] uppercase mt-0.5">
+                          of 108
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Audio Voice Chanting Player */}
+                    <div className="flex items-center justify-between p-2 rounded-xl bg-[#140D26] border border-[#2D1F49]">
+                      <button
+                        type="button"
+                        onClick={() => handleToggleMantraVoice(m.sanskrit)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 ${
+                          isPlayingAudio
+                            ? "bg-[#B21E68] text-white shadow-[0_0_12px_rgba(216,34,126,0.5)]"
+                            : "bg-[#251540] text-[#FDE68A] hover:bg-[#341854]"
+                        }`}
+                      >
+                        {isPlayingAudio ? (
+                          <>
+                            <Pause className="w-3.5 h-3.5" />
+                            <span>{lang === "hi" ? "मंत्र रोकें" : "Pause Chant"}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Volume2 className="w-3.5 h-3.5 text-[#E5A93C]" />
+                            <span>{lang === "hi" ? "मंत्र उच्चारण सुनें" : "Voice Chant"}</span>
+                          </>
+                        )}
+                      </button>
+
+                      {/* Waveform indicator */}
+                      <div className="flex items-center gap-1 h-4 px-2">
+                        <div className={`w-0.5 bg-[#E5A93C] rounded-full ${isPlayingAudio ? "wave-bar" : "h-1.5"}`} />
+                        <div className={`w-0.5 bg-[#B21E68] rounded-full ${isPlayingAudio ? "wave-bar" : "h-3"}`} />
+                        <div className={`w-0.5 bg-[#F4B8DC] rounded-full ${isPlayingAudio ? "wave-bar" : "h-2"}`} />
+                      </div>
+
+                      <button
+                        onClick={() => setChantCount(0)}
+                        className="text-[10.5px] text-[#8E82AA] hover:text-white underline px-1"
+                      >
+                        Reset
+                      </button>
+                    </div>
+
+                    {/* Tactile 1-Tap Bead Chanting Button */}
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={() => handleTapMalaBead(m.planet)}
+                        className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#931B58] via-[#B21E68] to-[#E5A93C] hover:brightness-110 text-white font-serif font-bold text-sm shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2"
+                      >
+                        <span>📿</span>
+                        <span>
+                          {lang === "hi"
+                            ? `मनका जपें (${chantCount}/108)`
+                            : `Tap Bead to Chant (${chantCount}/108)`}
+                        </span>
+                      </button>
+
+                      {chantCount >= 108 ? (
+                        <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-semibold animate-pulse">
+                          🎉 108 Japa Round Complete! Free question karma unlocked.
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleClaimMantraReward(m.planet)}
+                          className="w-full py-2 px-3 rounded-xl bg-[#1E1136] hover:bg-[#2B164C] text-[#C5B9DF] text-xs font-medium transition-colors"
+                        >
+                          {t("claimFreeQuestionMantra", lang)} (Instant Claim)
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
