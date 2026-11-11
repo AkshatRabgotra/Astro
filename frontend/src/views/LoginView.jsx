@@ -69,23 +69,24 @@ export default function LoginView({ onLoginSuccess, lang = "en", setLang }) {
     },
   ];
 
-  // Initialize Google Identity Services if client ID is configured
+  const DEFAULT_GOOGLE_CLIENT_ID = "967573847805-5a13l1mi5atril5ijja4d792f8vcng5e.apps.googleusercontent.com";
+
+  // Initialize Google Identity Services with synchronous default client ID so button renders on first millisecond
   const [googleClientId, setGoogleClientId] = useState(
-    import.meta.env.VITE_GOOGLE_CLIENT_ID || ""
+    import.meta.env.VITE_GOOGLE_CLIENT_ID || DEFAULT_GOOGLE_CLIENT_ID
   );
+  const [loadingMessage, setLoadingMessage] = useState("");
 
   useEffect(() => {
-    // If not injected via build-time VITE env, fetch from backend auth config
-    if (!googleClientId) {
-      fetch("/api/auth/config")
-        .then((r) => r.json())
-        .then((d) => {
-          if (d.google_client_id) {
-            setGoogleClientId(d.google_client_id);
-          }
-        })
-        .catch(() => {});
-    }
+    // Non-blocking ping to warm up the Render backend immediately when page opens
+    fetch("/api/auth/config")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.google_client_id && d.google_client_id !== googleClientId) {
+          setGoogleClientId(d.google_client_id);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -125,7 +126,7 @@ export default function LoginView({ onLoginSuccess, lang = "en", setLang }) {
           clearInterval(interval);
           setupGsi();
         }
-      }, 300);
+      }, 150);
       return () => clearInterval(interval);
     }
   }, [googleClientId]);
@@ -134,19 +135,42 @@ export default function LoginView({ onLoginSuccess, lang = "en", setLang }) {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch("/api/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ credential: response.credential }),
-      });
-      if (!res.ok) throw new Error("Google authentication failed");
-      const data = await res.json();
-      onLoginSuccess(data);
+      setLoadingMessage(lang === "hi" ? "Google से सत्यापन हो रहा है..." : "Verifying with Google...");
+
+      // Retry up to 2 times with backoff in case Render backend was cold-starting
+      let lastErr = null;
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          if (attempt > 1) {
+            setLoadingMessage(
+              lang === "hi"
+                ? "सर्वर कनेक्ट हो रहा है, कृपया प्रतीक्षा करें..."
+                : "Connecting to server, please wait a moment..."
+            );
+          }
+          const res = await fetch("/api/auth/google", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ credential: response.credential }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            onLoginSuccess(data);
+            return;
+          }
+          lastErr = new Error(`Server returned ${res.status}`);
+        } catch (fetchErr) {
+          lastErr = fetchErr;
+        }
+        await new Promise((r) => setTimeout(r, 1200));
+      }
+      throw lastErr || new Error("Google authentication failed");
     } catch (err) {
       console.error(err);
       setError(err.message || "Failed to authenticate with Google.");
     } finally {
       setLoading(false);
+      setLoadingMessage("");
     }
   };
 
@@ -323,6 +347,14 @@ export default function LoginView({ onLoginSuccess, lang = "en", setLang }) {
               : "Real vedic guidance. Daily clarity."}
           </p>
         </div>
+
+        {/* Loading / Status Feedback */}
+        {loading && loadingMessage && (
+          <div className="p-2.5 rounded-xl bg-purple-950/60 border border-purple-500/40 text-purple-200 text-xs flex items-center justify-center gap-2 animate-pulse">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+            <span>{loadingMessage}</span>
+          </div>
+        )}
 
         {/* Error Feedback */}
         {error && (
