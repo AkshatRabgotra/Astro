@@ -70,18 +70,18 @@ def build_safe_templated_answer(
                 cited_ids.append("F09")
 
         elif is_career:
-            lines.append("\n**सर्वोत्तम कार्यक्षेत्र दिशा**: ग्रहों की स्थिति के अनुसार, आप उन क्षेत्रों में श्रेष्ठ प्रदर्शन करते हैं जहाँ आपको रणनीतिक स्वायत्तता और व्यवस्था निर्माण का अवसर मिले।")
+            lines.append(f"\n**सर्वोत्तम कार्यक्षेत्र दिशा**: {display_name}, आपकी कुंडली के अनुसार आप उन क्षेत्रों में सबसे अच्छा प्रदर्शन करेंगे जहाँ आपको स्वतंत्र निर्णय लेने, तकनीकी प्रणालियाँ बनाने और अपनी सोच से काम करने का अवसर मिले।")
             sun = planets_by_name.get("Sun")
             saturn = planets_by_name.get("Saturn")
             if sun:
                 hi_sign = HINDI_SIGNS.get(sun.sign, sun.sign)
                 h_sun = f", भाव {sun.house}" if (chart_facts.time_known and sun.house is not None) else ""
-                lines.append(f"- **सूर्य {hi_sign} राशि में{h_sun}** [F03]: अधिकार क्षेत्र, आत्मबल और नेतृत्व क्षमता को मजबूत करता है।")
+                lines.append(f"- **सूर्य {hi_sign} राशि में{h_sun}** [F03]: काम में अधिकार, आत्मविश्वास और नेतृत्व करने की क्षमता देता है।")
                 cited_ids.append("F03")
             if saturn:
                 hi_sign = HINDI_SIGNS.get(saturn.sign, saturn.sign)
                 h_sat = f", भाव {saturn.house}" if (chart_facts.time_known and saturn.house is not None) else ""
-                lines.append(f"- **शनि {hi_sign} राशि में{h_sat}** [F09]: कर्म, निरंतर अभ्यास और अनुशासन द्वारा स्थायी सफलता प्रदान करता है।")
+                lines.append(f"- **शनि {hi_sign} राशि में{h_sat}** [F09]: रोज के निरंतर अभ्यास और अनुशासन से मजबूत, स्थायी सफलता सुनिश्चित करता है।")
                 cited_ids.append("F09")
 
         elif is_relationship:
@@ -137,17 +137,17 @@ def build_safe_templated_answer(
             lines.append("**Chart Foundation**: Your birth date and place indicate core planetary influences. As your exact birth time was not provided, house placements and exact Ascendant are reserved, focusing our reading on your planetary signs and nakshatras.")
 
         if is_career:
-            lines.append("\n**Core Vocational Alignment**: Based on your astrological profile, your highest vocational fulfillment lies in roles requiring strategic autonomy, systematic execution, and clear structural ownership.")
+            lines.append(f"\n**Core Vocational Alignment**: To give you the direct bottom line, {display_name}: your highest fulfillment lies in roles where you can build systems, solve problems, and make decisions with clear ownership rather than repetitive routine.")
             sun = planets_by_name.get("Sun")
             saturn = planets_by_name.get("Saturn")
             if sun:
                 h_sun = f", House {sun.house}" if (chart_facts.time_known and sun.house is not None) else ""
-                lines.append(f"- **Sun in {sun.sign}{h_sun}** [F03]: Governs career authority, purpose, and self-confidence. Placed in Nakshatra {sun.nakshatra.name}.")
+                lines.append(f"- **Sun in {sun.sign}{h_sun}** [F03]: Gives you natural authority, clear purpose, and the confidence to lead.")
                 cited_ids.append("F03")
             if saturn:
                 h_sat = f", House {saturn.house}" if (chart_facts.time_known and saturn.house is not None) else ""
                 dignity = " (Exalted)" if saturn.is_exalted else (" (Debilitated)" if saturn.is_debilitated else "")
-                lines.append(f"- **Saturn in {saturn.sign}{h_sat}{dignity}** [F09]: Represents discipline, sustained effort, and career foundation in Nakshatra {saturn.nakshatra.name}.")
+                lines.append(f"- **Saturn in {saturn.sign}{h_sat}{dignity}** [F09]: Shows that your career foundation builds step by step through steady discipline and real-world experience.")
                 cited_ids.append("F09")
 
         elif is_relationship:

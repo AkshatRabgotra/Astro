@@ -313,13 +313,13 @@ class DemoAstrologyProvider:
                 paragraphs.append("### प्रत्यक्ष उत्तर एवं सर्वोत्तम कार्यक्षेत्र")
                 ref_sign = lagna_sign or sun_sign
                 if ref_sign in ["Aries", "Leo", "Sagittarius"]:
-                    hi_domains = "रणनीतिक नेतृत्व, तकनीकी प्रबंधन, उद्यमिता एवं प्रशासनिक दायित्व"
+                    hi_domains = "तकनीकी प्रबंधन, सॉफ्टवेयर लीडरशिप एवं स्वतंत्र प्रोजेक्ट्स"
                 elif ref_sign in ["Taurus", "Virgo", "Capricorn"]:
-                    hi_domains = "डेटा एनालिटिक्स, वित्तीय प्रणालियाँ, संरचनात्मक संचालन एवं तकनीकी इंजीनियरिंग"
+                    hi_domains = "सॉफ्टवेयर इंजीनियरिंग, डेटा एनालिटिक्स एवं सिस्टम्स ऑपरेशंस"
                 elif ref_sign in ["Gemini", "Libra", "Aquarius"]:
-                    hi_domains = "उत्पाद प्रबंधन, नवाचार रणनीति, संचार, मीडिया एवं परामर्श सेवाएं"
+                    hi_domains = "प्रोडक्ट डिजाइन, टेक कंसल्टिंग एवं डिजिटल कम्युनिकेशन"
                 else:
-                    hi_domains = "अनुसंधान, परामर्श, शिक्षा, स्वास्थ्य सेवा नवाचार एवं संस्थागत विकास"
+                    hi_domains = "स्पेशलाइज्ड रिसर्च, एडवाइजरी एवं टेक्निकल टीचिंग"
 
                 basis_parts = []
                 if time_known and lagna_sign:
@@ -332,8 +332,8 @@ class DemoAstrologyProvider:
                 basis_text = " तथा ".join(basis_parts) if basis_parts else "ग्रहों की स्थिति"
 
                 paragraphs.append(
-                    f"आपकी जन्म कुंडली में {basis_text} के आधार पर, आपके लिए सबसे अनुकूल क्षेत्र **{hi_domains}** हैं। "
-                    f"आप उन भूमिकाओं में सर्वाधिक सफल होते हैं जहाँ आपको स्वतंत्र निर्णय लेने और दीर्घकालिक व्यवस्था निर्माण का अवसर प्राप्त हो।"
+                    f"{user_name}, सीधे और स्पष्ट शब्दों में कहें तो आपकी कुंडली के अनुसार आपके लिए सबसे अनुकूल क्षेत्र **{hi_domains}** है। "
+                    f"आप उन कामों में सबसे ज्यादा सफल होते हैं जहाँ आपको स्वतंत्रता से निर्णय लेने और नई व्यवस्था बनाने का मौका मिले।"
                 )
 
                 paragraphs.append("### प्रमुख ग्रह प्रभाव")
@@ -341,8 +341,7 @@ class DemoAstrologyProvider:
                 if "F03" in facts:
                     h_str = f" एवं {HINDI_HOUSES.get(sun_house, f'भाव {sun_house}')}" if (time_known and sun_house) else ""
                     drivers.append(
-                        f"- **सूर्य का अधिकार क्षेत्र [F03]**: सूर्य **{hi_sun_sign} राशि में**{h_str} स्थित है। "
-                        f"यह आपके भीतर स्वाभाविक नेतृत्व क्षमता, निर्णय लेने का साहस और सामाजिक मान-प्रतिष्ठा प्रदान करता है।"
+                        f"- **सूर्य की स्थिति [F03]**: सूर्य **{hi_sun_sign} राशि में**{h_str} स्थित है। यह आपको आत्मविश्वास और काम में नेतृत्व करने की स्वाभाविक क्षमता देता है।"
                     )
                     if "F03" not in cited_ids:
                         cited_ids.append("F03")
@@ -350,8 +349,7 @@ class DemoAstrologyProvider:
                 if "F09" in facts:
                     h_str = f" एवं {HINDI_HOUSES.get(sat_house, f'भाव {sat_house}')}" if (time_known and sat_house) else ""
                     drivers.append(
-                        f"- **शनि का कर्म आधार [F09]**: शनि **{hi_sat_sign} राशि में**{h_str} स्थित है। "
-                        f"कर्म के अधिपति के रूप में शनि निरंतर अभ्यास, धैर्य और अनुशासन से दीर्घकालिक प्रगति सुनिश्चित करता है।"
+                        f"- **शनि का प्रभाव [F09]**: शनि **{hi_sat_sign} राशि में**{h_str} स्थित है। यह दिखाता है कि आपकी सफलता रोज के छोटे-छोटे अभ्यासों और निरंतर मेहनत से ही पक्की होगी।"
                     )
                     if "F09" not in cited_ids:
                         cited_ids.append("F09")
@@ -362,7 +360,7 @@ class DemoAstrologyProvider:
                     merc_house = get_house(merc_text)
                     h_str = f" एवं {HINDI_HOUSES.get(merc_house, f'भाव {merc_house}')}" if (time_known and merc_house) else ""
                     drivers.append(
-                        f"- **बुध का बौद्धिक विवेक [F06]**: बुध **{hi_merc_sign} राशि में**{h_str} स्थित होकर तीक्ष्ण विश्लेषणात्मक क्षमता और व्यापारिक दूरदर्शिता प्रदान करता है।"
+                        f"- **बुध की बुद्धि [F06]**: बुध **{hi_merc_sign} राशि में**{h_str} स्थित होकर आपको तेज विश्लेषणात्मक समझ और समस्याओं को जल्दी सुलझाने की क्षमता देता है।"
                     )
                     if "F06" not in cited_ids:
                         cited_ids.append("F06")
@@ -376,15 +374,15 @@ class DemoAstrologyProvider:
                     paragraphs.append(
                         f"### करियर समय चक्र एवं महादशा [F12]\n"
                         f"वर्तमान में आप **{hi_maha} महादशा** एवं **{hi_antar} अंतर्दशा** ({dates}) के प्रभाव में हैं। "
-                        f"यह समयावधि अपनी कार्यकुशलता को निखारने और करियर में नई ऊंचाइयाँ प्राप्त करने के लिए अनुकूल है।"
+                        f"यह समय नई स्किल्स सीखने और अपनी काबिलियत को मजबूत करने के लिए बहुत अच्छा है।"
                     )
                     if "F12" not in cited_ids:
                         cited_ids.append("F12")
 
                 paragraphs.append(
                     "### व्यावहारिक मार्गदर्शन\n"
-                    "- **मुख्य कौशल में निपुणता**: अपनी विशेषज्ञता को निरंतर विस्तार दें।\n"
-                    "- **धैर्य और निरंतरता**: तात्कालिक सफलता के स्थान पर सुदृढ़ नींव तैयार करें।"
+                    "- **एक मुख्य स्किल चुनें**: अगले दो महीनों में किसी एक खास टेक्नोलॉजी या काम में पूरी पकड़ बनाएं।\n"
+                    "- **धैर्य रखें**: दूसरों की प्रगति देखकर चिंता न करें; आपकी कुंडली निरंतर मेहनत का बहुत अच्छा फल देती है।"
                 )
 
             elif is_relationship:
@@ -394,8 +392,8 @@ class DemoAstrologyProvider:
                 ven_house = get_house(ven_text)
 
                 paragraphs.append(
-                    f"आपकी कुंडली में **शुक्र {hi_ven_sign} राशि में [F08]** एवं **चन्द्र {hi_moon_sign} राशि में [F04]** स्थित होकर "
-                    f"परस्पर सम्मान, भावनात्मक सच्चाई और सौहार्दपूर्ण साझेदारी को आधार बनाते हैं।"
+                    f"{user_name}, सीधे शब्दों में कहें तो आपकी कुंडली में **शुक्र {hi_ven_sign} राशि में [F08]** एवं **चन्द्र {hi_moon_sign} राशि में [F04]** स्थित हैं। "
+                    f"इसका मतलब है कि आपके लिए ऐसे रिश्ते टिकते हैं जहाँ दोनों तरफ से आदर, भावनात्मक सच्चाई और आपसी समझ हो।"
                 )
                 if "F08" not in cited_ids and "F08" in facts:
                     cited_ids.append("F08")
@@ -407,13 +405,12 @@ class DemoAstrologyProvider:
                 if "F08" in facts:
                     h_str = f" एवं {HINDI_HOUSES.get(ven_house, f'भाव {ven_house}')}" if (time_known and ven_house) else ""
                     drivers.append(
-                        f"- **शुक्र का प्रेम एवं सामंजस्य [F08]**: शुक्र **{hi_ven_sign} राशि में**{h_str} स्थित है। "
-                        f"यह संबंधों में आदर, कोमलता और भावनात्मक संतुलन की आवश्यकता को दर्शाता है।"
+                        f"- **शुक्र का प्रभाव [F08]**: शुक्र **{hi_ven_sign} राशि में**{h_str} स्थित है। यह दिखाता है कि आपको रिश्तों में शांति, कोमलता और खुलापन चाहिए।"
                     )
                 if "F04" in facts:
                     h_str = f" एवं {HINDI_HOUSES.get(moon_house, f'भाव {moon_house}')}" if (time_known and moon_house) else ""
                     drivers.append(
-                        f"- **चन्द्रमा का भावनात्मक आधार [F04]**: चन्द्र **{hi_moon_sign} राशि में**{h_str} मन की शांति और आत्मीय सुरक्षा को निर्देशित करता है।"
+                        f"- **चन्द्रमा का आधार [F04]**: चन्द्र **{hi_moon_sign} राशि में**{h_str} स्थित है। यह बताता है कि आपका मन सुरक्षा और भावनात्मक सुकून चाहता है।"
                     )
                 paragraphs.append("\n".join(drivers))
 
@@ -423,15 +420,15 @@ class DemoAstrologyProvider:
                     hi_antar = HINDI_PLANETS.get(antar, antar)
                     paragraphs.append(
                         f"### संबंध समय चक्र एवं दशा [F12]\n"
-                        f"आपकी सक्रिय **{hi_maha} महादशा** और **{hi_antar} अंतर्दशा** ({dates}) भावनात्मक परिपक्वता का अवसर प्रदान करती है।"
+                        f"आपकी सक्रिय **{hi_maha} महादशा** और **{hi_antar} अंतर्दशा** ({dates}) रिश्तों में समझदारी और स्थिरता लाने का अवसर देती है।"
                     )
                     if "F12" not in cited_ids:
                         cited_ids.append("F12")
 
                 paragraphs.append(
                     "### व्यावहारिक मार्गदर्शन\n"
-                    "- **खुला संवाद रखें**: अपनी भावनाओं और अपेक्षाओं को स्पष्टता से साझा करें।\n"
-                    "- **पारस्परिक सहयोग**: एक-दूसरे की व्यक्तिगत स्वतंत्रता का सम्मान करते हुए साझा लक्ष्य बनाएं।"
+                    "- **स्पष्ट बातचीत रखें**: अपनी भावनाएं और जरूरतें बिना झिझक के सीधे और शांत तरीके से साझा करें।\n"
+                    "- **जल्दबाजी से बचें**: किसी भी नए रिश्ते में केवल मीठी बातों के बजाय सामने वाले के व्यवहार और निरंतरता को देखें।"
                 )
 
             elif is_timing:
@@ -441,16 +438,16 @@ class DemoAstrologyProvider:
                     hi_maha = HINDI_PLANETS.get(maha, maha)
                     hi_antar = HINDI_PLANETS.get(antar, antar)
                     paragraphs.append(
-                        f"आपका मुख्य समय चक्र **{hi_maha} महादशा** एवं **{hi_antar} अंतर्दशा** [F12] द्वारा संचालित है, जो {dates} तक सक्रिय है। "
-                        f"वैदिक ज्योतिष में विंशोत्तरी दशा जीवन के इस अध्याय की प्राथमिक प्राथमिकताओं और विकास को इंगित करती है।"
+                        f"{user_name}, आपका मुख्य समय चक्र वर्तमान में **{hi_maha} महादशा** एवं **{hi_antar} अंतर्दशा** [F12] के तहत चल रहा है, जो {dates} तक सक्रिय है। "
+                        f"यह समय अपने बुनियादी काम को पक्का करने और जीवन में स्थिरता लाने के लिए अनुकूल है।"
                     )
                     if "F12" not in cited_ids:
                         cited_ids.append("F12")
 
                 paragraphs.append(
                     "### व्यावहारिक योजना\n"
-                    "- **दशा अनुसार कार्य**: महत्वपूर्ण निर्णयों को अनुकूल ग्रह दशा के साथ संरेखित करें।\n"
-                    "- **तैयारी और संयम**: प्रमुख अवसरों के लिए पूर्व-तैयारी पर ध्यान दें।"
+                    "- **सही समय पर कदम उठाएं**: बड़े फैसलों में जल्दबाजी न करें, अपने कौशल को तैयार रखें।\n"
+                    "- **संयम और तैयारी**: इस समय की गई मेहनत आगे चलकर बहुत अच्छा और स्थायी परिणाम देगी।"
                 )
 
             else:
@@ -529,17 +526,17 @@ class DemoAstrologyProvider:
 
                 ref_sign = lagna_sign or sun_sign
                 if ref_sign in ["Aries", "Leo", "Sagittarius"]:
-                    domains = "Executive Leadership, Technology Strategy, Entrepreneurial Operations, and Strategic Administration"
+                    domains = "Technology Leadership, Product Strategy, and Building Independent Ventures"
                 elif ref_sign in ["Taurus", "Virgo", "Capricorn"]:
-                    domains = "Strategic Analytics, Systems Architecture, Finance, Structured Operations, and Enterprise Engineering"
+                    domains = "Software Engineering, Data Analytics, Systems Architecture, and Technical Operations"
                 elif ref_sign in ["Gemini", "Libra", "Aquarius"]:
-                    domains = "Product Management, Strategic Advisory, Innovation Strategy, Communications, and Scalable Technology"
+                    domains = "Software Product Design, Technical Consulting, and Digital Strategy"
                 else:
-                    domains = "Advisory Consulting, Specialized Research, Healthcare Innovation, Creative Strategy, and People Leadership"
+                    domains = "Specialized Research, Technical Teaching, and Advisory Roles"
 
                 paragraphs.append(
-                    f"Based on {basis_str}, your strongest natural career alignment is in **{domains}**. "
-                    f"You excel where you hold structural ownership, intellectual autonomy, and the agency to build enduring, scalable results."
+                    f"To give you the bottom line right away, {user_name}: based on {basis_str}, your strongest career fit is in **{domains}**. "
+                    f"You perform at your best when you have the freedom to solve problems and build real things, rather than doing repetitive tasks."
                 )
 
                 paragraphs.append("### Key Astrological Drivers")
@@ -547,8 +544,7 @@ class DemoAstrologyProvider:
                 if "F03" in facts:
                     h_str = f" in House {sun_house}" if (time_known and sun_house) else ""
                     drivers.append(
-                        f"- **Sun's Authority [F03]**: Placed in **{sun_sign}{h_str}**, the Sun governs professional recognition, inner conviction, and leadership. "
-                        f"This placement signals that you perform at your best with executive clarity and decision-making independence."
+                        f"- **Sun's Authority [F03]**: Placed in **{sun_sign}{h_str}**, the Sun gives you natural confidence, clarity in decision-making, and a drive to lead."
                     )
                     if "F03" not in cited_ids:
                         cited_ids.append("F03")
@@ -556,8 +552,7 @@ class DemoAstrologyProvider:
                 if "F09" in facts:
                     h_str = f" in House {sat_house}" if (time_known and sat_house) else ""
                     drivers.append(
-                        f"- **Saturn's Vocational Foundation [F09]**: Positioned in **{sat_sign}{h_str}**, Saturn acts as your vocational anchor, governing discipline, patience, and long-term mastery. "
-                        f"It indicates that your professional stature builds steadily through systematic execution and cumulative experience."
+                        f"- **Saturn's Vocational Foundation [F09]**: Positioned in **{sat_sign}{h_str}**, Saturn acts as your vocational anchor, showing that your success builds step by step through steady daily effort."
                     )
                     if "F09" not in cited_ids:
                         cited_ids.append("F09")
@@ -567,7 +562,7 @@ class DemoAstrologyProvider:
                     merc_house = get_house(merc_text)
                     h_str = f" in House {merc_house}" if (time_known and merc_house) else ""
                     drivers.append(
-                        f"- **Mercury's Intellect & Strategy [F06]**: Placed in **{merc_sign}{h_str}**, Mercury fuels sharp analytical discrimination, strategic negotiation, and commercial problem-solving."
+                        f"- **Mercury's Intellect & Strategy [F06]**: Placed in **{merc_sign}{h_str}**, Mercury gives you sharp analytical thinking and quick problem-solving."
                     )
                     if "F06" not in cited_ids:
                         cited_ids.append("F06")
@@ -576,7 +571,7 @@ class DemoAstrologyProvider:
                     jup_house = get_house(jup_text)
                     h_str = f" in House {jup_house}" if (time_known and jup_house) else ""
                     drivers.append(
-                        f"- **Jupiter's Wisdom & Expansion [F07]**: Located in **{jup_sign}{h_str}**, Jupiter confers higher vision, ethical discernment, and mentorship capacity."
+                        f"- **Jupiter's Wisdom & Expansion [F07]**: Located in **{jup_sign}{h_str}**, Jupiter brings sound judgment, learning ability, and mentoring capacity."
                     )
                     if "F07" not in cited_ids:
                         cited_ids.append("F07")
@@ -587,17 +582,17 @@ class DemoAstrologyProvider:
                     maha, antar, dates = get_dasha_details(facts["F12"])
                     paragraphs.append(
                         f"### Career Timing & Active Dasha Window [F12]\n"
-                        f"You are actively navigating the **{maha} Mahadasha** and **{antar} Antardasha** ({dates}). "
-                        f"This planetary cycle opens favorable timing for consolidating your expertise, establishing domain authority, and preparing for strategic career expansion."
+                        f"You are actively in your **{maha} Mahadasha** and **{antar} Antardasha** ({dates}). "
+                        f"This window strongly favors upgrading your core skills, building a standout project, and preparing for your next career jump."
                     )
                     if "F12" not in cited_ids:
                         cited_ids.append("F12")
 
                 paragraphs.append(
                     "### Strategic Actionable Guidance\n"
-                    "- **Consolidate High-Leverage Skills**: Focus on cultivating rare and valuable expertise that bridges strategic vision with systematic implementation.\n"
-                    "- **Cultivate Long-Term Alliances**: Align with mentors and collaborators who respect substantive competence and reliability.\n"
-                    "- **Embrace Compound Progression**: Let Saturn's disciplined cadence work in your favor—steadfast consistency will outperform short-term expedience."
+                    "- **Master One Core Skill**: Pick your primary technology or domain and master it deeply over the next 60 days.\n"
+                    "- **Show Real Work**: Build tangible projects that demonstrate your ability rather than just updating resumes.\n"
+                    "- **Trust Steady Progress**: Don't stress over overnight results; your chart rewards patient, consistent effort."
                 )
 
             elif is_relationship:
@@ -610,8 +605,7 @@ class DemoAstrologyProvider:
                 moon_house = get_house(moon_text)
 
                 paragraphs.append(
-                    f"Your relational blueprint is anchored by **Venus in {ven_sign} [F08]** and **Moon in {moon_sign} [F04]**. "
-                    f"You approach close partnerships with a deep need for mutual respect, emotional authenticity, and intellectual compatibility."
+                    f"To give you the direct bottom line, {user_name}: your chart shows that meaningful partnerships for you are built on **mutual respect, honesty, and emotional safety**, rather than surface-level charm."
                 )
                 if "F08" not in cited_ids and "F08" in facts:
                     cited_ids.append("F08")
@@ -623,13 +617,12 @@ class DemoAstrologyProvider:
                 if "F08" in facts:
                     h_str = f" in House {ven_house}" if (time_known and ven_house) else ""
                     rel_drivers.append(
-                        f"- **Venus Harmony [F08]**: Placed in **{ven_sign}{h_str}**, Venus represents how you express affection and value harmony. "
-                        f"It indicates that balance, transparent appreciation, and shared aesthetic values are essential for lasting fulfillment."
+                        f"- **Venus Harmony [F08]**: Placed in **{ven_sign}{h_str}**, Venus reflects that you value peace, clear communication, and emotional warmth in relationships."
                     )
                 if "F04" in facts:
                     h_str = f" in House {moon_house}" if (time_known and moon_house) else ""
                     rel_drivers.append(
-                        f"- **Moon's Emotional Anchor [F04]**: Located in **{moon_sign}{h_str}**, the Moon shapes your instinctual response and emotional security in deep bonds."
+                        f"- **Moon's Emotional Anchor [F04]**: Located in **{moon_sign}{h_str}**, the Moon indicates your emotional core needs someone who genuinely listens and respects your boundaries."
                     )
                     if "F02" in facts and "F02" not in cited_ids:
                         cited_ids.append("F02")
@@ -639,15 +632,15 @@ class DemoAstrologyProvider:
                     maha, antar, dates = get_dasha_details(facts["F12"])
                     paragraphs.append(
                         f"### Partnership Timing & Active Dasha Window [F12]\n"
-                        f"Your active **{maha} Mahadasha** and **{antar} Antardasha** ({dates}) highlight an important chapter for deepening emotional bonds and establishing balanced commitments."
+                        f"Your active **{maha} Mahadasha** and **{antar} Antardasha** ({dates}) brings a key period for emotional clarity and forming grounded bonds."
                     )
                     if "F12" not in cited_ids:
                         cited_ids.append("F12")
 
                 paragraphs.append(
                     "### Strategic Actionable Guidance\n"
-                    "- **Prioritize Transparent Communication**: Express your emotional expectations clearly and invite vulnerable reciprocity.\n"
-                    "- **Foster Shared Growth**: Build partnerships that allow both individuals independent agency while cultivating common goals."
+                    "- **Be Direct About What You Need**: Share your thoughts honestly early on without second-guessing yourself.\n"
+                    "- **Watch Actions, Not Words**: In any close relationship, look for consistency and emotional safety over grand promises."
                 )
 
             elif is_timing:
